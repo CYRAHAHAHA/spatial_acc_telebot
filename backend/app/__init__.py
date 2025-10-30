@@ -10,9 +10,9 @@ def home():
     msg = request.args.get("msg", "")
     msg_html = f'<div class="msg">{msg}</div>' if msg else ""
 
-    # List env var keys (not values)
+    # List env var key and values
     keys = [attr for attr in dir(config) if not attr.startswith("__") and not callable(getattr(config, attr))]
-    keys_list_html = "<ul>" + "".join(f"<li>{k}</li>" for k in keys) + "</ul>"
+    keys_list_html = "<ul>" + "".join(f"<li>{k}: {getattr(config, k)}</li>" for k in keys) + "</ul>"
 
     # Pull aggregated data from session
     aggregated_data = session.get("aggregated_data")
