@@ -83,15 +83,13 @@ def fetch_assets_config():
 
         # === 6️⃣ Aggregate data ===
         aggregated_data = {
-            "customAttributes": [{ca.get("displayName"): ca.get("description", "")} for ca in custom_attributes],
+            "customAttributes": [{ca.get("displayName"): ca.get("description", ""), "id": ca.get("id")} for ca in custom_attributes],
             "statusSets": status_sets,
             "categories": categories_with_status
         }
 
         # Store in session
         session["aggregated_data"] = aggregated_data
-
-        print(aggregated_data)
 
         # === 7️⃣ Save all raw and mapped data to log.json ===
         log_path = Path("log.json")
@@ -107,6 +105,11 @@ def fetch_assets_config():
         print("\n=== Saved log.json with all debug info ===")
         print(log_path.resolve())
 
+        # === 8️⃣ Save aggregated data to log_aggregated.json ===
+        log_aggregated_path = Path("log_aggregated.json")
+        with log_aggregated_path.open("w", encoding="utf-8") as f:
+            json.dump(aggregated_data, f, indent=2)
+        print("\n=== Saved log_aggregated.json with aggregated data ===")
         # Redirect message
         msg = urllib.parse.quote_plus(
             f"Fetched {len(custom_attributes)} attributes, "

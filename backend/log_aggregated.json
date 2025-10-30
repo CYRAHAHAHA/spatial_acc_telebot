@@ -1,190 +1,40 @@
 {
-  "customAttributesRaw": [
+  "customAttributes": [
     {
-      "name": "ca1",
-      "displayName": "IFCGlobalId",
-      "description": "Unique IFC identifier",
-      "dataType": "text",
-      "requiredOnIngress": true,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "8151d4ab-5df3-4e47-b0ef-5361cb159d81",
-      "version": 3094738,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:32.948Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:32.948Z",
-      "updatedBy": "26T24R4NKFREYN6X"
+      "IFCGlobalId": "Unique IFC identifier",
+      "id": "8151d4ab-5df3-4e47-b0ef-5361cb159d81"
     },
     {
-      "name": "ca2",
-      "displayName": "IFC_Type",
-      "description": "Component type",
-      "dataType": "text",
-      "requiredOnIngress": true,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "5ae8d86e-e46e-46fb-94cc-43aa47977953",
-      "version": 3094739,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:33.379Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:33.379Z",
-      "updatedBy": "26T24R4NKFREYN6X"
+      "IFC_Type": "Component type",
+      "id": "5ae8d86e-e46e-46fb-94cc-43aa47977953"
     },
     {
-      "name": "ca3",
-      "displayName": "Discipline",
-      "description": "Trade category",
-      "dataType": "multi_select",
-      "requiredOnIngress": false,
-      "values": [
-        {
-          "id": "ff49a95f-e2da-45bb-b7dd-06d2217f1d3a",
-          "version": 13861180,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Architecture",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "f1dc2833-8297-4b6c-9393-ab4d8259c1e1",
-          "version": 13861181,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Structural",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "23f089ec-e9ac-493b-be62-8ad2822760da",
-          "version": 13861182,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Mechanical",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "367ae5cc-7b58-45f6-8d31-d3b1318bd614",
-          "version": 13861183,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Electrical",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "6592a0d5-8488-452d-b800-fad09e9aeace",
-          "version": 13861184,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Plumbing",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        }
-      ],
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "521fc486-3576-4db5-9d3d-808f988a89a2",
-      "version": 3094740,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:33.790Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:33.790Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "enumValues": [
-        "Architecture",
-        "Structural",
-        "Mechanical",
-        "Electrical",
-        "Plumbing"
-      ]
+      "Discipline": "Trade category",
+      "id": "521fc486-3576-4db5-9d3d-808f988a89a2"
     },
     {
-      "name": "ca4",
-      "displayName": "Subcontractor",
-      "description": "Responsible party",
-      "dataType": "text",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "a359e86e-5fa5-4028-b141-f52133fca4b6",
-      "version": 3094741,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:35.121Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:35.121Z",
-      "updatedBy": "26T24R4NKFREYN6X"
+      "Subcontractor": "Responsible party",
+      "id": "a359e86e-5fa5-4028-b141-f52133fca4b6"
     },
     {
-      "name": "ca5",
-      "displayName": "Planned Date",
-      "description": "Construction plan",
-      "dataType": "date",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "ccb6025b-a539-4fe0-98cb-32aea26d1111",
-      "version": 3094742,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:35.533Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:35.533Z",
-      "updatedBy": "26T24R4NKFREYN6X"
+      "Planned Date": "Construction plan",
+      "id": "ccb6025b-a539-4fe0-98cb-32aea26d1111"
     },
     {
-      "name": "ca12",
-      "displayName": "Asset Value",
-      "description": "Cost data",
-      "dataType": "numeric",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "b05bca3c-11c4-4c91-bfab-75544e9249a6",
-      "version": 3094749,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:39.284Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:39.284Z",
-      "updatedBy": "26T24R4NKFREYN6X"
+      "Asset Value": "Cost data",
+      "id": "b05bca3c-11c4-4c91-bfab-75544e9249a6"
     },
     {
-      "name": "ca22",
-      "displayName": "Notes",
-      "description": "Additional remarks or special handling instructions",
-      "dataType": "text",
-      "requiredOnIngress": false,
-      "maxLengthOnIngress": 200,
-      "defaultValue": "Handle with care.",
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "28dbd448-1388-43d7-a7fd-c31c5c8f96b5",
-      "version": 3166789,
-      "isActive": true,
-      "createdAt": "2025-10-30T15:23:13.482Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-30T15:23:13.482Z",
-      "updatedBy": "26T24R4NKFREYN6X"
+      "Notes": "Additional remarks or special handling instructions",
+      "id": "28dbd448-1388-43d7-a7fd-c31c5c8f96b5"
     }
   ],
-  "statusSetsRaw": [
+  "statusSets": [
     {
       "id": "9fb88510-9264-4e7c-a516-3b3577016161",
-      "version": 4949194,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
       "name": "Default",
-      "isDefault": true,
-      "values": [
+      "description": "",
+      "statuses": [
         {
           "id": "9606b15d-1209-4007-9912-0a8564cd5f04",
           "version": 70841157,
@@ -345,21 +195,13 @@
           "updatedAt": "2025-10-16T15:31:29.368Z",
           "isActive": true
         }
-      ],
-      "createdAt": "2025-10-16T15:31:29.361Z",
-      "createdBy": "7G5ALB7C2DNA",
-      "updatedAt": "2025-10-16T15:31:29.361Z",
-      "updatedBy": "7G5ALB7C2DNA",
-      "isActive": true
+      ]
     },
     {
       "id": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-      "version": 5003869,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
       "name": "testing 1",
       "description": "for api testing",
-      "isDefault": false,
-      "values": [
+      "statuses": [
         {
           "id": "4ee2681f-2f16-4aae-be5e-c1e220ca0685",
           "version": 71708381,
@@ -408,21 +250,13 @@
           "updatedAt": "2025-10-27T09:37:01.201Z",
           "isActive": true
         }
-      ],
-      "createdAt": "2025-10-27T09:37:01.197Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-27T09:37:01.197Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "isActive": true
+      ]
     },
     {
       "id": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-      "version": 5003872,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
       "name": "testing 2",
       "description": "API testing",
-      "isDefault": false,
-      "values": [
+      "statuses": [
         {
           "id": "7cad71c6-a84a-46e1-9ce1-e52de64b6a43",
           "version": 71708424,
@@ -487,21 +321,13 @@
           "updatedAt": "2025-10-27T09:37:23.331Z",
           "isActive": true
         }
-      ],
-      "createdAt": "2025-10-27T09:37:23.327Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-27T09:37:23.327Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "isActive": true
+      ]
     },
     {
       "id": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
-      "version": 5022496,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
       "name": "Installation",
       "description": "Installation phases",
-      "isDefault": false,
-      "values": [
+      "statuses": [
         {
           "id": "2ab2816d-388b-4f16-8b52-b3c465029c2c",
           "version": 72037295,
@@ -550,21 +376,13 @@
           "updatedAt": "2025-10-30T14:11:15.323Z",
           "isActive": true
         }
-      ],
-      "createdAt": "2025-10-30T14:11:15.321Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-30T14:11:15.321Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "isActive": true
+      ]
     },
     {
       "id": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
-      "version": 5022497,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
       "name": "Inspection",
       "description": "Inspection status",
-      "isDefault": false,
-      "values": [
+      "statuses": [
         {
           "id": "68cb2635-ade2-4115-9c66-2ea94cda0c8c",
           "version": 72037298,
@@ -613,87 +431,10 @@
           "updatedAt": "2025-10-30T14:11:16.094Z",
           "isActive": true
         }
-      ],
-      "createdAt": "2025-10-30T14:11:16.091Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-30T14:11:16.091Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "isActive": true
+      ]
     }
   ],
-  "categoriesRaw": [
-    {
-      "id": "1",
-      "name": "ROOT",
-      "description": "Auto-generated ROOT category for Assets Category Hierarchy",
-      "createdAt": "2025-10-16T15:33:25.901Z",
-      "createdBy": "7G5ALB7C2DNA",
-      "updatedAt": "2025-10-16T15:33:25.901Z",
-      "updatedBy": "7G5ALB7C2DNA",
-      "subcategoryIds": [
-        "2",
-        "3",
-        "4"
-      ],
-      "isActive": true,
-      "isRoot": true,
-      "isLeaf": false
-    },
-    {
-      "id": "2",
-      "name": "Custom Category",
-      "parentId": "1",
-      "createdAt": "2025-10-16T15:34:24.137Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:34:24.137Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "subcategoryIds": [],
-      "isActive": true,
-      "isRoot": false,
-      "isLeaf": true
-    },
-    {
-      "id": "3",
-      "name": "Doors",
-      "parentId": "1",
-      "createdAt": "2025-10-16T16:22:12.599Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T16:22:12.599Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "subcategoryIds": [],
-      "isActive": true,
-      "isRoot": false,
-      "isLeaf": true
-    },
-    {
-      "id": "4",
-      "name": "API testing",
-      "parentId": "1",
-      "createdAt": "2025-10-27T09:37:54.770Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-27T09:37:54.770Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "subcategoryIds": [],
-      "isActive": true,
-      "isRoot": false,
-      "isLeaf": true
-    }
-  ],
-  "categoryStatusMappingRaw": [
-    {
-      "categoryId": "2",
-      "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e"
-    },
-    {
-      "categoryId": "3",
-      "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf"
-    },
-    {
-      "categoryId": "4",
-      "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf"
-    }
-  ],
-  "categoriesWithStatus": [
+  "categories": [
     {
       "categoryName": "ROOT",
       "categoryId": "1",

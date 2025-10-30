@@ -23,16 +23,18 @@ def home():
         # ---- Custom Attributes ----
         assets_html += "<h3>Custom Attributes</h3><ul>"
         for ca in aggregated_data.get("customAttributes", []):
+            # ca is a dict like {displayName: description, id: id}
             for k, v in ca.items():
-                assets_html += f"<li><strong>{k}</strong> – {v}</li>"
+                if k != "id":
+                    assets_html += f"<li><strong>{k}</strong> – {v} - {ca.get('id')}</li>"
         assets_html += "</ul>"
 
         # ---- Status Sets ----
         assets_html += "<h3>Status Sets (Expanded)</h3>"
         for ss in aggregated_data.get("statusSets", []):
-            assets_html += f"<p><strong>{ss.get('name')}</strong> – {ss.get('description','')}</p><ul>"
+            assets_html += f"<p><strong>{ss.get('name')}</strong> – {ss.get('description','')} - {ss.get('id')}</p><ul>"
             for st in ss.get("statuses", []):
-                assets_html += f"<li>{st.get('label')} – {st.get('description','')}</li>"
+                assets_html += f"<li>{st.get('label')} – {st.get('description','')} - {st.get('id')}</li>"
             assets_html += "</ul>"
 
         # ---- Categories ----
@@ -50,7 +52,7 @@ def home():
         roots = [c for c in aggregated_data["categories"] if not c.get("parentId")]
 
         def render_category_tree(cat):
-            html = f"<li><strong>{cat['categoryName']}</strong> → Status Set: {cat['statusSetName']}</li>"
+            html = f"<li><strong>{cat['categoryName']} id:{cat['categoryId']}</strong> → Status Set: {cat['statusSetName']}</li>"
             children = [categories_dict[ch_id] for ch_id in cat.get("children", []) if ch_id in categories_dict]
             if children:
                 html += "<ul>"
@@ -63,8 +65,6 @@ def home():
         for root in roots:
             assets_html += render_category_tree(root)
         assets_html += "</ul>"
-        print("----- Aggregated Data Rendered Below -----")
-        print(assets_html)
 
     return f'''
         <h1>ACC API Integration</h1>
@@ -84,6 +84,11 @@ def home():
         <form action="/create_custom_fields_from_csv">
             <button type="submit">📊 Create Custom Fields from CSV</button>
         </form>
+
+        <form action="/create_categories_from_csv">
+            <button type="submit">📊 Create Categories from CSV</button>
+        </form>
+
 
         <hr/>
         {assets_html}
