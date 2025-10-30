@@ -145,21 +145,6 @@
       "updatedBy": "26T24R4NKFREYN6X"
     },
     {
-      "name": "ca6",
-      "displayName": "Actual Date",
-      "description": "Construction record",
-      "dataType": "date",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "34b77bd7-482e-48c4-ac80-57b5bceb632f",
-      "version": 3094743,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:35.947Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:35.947Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
       "name": "ca7",
       "displayName": "Manufacturer",
       "description": "Equipment manufacturer",
@@ -190,51 +175,6 @@
       "updatedBy": "26T24R4NKFREYN6X"
     },
     {
-      "name": "ca9",
-      "displayName": "Serial Number",
-      "description": "Tracking serial number",
-      "dataType": "text",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "50c07c89-12a2-4df5-9916-35c685d51ab3",
-      "version": 3094746,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:37.254Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:37.254Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
-      "name": "ca10",
-      "displayName": "System",
-      "description": "Grouping assets",
-      "dataType": "text",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "bb960422-75ed-4c66-b96d-56767040cc84",
-      "version": 3094747,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:38.286Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:38.286Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
-      "name": "ca11",
-      "displayName": "Warranty Expiry",
-      "description": "FM handover",
-      "dataType": "date",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "bd4a94a4-435a-471e-9e59-c148bf13bad6",
-      "version": 3094748,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:38.857Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:38.857Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
       "name": "ca12",
       "displayName": "Asset Value",
       "description": "Cost data",
@@ -247,6 +187,87 @@
       "createdAt": "2025-10-16T15:33:39.284Z",
       "createdBy": "26T24R4NKFREYN6X",
       "updatedAt": "2025-10-16T15:33:39.284Z",
+      "updatedBy": "26T24R4NKFREYN6X"
+    },
+    {
+      "name": "ca14",
+      "displayName": "Installation Date",
+      "description": "Date when asset was installed",
+      "dataType": "date",
+      "requiredOnIngress": false,
+      "defaultValue": "2025-01-01",
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "id": "43a9590b-fa1a-4fd1-b2c0-14bdc0897ecc",
+      "version": 3166781,
+      "isActive": true,
+      "createdAt": "2025-10-30T15:23:05.977Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T15:23:05.977Z",
+      "updatedBy": "26T24R4NKFREYN6X"
+    },
+    {
+      "name": "ca16",
+      "displayName": "Component ID",
+      "description": "Unique identifier for component",
+      "dataType": "text",
+      "requiredOnIngress": true,
+      "maxLengthOnIngress": 50,
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "id": "7d3736ee-cd3c-4022-90a1-671faea99c54",
+      "version": 3166783,
+      "isActive": true,
+      "createdAt": "2025-10-30T15:23:07.869Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T15:23:07.869Z",
+      "updatedBy": "26T24R4NKFREYN6X"
+    },
+    {
+      "name": "ca21",
+      "displayName": "Requires Maintenance",
+      "description": "Whether the asset needs maintenance",
+      "dataType": "boolean",
+      "requiredOnIngress": false,
+      "defaultValue": true,
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "id": "cd6c134b-1867-43cd-8618-c23641ec6260",
+      "version": 3166788,
+      "isActive": true,
+      "createdAt": "2025-10-30T15:23:12.557Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T15:23:12.557Z",
+      "updatedBy": "26T24R4NKFREYN6X"
+    },
+    {
+      "name": "ca22",
+      "displayName": "Notes",
+      "description": "Additional remarks or special handling instructions",
+      "dataType": "text",
+      "requiredOnIngress": false,
+      "maxLengthOnIngress": 200,
+      "defaultValue": "Handle with care.",
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "id": "28dbd448-1388-43d7-a7fd-c31c5c8f96b5",
+      "version": 3166789,
+      "isActive": true,
+      "createdAt": "2025-10-30T15:23:13.482Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T15:23:13.482Z",
+      "updatedBy": "26T24R4NKFREYN6X"
+    },
+    {
+      "name": "ca23",
+      "displayName": "Temperature Range (\u00b0C)",
+      "description": "Operational temperature range",
+      "dataType": "text",
+      "requiredOnIngress": false,
+      "defaultValue": "0-100",
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "id": "36eb97d7-f94e-45cf-9b3e-41ef637af8f2",
+      "version": 3166790,
+      "isActive": true,
+      "createdAt": "2025-10-30T15:23:14.425Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T15:23:14.425Z",
       "updatedBy": "26T24R4NKFREYN6X"
     }
   ],
@@ -566,6 +587,258 @@
       "updatedAt": "2025-10-27T09:37:23.327Z",
       "updatedBy": "26T24R4NKFREYN6X",
       "isActive": true
+    },
+    {
+      "id": "50b78d10-f56b-4d81-91ad-96229f8d862e",
+      "version": 5022494,
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "name": "Fabrication",
+      "description": "Stages of fabrication",
+      "isDefault": false,
+      "values": [
+        {
+          "id": "2b6e22ee-945a-49b1-b458-0c2a7c0fcd96",
+          "version": 72037280,
+          "description": "Pending",
+          "bucket": "pending_1761833472908",
+          "label": "Pending",
+          "color": "adsk-charcoal-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "50b78d10-f56b-4d81-91ad-96229f8d862e",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:12.908Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:12.908Z",
+          "isActive": true
+        },
+        {
+          "id": "8ddad86c-857c-43cd-939f-96be95eb086c",
+          "version": 72037281,
+          "description": "In Progress",
+          "bucket": "in_progress_1761833472908",
+          "label": "In Progress",
+          "color": "adsk-charcoal-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "50b78d10-f56b-4d81-91ad-96229f8d862e",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:12.908Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:12.908Z",
+          "isActive": true
+        },
+        {
+          "id": "04aad1ec-b0c7-4dae-a523-f98d4540cfbf",
+          "version": 72037282,
+          "description": "Completed",
+          "bucket": "completed_1761833472908",
+          "label": "Completed",
+          "color": "adsk-charcoal-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "50b78d10-f56b-4d81-91ad-96229f8d862e",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:12.908Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:12.908Z",
+          "isActive": true
+        }
+      ],
+      "createdAt": "2025-10-30T14:11:12.906Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T14:11:12.906Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true
+    },
+    {
+      "id": "37600997-6321-4061-accc-7c0612a0dede",
+      "version": 5022495,
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "name": "Delivery",
+      "description": "Delivery progress",
+      "isDefault": false,
+      "values": [
+        {
+          "id": "542ea210-6141-47f5-bec4-59d320ad4761",
+          "version": 72037292,
+          "description": "Requested",
+          "bucket": "requested_1761833474501",
+          "label": "Requested",
+          "color": "adsk-blue-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "37600997-6321-4061-accc-7c0612a0dede",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:14.501Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:14.501Z",
+          "isActive": true
+        },
+        {
+          "id": "7772a0d8-effb-4923-879d-60b0794f2f01",
+          "version": 72037293,
+          "description": "Dispatched",
+          "bucket": "dispatched_1761833474501",
+          "label": "Dispatched",
+          "color": "adsk-blue-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "37600997-6321-4061-accc-7c0612a0dede",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:14.501Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:14.501Z",
+          "isActive": true
+        },
+        {
+          "id": "f7b80fd6-4bc5-4281-b894-01a3a3b8bace",
+          "version": 72037294,
+          "description": "Delivered",
+          "bucket": "delivered_1761833474501",
+          "label": "Delivered",
+          "color": "adsk-blue-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "37600997-6321-4061-accc-7c0612a0dede",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:14.501Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:14.501Z",
+          "isActive": true
+        }
+      ],
+      "createdAt": "2025-10-30T14:11:14.499Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T14:11:14.499Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true
+    },
+    {
+      "id": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
+      "version": 5022496,
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "name": "Installation",
+      "description": "Installation phases",
+      "isDefault": false,
+      "values": [
+        {
+          "id": "2ab2816d-388b-4f16-8b52-b3c465029c2c",
+          "version": 72037295,
+          "description": "Not Started",
+          "bucket": "not_started_1761833475323",
+          "label": "Not Started",
+          "color": "adsk-purple-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:15.323Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:15.323Z",
+          "isActive": true
+        },
+        {
+          "id": "e8293d39-637d-4711-96ee-b7b582b5bcfd",
+          "version": 72037296,
+          "description": "In Progress",
+          "bucket": "in_progress_1761833475323",
+          "label": "In Progress",
+          "color": "adsk-purple-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:15.323Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:15.323Z",
+          "isActive": true
+        },
+        {
+          "id": "9c32de1b-fe7c-4a08-ba7d-f7f039e0d19c",
+          "version": 72037297,
+          "description": "Finalized",
+          "bucket": "finalized_1761833475323",
+          "label": "Finalized",
+          "color": "adsk-purple-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:15.323Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:15.323Z",
+          "isActive": true
+        }
+      ],
+      "createdAt": "2025-10-30T14:11:15.321Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T14:11:15.321Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true
+    },
+    {
+      "id": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
+      "version": 5022497,
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "name": "Inspection",
+      "description": "Inspection status",
+      "isDefault": false,
+      "values": [
+        {
+          "id": "68cb2635-ade2-4115-9c66-2ea94cda0c8c",
+          "version": 72037298,
+          "description": "Scheduled",
+          "bucket": "scheduled_1761833476094",
+          "label": "Scheduled",
+          "color": "adsk-yellow-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:16.094Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:16.094Z",
+          "isActive": true
+        },
+        {
+          "id": "72eda371-3c93-492d-a886-7c03f12c0fdc",
+          "version": 72037299,
+          "description": "In Progress",
+          "bucket": "in_progress_1761833476094",
+          "label": "In Progress",
+          "color": "adsk-yellow-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:16.094Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:16.094Z",
+          "isActive": true
+        },
+        {
+          "id": "55c17ea5-9a7b-417a-b110-866531434669",
+          "version": 72037300,
+          "description": "Completed",
+          "bucket": "completed_1761833476094",
+          "label": "Completed",
+          "color": "adsk-yellow-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-10-30T14:11:16.094Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-10-30T14:11:16.094Z",
+          "isActive": true
+        }
+      ],
+      "createdAt": "2025-10-30T14:11:16.091Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-30T14:11:16.091Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true
     }
   ],
   "categoriesRaw": [
@@ -686,12 +959,6 @@
           "enumValues": []
         },
         {
-          "displayName": "Actual Date",
-          "description": "Construction record",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
           "displayName": "Manufacturer",
           "description": "Equipment manufacturer",
           "dataType": "text",
@@ -704,27 +971,39 @@
           "enumValues": []
         },
         {
-          "displayName": "Serial Number",
-          "description": "Tracking serial number",
-          "dataType": "text",
+          "displayName": "Asset Value",
+          "description": "Cost data",
+          "dataType": "numeric",
           "enumValues": []
         },
         {
-          "displayName": "System",
-          "description": "Grouping assets",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Warranty Expiry",
-          "description": "FM handover",
+          "displayName": "Installation Date",
+          "description": "Date when asset was installed",
           "dataType": "date",
           "enumValues": []
         },
         {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
+          "displayName": "Component ID",
+          "description": "Unique identifier for component",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Requires Maintenance",
+          "description": "Whether the asset needs maintenance",
+          "dataType": "boolean",
+          "enumValues": []
+        },
+        {
+          "displayName": "Notes",
+          "description": "Additional remarks or special handling instructions",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Temperature Range (\u00b0C)",
+          "description": "Operational temperature range",
+          "dataType": "text",
           "enumValues": []
         }
       ],
@@ -844,12 +1123,6 @@
           "enumValues": []
         },
         {
-          "displayName": "Actual Date",
-          "description": "Construction record",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
           "displayName": "Manufacturer",
           "description": "Equipment manufacturer",
           "dataType": "text",
@@ -862,27 +1135,39 @@
           "enumValues": []
         },
         {
-          "displayName": "Serial Number",
-          "description": "Tracking serial number",
-          "dataType": "text",
+          "displayName": "Asset Value",
+          "description": "Cost data",
+          "dataType": "numeric",
           "enumValues": []
         },
         {
-          "displayName": "System",
-          "description": "Grouping assets",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Warranty Expiry",
-          "description": "FM handover",
+          "displayName": "Installation Date",
+          "description": "Date when asset was installed",
           "dataType": "date",
           "enumValues": []
         },
         {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
+          "displayName": "Component ID",
+          "description": "Unique identifier for component",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Requires Maintenance",
+          "description": "Whether the asset needs maintenance",
+          "dataType": "boolean",
+          "enumValues": []
+        },
+        {
+          "displayName": "Notes",
+          "description": "Additional remarks or special handling instructions",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Temperature Range (\u00b0C)",
+          "description": "Operational temperature range",
+          "dataType": "text",
           "enumValues": []
         }
       ],
@@ -982,12 +1267,6 @@
           "enumValues": []
         },
         {
-          "displayName": "Actual Date",
-          "description": "Construction record",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
           "displayName": "Manufacturer",
           "description": "Equipment manufacturer",
           "dataType": "text",
@@ -1000,27 +1279,39 @@
           "enumValues": []
         },
         {
-          "displayName": "Serial Number",
-          "description": "Tracking serial number",
-          "dataType": "text",
+          "displayName": "Asset Value",
+          "description": "Cost data",
+          "dataType": "numeric",
           "enumValues": []
         },
         {
-          "displayName": "System",
-          "description": "Grouping assets",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Warranty Expiry",
-          "description": "FM handover",
+          "displayName": "Installation Date",
+          "description": "Date when asset was installed",
           "dataType": "date",
           "enumValues": []
         },
         {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
+          "displayName": "Component ID",
+          "description": "Unique identifier for component",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Requires Maintenance",
+          "description": "Whether the asset needs maintenance",
+          "dataType": "boolean",
+          "enumValues": []
+        },
+        {
+          "displayName": "Notes",
+          "description": "Additional remarks or special handling instructions",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Temperature Range (\u00b0C)",
+          "description": "Operational temperature range",
+          "dataType": "text",
           "enumValues": []
         }
       ],
@@ -1120,12 +1411,6 @@
           "enumValues": []
         },
         {
-          "displayName": "Actual Date",
-          "description": "Construction record",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
           "displayName": "Manufacturer",
           "description": "Equipment manufacturer",
           "dataType": "text",
@@ -1138,27 +1423,39 @@
           "enumValues": []
         },
         {
-          "displayName": "Serial Number",
-          "description": "Tracking serial number",
-          "dataType": "text",
+          "displayName": "Asset Value",
+          "description": "Cost data",
+          "dataType": "numeric",
           "enumValues": []
         },
         {
-          "displayName": "System",
-          "description": "Grouping assets",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Warranty Expiry",
-          "description": "FM handover",
+          "displayName": "Installation Date",
+          "description": "Date when asset was installed",
           "dataType": "date",
           "enumValues": []
         },
         {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
+          "displayName": "Component ID",
+          "description": "Unique identifier for component",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Requires Maintenance",
+          "description": "Whether the asset needs maintenance",
+          "dataType": "boolean",
+          "enumValues": []
+        },
+        {
+          "displayName": "Notes",
+          "description": "Additional remarks or special handling instructions",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Temperature Range (\u00b0C)",
+          "description": "Operational temperature range",
+          "dataType": "text",
           "enumValues": []
         }
       ],

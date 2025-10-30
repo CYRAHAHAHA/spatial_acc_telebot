@@ -91,6 +91,8 @@ def fetch_assets_config():
         # Store in session
         session["aggregated_data"] = aggregated_data
 
+        print(aggregated_data)
+
         # === 7️⃣ Save all raw and mapped data to log.json ===
         log_path = Path("log.json")
         with log_path.open("w", encoding="utf-8") as f:

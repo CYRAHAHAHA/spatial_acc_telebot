@@ -19,6 +19,7 @@ def home():
     assets_html = ""
 
     if aggregated_data:
+        print("---Rendering aggregated data----")
         # ---- Custom Attributes ----
         assets_html += "<h3>Custom Attributes</h3><ul>"
         for ca in aggregated_data.get("customAttributes", []):
@@ -62,6 +63,8 @@ def home():
         for root in roots:
             assets_html += render_category_tree(root)
         assets_html += "</ul>"
+        print("----- Aggregated Data Rendered Below -----")
+        print(assets_html)
 
     return f'''
         <h1>ACC API Integration</h1>
@@ -72,6 +75,14 @@ def home():
 
         <form action="/fetch_assets_config">
             <button type="submit">Fetch Assets Config</button>
+        </form>
+
+        <form action="/create_status_sets_from_csv">
+            <button type="submit">📊 Create Status Sets from CSV</button>
+        </form>
+
+        <form action="/create_custom_fields_from_csv">
+            <button type="submit">📊 Create Custom Fields from CSV</button>
         </form>
 
         <hr/>

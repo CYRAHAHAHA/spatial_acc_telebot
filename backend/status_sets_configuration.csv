@@ -1,0 +1,5 @@
+name,status_set_description,status_label,description,status_colors
+Fabrication,Stages of fabrication,"Pending,In Progress,Completed","Pending,In Progress,Completed","adsk-charcoal-500, adsk-charcoal-500, adsk-charcoal-500"
+Delivery,Delivery progress,"Requested,Dispatched,Delivered","Requested,Dispatched,Delivered","adsk-blue-500, adsk-blue-500, adsk-blue-500"
+Installation,Installation phases,"Not Started,In Progress,Finalized","Not Started,In Progress,Finalized","adsk-purple-500, adsk-purple-500, adsk-purple-500"
+Inspection,Inspection status,"Scheduled,In Progress,Completed","Scheduled,In Progress,Completed","adsk-yellow-500, adsk-yellow-500, adsk-yellow-500"
