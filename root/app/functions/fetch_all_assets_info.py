@@ -71,7 +71,7 @@ def fetch_all_assets_info(token: str):
 
     # Choose a stable subset of fields commonly returned by ACC Assets v2
     headers_row = [
-        "b3f_id",
+        "B3F_id",
         "description",
         "companyId",
         "clientAssetId",

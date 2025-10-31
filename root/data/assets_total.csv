@@ -1,4 +1,4 @@
-﻿b3f_id,description,companyId,clientAssetId,categoryId,status_id,ifc_global_id
+﻿B3F_id,description,companyId,clientAssetId,categoryId,status_id,ifc_global_id
 1cfc3a14-f661-43b7-b2e2-5ccf54999d22,,,Single-Flush:800 x 2100:425292,3,df3a989a-ee5c-4828-b076-badfd3d3356d,1$p8tACJ938vr1_lKOJJ9g
 69708830-daa6-418b-86a2-4bcc1f1ce53f,,,Single-Flush:800 x 2100:422466,3,9606b15d-1209-4007-9912-0a8564cd5f04,1PDnLIM013wvkZO9Lb4$s7
 c670a1c5-71f4-4d54-9992-21443e0836b1,,,M_Double-Flush:1730 x 2134mm:906937,3,df3a989a-ee5c-4828-b076-badfd3d3356d,2pfAHb2EL46hq_sMVbImEN
@@ -11,7 +11,7 @@ bbded766-f8cc-4497-a2b9-74b1a5eed633,,,Single-Flush:800 x 2100:431144,3,9606b15d
 b2ece6d0-ad9a-4cff-ac68-375fa9a959f6,,,Pocket_Slider_Door_5851:2.027 x 0.945:940221,3,df3a989a-ee5c-4828-b076-badfd3d3356d,2wm6PO6TX9IxXwLP21HySo
 459c2769-349d-4c3e-bd91-5cc5b14f6800,,,Pocket_Slider_Door_5851:2.027 x 0.945:939962,3,9606b15d-1209-4007-9912-0a8564cd5f04,2wm6PO6TX9IxXwLP21HyWr
 3ff43b79-5339-4e9a-b61d-85d3eb2c1c51,dcdc,,Single Window:Standard:744522,3,9606b15d-1209-4007-9912-0a8564cd5f04,20nhVaBTTAJguMI9o6oBQ8
-64a4732e-9003-47c5-90eb-96d084317982,,,Single Window:Standard:744523,3,4ee2681f-2f16-4aae-be5e-c1e220ca0685,20nhVaBTTAJguMI9o6oBQ9
+64a4732e-9003-47c5-90eb-96d084317982,,,Single Window:Standard:744523,3,8b8486f9-b23d-4d5e-92d2-5a29707a3c94,20nhVaBTTAJguMI9o6oBQ9
 16eca416-4585-4e79-ba96-8266afe2dc4f,sdsd,,Single Window:Standard:744524,3,9606b15d-1209-4007-9912-0a8564cd5f04,20nhVaBTTAJguMI9o6oBQE
 3f012277-2aea-43ea-9bab-d25581a6ced2,asdadasd,,Single Window:Standard:744525,3,9606b15d-1209-4007-9912-0a8564cd5f04,20nhVaBTTAJguMI9o6oBQF
 8fc4ec97-aec3-46ad-8220-dc35376c16e4,,,Single Window:Standard:735853,3,9606b15d-1209-4007-9912-0a8564cd5f04,20nhVaBTTAJguMI9o6oD2l

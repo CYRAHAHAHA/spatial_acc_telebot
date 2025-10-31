@@ -28,12 +28,21 @@ def _lookup_status_id_by_label(label: str) -> Optional[str]:
     return None
 
 def _resolve_asset_id_from_guid(asset_guid: str) -> Optional[str]:
-    """
-    For now, treat the provided asset_guid as the actual ACC assetId.
-    Replace this with a real lookup (e.g., by b3fId) if needed.
-    """
-    gid = (asset_guid or "").strip()
-    return gid or None
+    # with the asset_guid, search root\data\assets_total.csv to find the header ifc_global_id and then get the corresponding b3f_id
+    csv_path = Path("./data/assets_total.csv")
+    if not csv_path.exists():
+        print("no assets_total.csv found")
+        return None
+    try:
+        with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                if (row.get("ifc_global_id")).strip() == (asset_guid.strip()):
+                    print("Found matching asset_b3f_id:", row.get("B3F_id"))
+                    return row.get("B3F_id") or None
+    except Exception:
+        return None
+    
 
 def update_assets(access_token: str, asset_guid: str, status_value: str):
     """
@@ -56,10 +65,10 @@ def update_assets(access_token: str, asset_guid: str, status_value: str):
 
     asset_id = _resolve_asset_id_from_guid(asset_guid)
     if not asset_id:
-        return jsonify({"error": "Invalid asset GUID."}), 400
+        return jsonify({"error": "Invalid asset B3F_ID."}), 400
 
-    url = f"{API_BASE_V2}/{project_id}/assets:batch"
-    body: Dict[str, Any] = {
+    url = f"{API_BASE_V2}/{project_id}/assets:batch-patch"
+    body = {
         asset_id: {
             "statusId": status_id
         }
@@ -68,7 +77,8 @@ def update_assets(access_token: str, asset_guid: str, status_value: str):
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",
     }
-
+    print("--- Updating asset status via APS Assets Batch PATCH v2 API ---")
+    print("PATCH", url, body)
     try:
         resp = requests.patch(url, json=body, headers=headers, timeout=30)
         # Pass through upstream response for transparency
