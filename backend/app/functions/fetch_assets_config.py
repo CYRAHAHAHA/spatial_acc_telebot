@@ -3,8 +3,11 @@ from flask import request, redirect, session
 from app.config import config
 from pathlib import Path
 
-def fetch_assets_config():
-    access_token = request.args.get("access_token")
+def fetch_assets_config(access_token: str):
+    """
+    Refactored to accept token from route decorator.
+    Use 'access_token' instead of reading from session/request.
+    """
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",

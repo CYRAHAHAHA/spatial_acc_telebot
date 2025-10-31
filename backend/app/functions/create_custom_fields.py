@@ -3,7 +3,6 @@ from pathlib import Path
 from typing import List, Optional, Any, Dict
 
 import requests
-from flask import request, session
 from app.config import config
 
 API_BASE = "https://developer.api.autodesk.com/construction/assets/v1/projects"
@@ -31,17 +30,15 @@ def _to_int(v: Any) -> Optional[int]:
 def _to_list(v: Any) -> List[str]:
     if not v:
         return []
-    # Split by comma and strip
     return [item.strip() for item in str(v).split(",") if item.strip()]
 
 
-def create_custom_fields():
+def create_custom_fields(access_token: str) -> List[Dict[str, Any]]:
     """
     Reads custom_fields_configuration.csv and creates Asset custom attributes
     via POST /projects/{projectId}/custom-attributes.
+    Access token is provided by the route decorator.
     """
-    # Access token from query or session
-    access_token = request.args.get("access_token") or session.get("access_token")
     if not access_token:
         print("❌ Missing access token.")
         return []
@@ -78,18 +75,13 @@ def create_custom_fields():
                     print(f"⚠️ Row {idx}: missing displayName or dataType. Skipping.")
                     continue
 
-                # enumValues: only for select and multi_select
                 enum_values = _to_list(row.get("enumValues"))
                 if data_type in ("select", "multi_select") and not enum_values:
                     print(f"⚠️ Row {idx} ({display_name}): dataType={data_type} requires enumValues. Skipping.")
                     continue
 
-                # maxLengthOnIngress: only for text
                 max_len = _to_int(row.get("maxLengthOnIngress")) if data_type == "text" else None
-                if data_type != "text":
-                    max_len = None
 
-                # defaultValue: typed by dataType
                 default_raw = (row.get("defaultValue") or "").strip()
                 default_value: Any = None
                 if default_raw:
@@ -98,7 +90,6 @@ def create_custom_fields():
                     elif data_type == "multi_select":
                         default_value = _to_list(default_raw)
                     else:
-                        # text, numeric, date, select -> string
                         default_value = default_raw
 
                 payload: Dict[str, Any] = {
@@ -110,14 +101,12 @@ def create_custom_fields():
                     "maxLengthOnIngress": max_len,
                     "defaultValue": default_value,
                 }
-                # Remove nulls
                 payload = {k: v for k, v in payload.items() if v is not None}
 
                 print(f"Creating custom attribute: {display_name} ...")
                 print(payload)
 
                 resp = requests.post(url, headers=headers, json=payload, timeout=30)
-
                 if 200 <= resp.status_code < 300:
                     data = resp.json() if resp.content else {"displayName": display_name}
                     print(f"✅ Created '{display_name}' (row {idx}).")

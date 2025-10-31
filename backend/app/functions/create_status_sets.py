@@ -4,8 +4,11 @@ from pathlib import Path
 from app.config import config
 from flask import request
 
-def create_status_sets():
-    access_token = request.args.get("access_token")
+def create_status_sets(access_token: str):
+    """
+    Refactored to accept token from route decorator.
+    Implement your CSV reading and POST /status-step-sets here, using access_token.
+    """
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",
