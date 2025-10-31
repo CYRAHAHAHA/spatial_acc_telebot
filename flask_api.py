@@ -49,3 +49,9 @@ def update_guid(guid):
             f.write(json.dumps({"guid": guid, "version": rec["version"], **payload}) + "\n")
 
     return jsonify({"ok": True, "guid": guid, "version": DB[guid]["version"]})
+
+
+if __name__ == "__main__":
+    # host 0.0.0.0 lets other machines reach you if you deploy later
+    # port 8080 must match FLASK_BASE in your bot code
+    app.run(host="0.0.0.0", port=8080, debug=True)
