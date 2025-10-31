@@ -1,0 +1,3 @@
+﻿project_id,category_id,category_name,parent_id,status_set_id,status_set_name,custom_attributes
+f67bd06d-b755-4591-a870-24812c7f15f5,1,ROOT,,,No Status Set (system),Material Type;Installation Date;Inspection Passed;Component ID;Weight (kg);Surface Finish;Color Code;Warranty Expiration;Requires Maintenance;Notes;Temperature Range (°C);Asset Category;Permitted Inspectors;Energy Efficiency Rating
+f67bd06d-b755-4591-a870-24812c7f15f5,2,asdsad,1,,No Status Set (system),Material Type;Installation Date;Inspection Passed;Component ID;Weight (kg);Surface Finish;Color Code;Warranty Expiration;Requires Maintenance;Notes;Temperature Range (°C);Asset Category;Permitted Inspectors;Energy Efficiency Rating

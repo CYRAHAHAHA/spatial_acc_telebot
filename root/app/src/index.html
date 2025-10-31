@@ -28,6 +28,22 @@
       <button id="fetchConfigBtn" class="btn">Fetch Assets Config</button>
     </section>
 
+    <!-- Section to update an asset, given a GUID and status value, a form to to submit to API endcall -->
+    <section class="card">
+      <h3>Update Asset Status</h3>
+      <form id="updateAssetForm">
+        <div>
+          <label for="assetGuid">Asset GUID:</label>
+          <input type="text" id="assetGuid" name="assetGuid" required />
+        </div>
+        <div>
+          <label for="assetStatus">New Status:</label>
+          <input type="text" id="assetStatus" name="assetStatus" required />
+        </div>
+        <button type="submit" class="btn">Update Status</button>
+      </form>
+    </section>
+
     <section class="card">
       <h3>Create via JSON</h3>
       <div class="grid-2">

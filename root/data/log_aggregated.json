@@ -59,6 +59,7 @@
   ],
   "statusSets": [
     {
+      "projectId": "f67bd06d-b755-4591-a870-24812c7f15f5",
       "id": "c46be017-3bd1-424f-9acc-73bcf6d5968b",
       "name": "Default",
       "description": "",
@@ -226,6 +227,7 @@
       ]
     },
     {
+      "projectId": "f67bd06d-b755-4591-a870-24812c7f15f5",
       "id": "cdc9ce44-2511-434f-9285-18997fc070f2",
       "name": "Fabrication",
       "description": "Stages of fabrication",
@@ -281,6 +283,7 @@
       ]
     },
     {
+      "projectId": "f67bd06d-b755-4591-a870-24812c7f15f5",
       "id": "4efdcccb-a043-4821-8ca8-9530f5321ce6",
       "name": "Delivery",
       "description": "Delivery progress",
@@ -336,6 +339,7 @@
       ]
     },
     {
+      "projectId": "f67bd06d-b755-4591-a870-24812c7f15f5",
       "id": "39feb744-70ca-4c1b-8d2b-3db2e44933be",
       "name": "Installation",
       "description": "Installation phases",
@@ -391,6 +395,7 @@
       ]
     },
     {
+      "projectId": "f67bd06d-b755-4591-a870-24812c7f15f5",
       "id": "b27584c1-1e90-4ec7-b6f3-86588ab8e612",
       "name": "Inspection",
       "description": "Inspection status",

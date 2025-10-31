@@ -1,4 +1,4 @@
-project_id,custom_attribute_id,display_name,description,data_type,required,values,values_and_ids
+﻿project_id,custom_attribute_id,display_name,description,data_type,required,values,values_and_ids
 f67bd06d-b755-4591-a870-24812c7f15f5,bda6e41d-ced5-47fb-8c65-bb16cb396dea,Material Type,Type of material used in construction,select,True,,Steel(01a1d81a-5900-43cf-b1c1-a73f047741b1);Concrete(7b7934b3-a49a-4730-923f-0f274a55aaac);Wood(93f65bab-3bf3-4202-b173-7ad6257a5ca7);Plastic(b5db967b-a9d8-4f57-8eb5-92cf8975c3f5)
 f67bd06d-b755-4591-a870-24812c7f15f5,10d1d46a-f2a9-414b-bfee-89671868f5c3,Installation Date,Date when asset was installed,date,False,,
 f67bd06d-b755-4591-a870-24812c7f15f5,3c6ce6ca-409f-4369-92ef-8ea167c77c2e,Inspection Passed,Indicates whether inspection is complete,boolean,False,,

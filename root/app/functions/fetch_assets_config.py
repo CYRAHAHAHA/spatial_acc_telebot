@@ -2,6 +2,7 @@ import requests, json, urllib.parse
 from flask import redirect, session
 from app.config import config
 from pathlib import Path
+import csv
 
 def fetch_assets_config(access_token: str):
     """
@@ -30,6 +31,7 @@ def fetch_assets_config(access_token: str):
         status_sets_dict = {}
         for ss in status_sets_raw:
             ss_obj = {
+                "projectId": ss.get("projectId"),
                 "id": ss.get("id"),
                 "name": ss.get("name"),
                 "description": ss.get("description", ""),
@@ -121,7 +123,7 @@ def fetch_assets_config(access_token: str):
         )
 
         # === 8️⃣ Save useful data in database table style to 3 separate status_sets.csv, custom_fields.csv and categories.csv ===
-        # Status Sets CSV, retrieve from status_sets_raw the project_id, status set id, and status set name, all status values within each status set. Retrieve the id, label, and description.
+        # Status Sets CSV
         status_sets_csv = []
         for ss in status_sets:
             for status in ss.get("statuses", []):
@@ -134,16 +136,37 @@ def fetch_assets_config(access_token: str):
                     "status_description": status.get("description", "")
                 })
         status_sets_csv_path = Path("./data/status_sets.csv")
-        with status_sets_csv_path.open("w", encoding="utf-8") as f:
-                # Write CSV header
-                f.write("project_id,status_set_id,status_set_name,status_id,status_label,status_description\n")
-                for row in status_sets_csv:
-                    f.write(f"{row['project_id']},{row['status_set_id']},{row['status_set_name']},{row['status_id']},{row['status_label']},{row['status_description']}\n")
+        with status_sets_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
+            writer = csv.writer(f, delimiter=",", lineterminator="\n")
+            writer.writerow(["project_id","status_set_id","status_set_name","status_id","status_label","status_description"])
+            for row in status_sets_csv:
+                writer.writerow([
+                    row.get("project_id") or "",
+                    row.get("status_set_id") or "",
+                    row.get("status_set_name") or "",
+                    row.get("status_id") or "",
+                    row.get("status_label") or "",
+                    row.get("status_description") or "",
+                ])
         print("\n=== Saved status_sets.csv with status sets data ===")
 
-        # Custom Fields CSV, retrieve from custom_attributes the project_id, custom attribute id, display
+        # Custom Fields CSV
         custom_fields_csv = []
         for ca in custom_attributes:
+            # keep semicolons inside the cell to separate multiple values, CSV delimiter is still a comma
+            values_raw = ""
+            if ca.get("dataType") == "enum":
+                ev = ca.get("enumValues") or []
+                # enumValues can be strings or objects; stringify safely
+                values_raw = ";".join([v if isinstance(v, str) else str(v) for v in ev])
+
+            values_and_ids_raw = ""
+            if ca.get("values"):
+                values_and_ids_raw = ";".join([
+                    f"{(value.get('displayName') or '').strip()}({(value.get('id') or '').strip()})"
+                    for value in (ca.get("values") or [])
+                ])
+
             custom_fields_csv.append({
                 "project_id": ca.get("projectId"),
                 "custom_attribute_id": ca.get("id"),
@@ -151,18 +174,53 @@ def fetch_assets_config(access_token: str):
                 "description": ca.get("description", ""),
                 "data_type": ca.get("dataType"),
                 "required": ca.get("requiredOnIngress", False),
-                "values": ";".join(ca.get("enumValues", [])) if ca.get("dataType") == "enum" else "",
-                #corresponding displayName and id for array of values
-                "values_and_ids": ";".join([f"{value.get('displayName')}({value.get('id')})" for value in ca.get("values", [])]) if ca.get("values") else ""
+                "values": values_raw,
+                "values_and_ids": values_and_ids_raw
             })
+
         custom_fields_csv_path = Path("./data/custom_fields.csv")
-        with custom_fields_csv_path.open("w", encoding="utf-8") as f:
-                # Write CSV header
-                f.write("project_id,custom_attribute_id,display_name,description,data_type,required,values,values_and_ids\n")
-                for row in custom_fields_csv:
-                    f.write(f"{row['project_id']},{row['custom_attribute_id']},{row['display_name']},{row['description']},{row['data_type']},{row['required']},{row['values']},{row['values_and_ids']}\n")
+        with custom_fields_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
+            writer = csv.writer(f, delimiter=",", lineterminator="\n")
+            writer.writerow(["project_id","custom_attribute_id","display_name","description","data_type","required","values","values_and_ids"])
+            for row in custom_fields_csv:
+                writer.writerow([
+                    row.get("project_id") or "",
+                    row.get("custom_attribute_id") or "",
+                    row.get("display_name") or "",
+                    row.get("description") or "",
+                    row.get("data_type") or "",
+                    "True" if row.get("required") else "False",
+                    row.get("values") or "",
+                    row.get("values_and_ids") or "",
+                ])
         print("\n=== Saved custom_fields.csv with custom attributes data ===")
 
+        # Categories CSV
+        categories_csv = []
+        for cat in categories_with_status:
+            categories_csv.append({
+                "project_id": project_id,
+                "category_id": cat.get("categoryId"),
+                "category_name": cat.get("categoryName"),
+                "parent_id": cat.get("parentId"),
+                "status_set_id": cat.get("statusSetId"),
+                "status_set_name": cat.get("statusSetName"),
+                "custom_attributes": ";".join([ca.get("displayName") for ca in cat.get("customAttributes", []) if ca.get("displayName")])
+            })
+        categories_csv_path = Path("./data/categories.csv")
+        with categories_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
+            writer = csv.writer(f, delimiter=",", lineterminator="\n")
+            writer.writerow(["project_id","category_id","category_name","parent_id","status_set_id","status_set_name","custom_attributes"])
+            for row in categories_csv:
+                writer.writerow([
+                    row.get("project_id") or "",
+                    row.get("category_id") or "",
+                    row.get("category_name") or "",
+                    row.get("parent_id") or "",
+                    row.get("status_set_id") or "",
+                    row.get("status_set_name") or "",
+                    row.get("custom_attributes") or "",
+                ])
         return redirect(f"/?msg={msg}")
 
     except Exception as e:
