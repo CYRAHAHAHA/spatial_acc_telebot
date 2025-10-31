@@ -135,12 +135,19 @@ def extract_guid_block_format(text: str):
     return None
 
 def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], List[str]]:
+    """
+    Parse a single-shot [UPDATE] message.
+    Returns: (parsed_json, errors)
+    - parsed_json: dict with normalized fields
+    - errors: list of validation error strings (empty if OK)
+    """
     m = UPDATE_BLOCK_RE.match(text)
     if not m:
         return ({}, ["Message must start with [UPDATE]."])
 
     body = m.group("body")
 
+    # We'll collect all fields, forcing whitespace-only values to None
     found = {
         "location": None,
         "area": None,
@@ -150,12 +157,18 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         "remarks": None,
     }
 
+    # Extract each field match from the message using FIELD_RE
+    # FIELD_RE already has groups: location, area, task, status, date, remarks
     for fm in FIELD_RE.finditer(body):
         gd = fm.groupdict()
         for k in found:
-            if gd.get(k):
-                found[k] = gd[k].strip()
+            if gd.get(k) is not None:
+                # Strip leading/trailing spaces
+                cleaned = gd[k].strip()
+                # If it's empty or only spaces, treat it as missing (None)
+                found[k] = cleaned if cleaned != "" else None
 
+    # Build list of validation errors for required fields
     errors: List[str] = []
     if not found["location"]:
         errors.append("Missing 'Location: Building X, Level Y'.")
@@ -166,25 +179,35 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
     if not found["status"]:
         errors.append("Missing 'Status: ...'.")
 
+    # Parse "Location" into building + level
     building = level = None
     if found["location"]:
         lm = LOC_SPLIT_RE.search(found["location"])
         if lm:
             braw = lm.group("b")
-            building = braw if braw.lower().startswith("building") else f"Building {braw}"
+            # Normalize like "Building B"
+            building = (
+                braw if braw.lower().startswith("building")
+                else f"Building {braw}"
+            )
             level = lm.group("l")
         else:
+            # couldn't split, keep raw
             building = found["location"]
 
+    # Parse "Zone / Grid / Area" into (grid, wing)
     grid = wing = None
     if found["area"]:
         parts = [p.strip() for p in found["area"].split(",", 1)]
         grid = parts[0] if parts else None
         wing = parts[1] if len(parts) > 1 else None
 
-    # force to message timestamp date (not user-typed Date)
+    # Force internal date to be the timestamp date of the Telegram message,
+    # because that's the actual reporting time. Ignore user-entered Date: field.
+    # message_dt_iso example: "2025-10-31T03:07:39+00:00"
     date_iso = message_dt_iso.split("T", 1)[0]
 
+    # Silent normalization / correction
     if building:
         building = _closest_canon(building, BUILDINGS_CANON)
     if level:
@@ -206,7 +229,9 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         "date": date_iso,
         "remarks": found["remarks"] or None,
     }
+
     return (parsed, errors)
+
 
 # -------------------------------------------------
 # Send parsed update to Flask backend
@@ -246,38 +271,52 @@ def send_to_flask_api(guid: str, message, parsed: Dict[str, Any]) -> Tuple[bool,
 # Telegram handler
 # -------------------------------------------------
 async def one_shot_update_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    # Only act in group chats
     if update.effective_chat.type not in ("group", "supergroup"):
         return
 
     msg = update.effective_message
     text = (msg.text or msg.caption or "").strip()
+
+    # Only react to messages that start with [UPDATE]
     if not text.startswith("[UPDATE]"):
         return
 
-    parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
+    # Parse the message
+    parsed, errors = _parse_update_text(
+        text,
+        message_dt_iso=msg.date.isoformat()
+    )
+
+    # If any required fields are missing/blank, STOP here
     if errors:
-        await msg.reply_text("Message Error:\n- " + "\n- ".join(errors))
+        await msg.reply_text(
+            "Error: Update not logged.\nPlease fix:\n- " + "\n- ".join(errors)
+        )
         return
 
-    # 1. Write to local log file
+    # Log valid update to log_message.jsonl
     with open(log_path(), "a", encoding="utf-8") as f:
         entry = {"timestamp": msg.date.isoformat(), **parsed}
         f.write(json.dumps(entry, ensure_ascii=False) + "\n")
 
-    # 2. Extract GUID
+    # Extract GUID from the message
     guid = extract_guid_block_format(text)
 
-    # 3. If GUID present, send to Flask
+    # If GUID present, send to Flask API, otherwise just confirm local logging
     if guid:
         ok, info = send_to_flask_api(guid, msg, parsed)
         if ok:
-            await msg.reply_text(f"✅ Update logged and synced for GUID {guid}.")
+            await msg.reply_text(
+                f"Update logged and synced for GUID {guid}."
+            )
         else:
             await msg.reply_text(
-                f"⚠ Update logged locally but sync failed for GUID {guid}.\n{info}"
+                f"Error: Update logged locally but sync failed for GUID {guid}.\n{info}"
             )
     else:
         await msg.reply_text("Update logged.")
+
 
 # ------------- 
 # Main bootstrap

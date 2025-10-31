@@ -46,7 +46,19 @@ def update_guid(guid):
         DB[guid] = rec
 
         with open(LOG_PATH, "a", encoding="utf-8") as f:
-            f.write(json.dumps({"guid": guid, "version": rec["version"], **payload}) + "\n")
+            # Extract just the date (YYYY-MM-DD) from the timestamp
+            full_ts = payload.get("timestamp", "")
+            date_only = full_ts.split("T")[0] if "T" in full_ts else full_ts
+
+            clean_payload = {
+                "guid": guid,
+                "version": rec["version"],
+                "date": date_only,  
+                "raw_text": payload.get("raw_text"),
+                "parsed": payload.get("parsed")
+            }
+            f.write(json.dumps(clean_payload, ensure_ascii=False) + "\n")
+
 
     return jsonify({"ok": True, "guid": guid, "version": DB[guid]["version"]})
 
