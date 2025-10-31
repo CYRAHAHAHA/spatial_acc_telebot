@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>ACC API Integration</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link href="/styles.css" rel="stylesheet" />
+  </head>
+  <body>
+    <header class="page-header">
+      <h1>ACC API Integration</h1>
+    </header>
+
+    <section id="msg" class="msg" hidden></section>
+
+    <section class="card">
+      <h3>Status</h3>
+      <div id="tokenStatus" class="mono"></div>
+      <div><strong>Current user:</strong> <span id="currentUser">-</span></div>
+      <details class="env">
+        <summary>Environment keys</summary>
+        <ul id="envList"></ul>
+      </details>
+    </section>
+
+    <section class="actions">
+      <button id="authorizeBtn" class="btn">Authorize with Autodesk</button>
+      <button id="fetchConfigBtn" class="btn">Fetch Assets Config</button>
+    </section>
+
+    <section class="card">
+      <h3>Create via JSON</h3>
+      <div class="grid-2">
+        <div class="stack">
+          <button id="createStatusBtn" class="btn primary">
+            Create Status Sets from JSON
+          </button>
+        </div>
+        <div class="stack">
+          <button id="createFieldsBtn" class="btn primary">
+            Create Custom Fields from JSON
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h3>Status Sets</h3>
+      <small class="muted">Preview from CSV (status_sets.csv)</small>
+      <div id="StatusSets"></div>
+    </section>
+
+    <section class="card">
+      <h3>Custom Fields</h3>
+      <small class="muted">Preview from CSV (custom_fields.csv)</small>
+      <div id="CustomFields"></div>
+    </section>
+
+    <section class="card">
+      <h3>Categories & Hierarchy</h3>
+      <div id="categorySummary" class="muted"></div>
+      <div id="categoryTree"></div>
+    </section>
+
+    <script src="/script.js"></script>
+  </body>
+</html>
