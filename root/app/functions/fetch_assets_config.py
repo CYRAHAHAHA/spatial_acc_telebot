@@ -170,6 +170,7 @@ def fetch_assets_config(access_token: str):
             custom_fields_csv.append({
                 "project_id": ca.get("projectId"),
                 "custom_attribute_id": ca.get("id"),
+                "name": ca.get("name"),
                 "display_name": ca.get("displayName"),
                 "description": ca.get("description", ""),
                 "data_type": ca.get("dataType"),
@@ -181,11 +182,12 @@ def fetch_assets_config(access_token: str):
         custom_fields_csv_path = Path("./data/custom_fields.csv")
         with custom_fields_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
             writer = csv.writer(f, delimiter=",", lineterminator="\n")
-            writer.writerow(["project_id","custom_attribute_id","display_name","description","data_type","required","values","values_and_ids"])
+            writer.writerow(["project_id","custom_attribute_id","name","display_name","description","data_type","required","values","values_and_ids"])
             for row in custom_fields_csv:
                 writer.writerow([
                     row.get("project_id") or "",
                     row.get("custom_attribute_id") or "",
+                    row.get("name") or "",
                     row.get("display_name") or "",
                     row.get("description") or "",
                     row.get("data_type") or "",

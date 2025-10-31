@@ -7,6 +7,8 @@ from app.functions.create_status_sets import create_status_sets
 from app.functions.create_custom_fields import create_custom_fields
 from urllib.parse import quote_plus
 from pathlib import Path
+from app.functions.update_status import update_assets
+from app.functions.fetch_all_assets_info import fetch_all_assets_info 
 import csv
 import json
 import re
@@ -38,6 +40,21 @@ def switch_user(user):
 @require_access_token(pass_token=True)
 def fetch_assets(token):
     return fetch_assets_config(token)
+
+@app.route("/fetch_all_assets_info")
+@require_access_token(pass_token=True)
+def fetch_all_assets(token):
+    return fetch_all_assets_info(token)
+
+@app.route("/update_status", methods=["POST"])
+@require_access_token(pass_token=True)
+def update_status(token):
+    data = request.get_json(silent=True) or {}
+    asset_guid = data.get("asset_guid")
+    status_value = data.get("status_value")
+    if not asset_guid or not status_value:
+        return jsonify({"error": "Missing asset_guid or status_value"}), 400
+    return update_assets(token, asset_guid, status_value)
 
 # --- Payload APIs (read hardcoded JSON files for creation) ---
 @app.route("/api/payload/status_sets")

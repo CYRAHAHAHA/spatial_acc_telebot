@@ -1,15 +1,8 @@
-﻿project_id,custom_attribute_id,display_name,description,data_type,required,values,values_and_ids
-f67bd06d-b755-4591-a870-24812c7f15f5,bda6e41d-ced5-47fb-8c65-bb16cb396dea,Material Type,Type of material used in construction,select,True,,Steel(01a1d81a-5900-43cf-b1c1-a73f047741b1);Concrete(7b7934b3-a49a-4730-923f-0f274a55aaac);Wood(93f65bab-3bf3-4202-b173-7ad6257a5ca7);Plastic(b5db967b-a9d8-4f57-8eb5-92cf8975c3f5)
-f67bd06d-b755-4591-a870-24812c7f15f5,10d1d46a-f2a9-414b-bfee-89671868f5c3,Installation Date,Date when asset was installed,date,False,,
-f67bd06d-b755-4591-a870-24812c7f15f5,3c6ce6ca-409f-4369-92ef-8ea167c77c2e,Inspection Passed,Indicates whether inspection is complete,boolean,False,,
-f67bd06d-b755-4591-a870-24812c7f15f5,309e488c-7edc-41f4-a44d-24ce1cb99f7d,Component ID,Unique identifier for component,text,True,,
-f67bd06d-b755-4591-a870-24812c7f15f5,fed8b80b-760d-4bad-903b-0e108f6ed668,Weight (kg),Weight of the component in kilograms,numeric,False,,
-f67bd06d-b755-4591-a870-24812c7f15f5,1c44985f-d76f-433f-86e1-64b7e4c311dc,Surface Finish,Surface finishing material,multi_select,False,,Matte(954727bd-8933-4c93-af54-a892800cf89a);Glossy(10c9bd0d-36dd-4664-9468-3510d3e06740);Satin(26abfeb2-22b7-4389-b2c6-f65f6a7fc673);Textured(33b67d04-2c9d-47b0-a9ed-eb14e945381e)
-f67bd06d-b755-4591-a870-24812c7f15f5,a52d8b31-3cf9-4c5f-8b41-033b5562b647,Color Code,Surface color code,select,False,,Red(a751082c-d135-4ca4-847f-51d6311e2f02);Blue(613c4568-8e00-4dd3-b24b-8faf3f1a6c12);Green(71cc033d-2623-418d-9731-34f4153ee8fb);Gray(bf925d04-7b68-43ec-9733-e436ac43d904);White(d672e900-0a0a-4611-a6e2-6dd2f1823709)
-f67bd06d-b755-4591-a870-24812c7f15f5,70b52e0a-381c-4347-ad19-b838a808b124,Warranty Expiration,Expiration date of warranty,date,False,,
-f67bd06d-b755-4591-a870-24812c7f15f5,6e12350b-8ef9-4f37-a43e-759e0dc1e812,Requires Maintenance,Whether the asset needs maintenance,boolean,False,,
-f67bd06d-b755-4591-a870-24812c7f15f5,db8ba41a-77eb-4430-ba07-a98c9a03e82a,Notes,Additional remarks or special handling instructions,text,False,,
-f67bd06d-b755-4591-a870-24812c7f15f5,4cafbf44-ba64-4ba8-bf16-1c3321b86e13,Temperature Range (°C),Operational temperature range,text,False,,
-f67bd06d-b755-4591-a870-24812c7f15f5,91a05ddc-c65c-4e93-86fb-f6c56692b3f9,Asset Category,Asset classification,select,True,,Mechanical(2121cf2a-9091-4727-aa07-f080ab5bd379);Electrical(fa63a1e3-89cf-4fa3-a8e5-13db4c95e5ac);Plumbing(d1c93784-61e1-4c84-8f90-86f8cbf7a058);Structural(c6ae0f24-83e3-498c-af77-c7c84a4e586b)
-f67bd06d-b755-4591-a870-24812c7f15f5,7309e1f2-3d9a-4cc0-960e-4c865a9a9456,Permitted Inspectors,List of allowed inspection roles,multi_select,False,,Engineer(0359f9d7-abba-499e-b55a-e7e0de09fea6);Supervisor(0bb61623-be32-4760-9e3c-756ed2704bdd);Contractor(cde82a80-6656-4f64-afaa-8f0c43c4a74a)
-f67bd06d-b755-4591-a870-24812c7f15f5,b6da61bd-24b5-471c-85d7-20c75581d98f,Energy Efficiency Rating,Rating according to efficiency label,select,False,,A+(9653f7f1-b403-4698-8e20-26a96a027d87);A(2e39c6c0-8dc7-4db2-be26-d16b32237f67);B(7c5d27a0-dd93-435d-8057-1268f0c8490f);C(0a91548f-9427-4e2f-98d6-69efa9c3620c);D(6e31cd20-b16b-40e2-b0cd-e15e0aaccca8)
+﻿project_id,custom_attribute_id,name,display_name,description,data_type,required,values,values_and_ids
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,8151d4ab-5df3-4e47-b0ef-5361cb159d81,ca1,IFCGlobalId,Unique IFC identifier,text,True,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,5ae8d86e-e46e-46fb-94cc-43aa47977953,ca2,IFC_Type,Component type,text,True,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,521fc486-3576-4db5-9d3d-808f988a89a2,ca3,Discipline,Trade category,multi_select,False,,Architecture(ff49a95f-e2da-45bb-b7dd-06d2217f1d3a);Structural(f1dc2833-8297-4b6c-9393-ab4d8259c1e1);Mechanical(23f089ec-e9ac-493b-be62-8ad2822760da);Electrical(367ae5cc-7b58-45f6-8d31-d3b1318bd614);Plumbing(6592a0d5-8488-452d-b800-fad09e9aeace)
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,a359e86e-5fa5-4028-b141-f52133fca4b6,ca4,Subcontractor,Responsible party,text,False,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,ccb6025b-a539-4fe0-98cb-32aea26d1111,ca5,Planned Date,Construction plan,date,False,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,b05bca3c-11c4-4c91-bfab-75544e9249a6,ca12,Asset Value,Cost data,numeric,False,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,28dbd448-1388-43d7-a7fd-c31c5c8f96b5,ca22,Notes,Additional remarks or special handling instructions,text,False,,

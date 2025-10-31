@@ -12,6 +12,7 @@
     categoryTree: document.getElementById("categoryTree"),
     statusSetsHost: document.getElementById("StatusSets"),
     customFieldsHost: document.getElementById("CustomFields"),
+    fetchAssetsInfo: document.getElementById("fetchAssetsInfo"),
   };
 
   function setMsg(text) {
@@ -189,6 +190,10 @@
     window.location.href = "/fetch_assets_config";
   });
 
+  el.fetchAssetsInfo?.addEventListener("click", async () => {
+    window.location.href = "/fetch_all_assets_info";
+  });
+
   // Creation buttons: fetch JSON directly from server-side files via payload APIs, then post as body
   el.createStatusBtn?.addEventListener("click", async () => {
     try {
@@ -250,6 +255,37 @@
     } catch (e) {
       console.error(e);
       setMsg("Failed creating custom fields. Check console.");
+    }
+  });
+
+  // Handle Update Asset Status form
+  document.getElementById("updateAssetForm")?.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const assetGuid = document.getElementById("assetGuid")?.value.trim();
+    const assetStatus = document.getElementById("assetStatus")?.value.trim();
+    if (!assetGuid || !assetStatus) {
+      setMsg("Asset GUID and New Status are required.");
+      return;
+    }
+    try {
+      const resp = await fetch("/update_status", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ asset_guid: assetGuid, status_value: assetStatus }),
+      });
+      const text = await resp.text();
+      if (resp.ok) {
+        setMsg("Asset status update submitted successfully.");
+        console.log("Update status response:", text);
+        // Optionally refresh categories or other UI
+        // await loadCategories();
+      } else {
+        setMsg(`Failed to update asset status: ${text}`);
+      }
+    } catch (err) {
+      console.error(err);
+      setMsg("Failed to update asset status. Check console.");
     }
   });
 
