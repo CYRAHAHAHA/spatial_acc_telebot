@@ -1,0 +1,23 @@
+project_id,status_set_id,status_set_name,status_id,status_label,status_description
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,40d277c5-3c84-4a36-99c1-99ef0a6f5ff8,Specified,Specified
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,f23b881c-14e5-477a-be62-96bfce231c40,Ordered,Ordered
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,9f45870f-2bc1-4b57-bd03-24e231138b1c,Delivered,Delivered
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,3b10b4cf-0a74-4cc7-9165-b5e3f923eba0,Installed,Installed
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,82d89a7f-2148-44f5-93a6-e0e8f6be1e70,Pre-Start-Up,Pre-Start-Up
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,64f9974f-56ac-407d-b666-9cafeccb5df2,Start-Up,Start-Up
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,98400b4b-73c5-4fcd-8bbb-49e52bcee6f8,Pre-Functional Performance Tests,Pre-Functional Performance Tests
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,d6f1cd17-9fef-4512-ac7e-293e641101be,Functional Performance Tests,Functional Performance Tests
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,bb719c93-9f6d-4c44-8198-d4e45f361e68,Acceptance,Acceptance
+None,c46be017-3bd1-424f-9acc-73bcf6d5968b,Default,b328682b-3b50-4ae9-83a4-2b9c6e1474d9,Post-Acceptance,Post-Acceptance
+None,cdc9ce44-2511-434f-9285-18997fc070f2,Fabrication,42e9765d-5365-429f-8215-27cadf5d26c8,Pending,Pending
+None,cdc9ce44-2511-434f-9285-18997fc070f2,Fabrication,ac9fa6d5-6607-4a3e-b989-655439c0e30d,In Progress,In Progress
+None,cdc9ce44-2511-434f-9285-18997fc070f2,Fabrication,d603b902-dc1f-46e0-91ef-d982f402c974,Completed,Completed
+None,4efdcccb-a043-4821-8ca8-9530f5321ce6,Delivery,0bd0a418-e3c7-4bee-96a6-63e0d412ac4b,Requested,Requested
+None,4efdcccb-a043-4821-8ca8-9530f5321ce6,Delivery,f9211fd4-7f3a-41f0-b517-d1447ce9b455,Dispatched,Dispatched
+None,4efdcccb-a043-4821-8ca8-9530f5321ce6,Delivery,729cee9e-927f-49dd-8fe5-6cd1f39571e7,Delivered,Delivered
+None,39feb744-70ca-4c1b-8d2b-3db2e44933be,Installation,8261a8b9-a77d-4d78-a896-7f1961b0950c,Not Started,Not Started
+None,39feb744-70ca-4c1b-8d2b-3db2e44933be,Installation,9ceb1368-1d83-4001-b45d-e2d0e6cb818e,In Progress,In Progress
+None,39feb744-70ca-4c1b-8d2b-3db2e44933be,Installation,2bc0f987-c3f6-427c-bfbe-6ee68818a5ca,Finalized,Finalized
+None,b27584c1-1e90-4ec7-b6f3-86588ab8e612,Inspection,e51ffb01-f263-4665-952b-5a7f9fb25a81,Scheduled,Scheduled
+None,b27584c1-1e90-4ec7-b6f3-86588ab8e612,Inspection,6781c855-93d7-4eab-8d2b-0fa7dcd12a14,In Progress,In Progress
+None,b27584c1-1e90-4ec7-b6f3-86588ab8e612,Inspection,fd91c6b2-0be0-49cc-ae3b-70edf1035521,Completed,Completed

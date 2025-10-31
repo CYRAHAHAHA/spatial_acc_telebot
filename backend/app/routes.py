@@ -6,7 +6,6 @@ from app.config import config
 from app.functions.create_status_sets import create_status_sets
 from app.functions.create_custom_fields import create_custom_fields
 from urllib.parse import quote_plus
-from app.authentication import AutodeskAuth
 
 # Use the AutodeskAuth instance attached to the Flask app
 @app.route("/authorize")

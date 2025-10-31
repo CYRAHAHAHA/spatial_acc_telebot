@@ -1,5 +1,5 @@
 import requests, json, urllib.parse
-from flask import request, redirect, session
+from flask import redirect, session
 from app.config import config
 from pathlib import Path
 
@@ -95,7 +95,7 @@ def fetch_assets_config(access_token: str):
         session["aggregated_data"] = aggregated_data
 
         # === 7️⃣ Save all raw and mapped data to log.json ===
-        log_path = Path("log.json")
+        log_path = Path("./data/log.json")
         with log_path.open("w", encoding="utf-8") as f:
             json.dump({
                 "customAttributesRaw": custom_attributes,
@@ -109,7 +109,7 @@ def fetch_assets_config(access_token: str):
         print(log_path.resolve())
 
         # === 8️⃣ Save aggregated data to log_aggregated.json ===
-        log_aggregated_path = Path("log_aggregated.json")
+        log_aggregated_path = Path("./data/log_aggregated.json")
         with log_aggregated_path.open("w", encoding="utf-8") as f:
             json.dump(aggregated_data, f, indent=2)
         print("\n=== Saved log_aggregated.json with aggregated data ===")
@@ -119,6 +119,50 @@ def fetch_assets_config(access_token: str):
             f"{len(status_sets)} status sets, "
             f"{len(categories_raw)} categories"
         )
+
+        # === 8️⃣ Save useful data in database table style to 3 separate status_sets.csv, custom_fields.csv and categories.csv ===
+        # Status Sets CSV, retrieve from status_sets_raw the project_id, status set id, and status set name, all status values within each status set. Retrieve the id, label, and description.
+        status_sets_csv = []
+        for ss in status_sets:
+            for status in ss.get("statuses", []):
+                status_sets_csv.append({
+                    "project_id": ss.get("projectId"),
+                    "status_set_id": ss.get("id"),
+                    "status_set_name": ss.get("name"),
+                    "status_id": status.get("id"),
+                    "status_label": status.get("label"),
+                    "status_description": status.get("description", "")
+                })
+        status_sets_csv_path = Path("./data/status_sets.csv")
+        with status_sets_csv_path.open("w", encoding="utf-8") as f:
+                # Write CSV header
+                f.write("project_id,status_set_id,status_set_name,status_id,status_label,status_description\n")
+                for row in status_sets_csv:
+                    f.write(f"{row['project_id']},{row['status_set_id']},{row['status_set_name']},{row['status_id']},{row['status_label']},{row['status_description']}\n")
+        print("\n=== Saved status_sets.csv with status sets data ===")
+
+        # Custom Fields CSV, retrieve from custom_attributes the project_id, custom attribute id, display
+        custom_fields_csv = []
+        for ca in custom_attributes:
+            custom_fields_csv.append({
+                "project_id": ca.get("projectId"),
+                "custom_attribute_id": ca.get("id"),
+                "display_name": ca.get("displayName"),
+                "description": ca.get("description", ""),
+                "data_type": ca.get("dataType"),
+                "required": ca.get("requiredOnIngress", False),
+                "values": ";".join(ca.get("enumValues", [])) if ca.get("dataType") == "enum" else "",
+                #corresponding displayName and id for array of values
+                "values_and_ids": ";".join([f"{value.get('displayName')}({value.get('id')})" for value in ca.get("values", [])]) if ca.get("values") else ""
+            })
+        custom_fields_csv_path = Path("./data/custom_fields.csv")
+        with custom_fields_csv_path.open("w", encoding="utf-8") as f:
+                # Write CSV header
+                f.write("project_id,custom_attribute_id,display_name,description,data_type,required,values,values_and_ids\n")
+                for row in custom_fields_csv:
+                    f.write(f"{row['project_id']},{row['custom_attribute_id']},{row['display_name']},{row['description']},{row['data_type']},{row['required']},{row['values']},{row['values_and_ids']}\n")
+        print("\n=== Saved custom_fields.csv with custom attributes data ===")
+
         return redirect(f"/?msg={msg}")
 
     except Exception as e:
