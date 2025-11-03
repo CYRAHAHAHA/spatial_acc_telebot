@@ -1,6 +1,6 @@
 # Run pip install -r requirements.txt to install everything 
 
+Flask==3.0.3
 python-telegram-bot==21.4
-httpx
-python-dotenv
-flask
+requests==2.32.3
+

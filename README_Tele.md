@@ -44,5 +44,5 @@ Remarks: Ready for inspection
 
 You should see the bot reply: Update logged.
 
-### Step 6 — Check log_message.jsonl to see if it is updated
-
+### Step 6 - Check log_message.jsonl to see if it is updated
+#site_updates.jsonl: flask-api endpoint

@@ -105,16 +105,17 @@ UPDATE_BLOCK_RE = re.compile(
 
 FIELD_RE = re.compile(
     r"""
-    ^\s*Location\s*:\s*(?P<location>.+?)\s*$ |
-    ^\s*(?:Zone\s*/\s*Grid\s*/\s*Area|Zone|Grid|Area)\s*:\s*(?P<area>.+?)\s*$ |
-    ^\s*Task\s*:\s*(?P<task>.+?)\s*$ |
-    ^\s*Status\s*:\s*(?P<status>.+?)\s*$ |
-    ^\s*Date\s*:\s*(?P<date>.+?)\s*$ |
-    ^\s*Remarks\s*:\s*(?P<remarks>.+?)\s*$ |
-    ^\s*GUID\s*:\s*(?P<guid>.+?)\s*$
+    ^\s*Location\s*:\s*(?P<location>.*)\s*$ |
+    ^\s*(?:Zone\s*/\s*Grid\s*/\s*Area|Zone|Grid|Area)\s*:\s*(?P<area>.*)\s*$ |
+    ^\s*Task\s*:\s*(?P<task>.*)\s*$ |
+    ^\s*Status\s*:\s*(?P<status>.*)\s*$ |
+    ^\s*Date\s*:\s*(?P<date>.*)\s*$ |
+    ^\s*Remarks\s*:\s*(?P<remarks>.*)\s*$ |
+    ^\s*GUID\s*:\s*(?P<guid>.*)\s*$
     """,
     re.MULTILINE | re.IGNORECASE | re.VERBOSE
 )
+
 
 LOC_SPLIT_RE = re.compile(
     r"Building\s*(?P<b>[A-Za-z0-9\-]+)\s*,\s*Level\s*(?P<l>[A-Za-z0-9\-]+)",
