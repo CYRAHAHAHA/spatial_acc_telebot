@@ -166,11 +166,73 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         for k in found:
             if gd.get(k) is not None:
                 found[k] = _normalize_and_strip(gd[k])
-                
-    print("DEBUG found =", repr(found))
 
 
-    # Build list of validation errors for required fields
+# Expand typo map - typo helper
+COMMON_WORD_FIXES.update({
+    "reay": "ready",
+    "inspec": "inspection",
+    "inspct": "inspection",
+    "insp": "inspection",
+    "com": "completed",
+    "compl": "completed",
+    "complet": "completed",
+})
+
+DIRECTIONS = {"east", "west", "north", "south"}
+
+def _prefix_or_fuzzy(value: str, choices: List[str]) -> str | None:
+    """Prefer case-insensitive prefix match; fallback to fuzzy."""
+    if not value:
+        return None
+    v = value.strip().lower()
+    hits = [c for c in choices if c.lower().startswith(v)]
+    if len(hits) == 1:
+        return hits[0]
+    cand = difflib.get_close_matches(value, choices, n=1, cutoff=0.6)
+    return cand[0] if cand else None
+
+def _canonicalize_status(s: str | None) -> str | None:
+    if not s:
+        return None
+    return _prefix_or_fuzzy(s, STATUSES_CANON)
+
+def _canonicalize_task(t: str | None) -> str | None:
+    if not t:
+        return None
+    t = _fix_common_words(t)
+    # try your existing closest, then prefix/fuzzy
+    mapped = _closest_canon(t, TASKS_CANON)
+    return mapped or _prefix_or_fuzzy(t, TASKS_CANON)
+
+def _normalize_area_parts(grid: str | None, wing: str | None) -> tuple[str | None, str | None]:
+    if grid:
+        g = grid.strip()
+        if not g.lower().startswith("grid "):
+            grid = f"Grid {g}"
+    if wing:
+        w = wing.strip()
+        if w.lower() in DIRECTIONS:
+            wing = w.capitalize() + " Wing"
+    return grid, wing
+
+def _polish_remarks(text: str | None) -> str | None:
+    if not text:
+        return None
+    tokens = []
+    for w in text.split():
+        core = w.strip(",.;:!?")
+        fixed = COMMON_WORD_FIXES.get(core.lower(), core)
+        suffix = w[len(core):]
+        tokens.append(fixed + suffix)
+    s = " ".join(tokens)
+    # phrase-level tweaks
+    s = s.replace("ready for inspection", "Ready for inspection")
+    return s
+
+
+
+        # --- Required fields present? (empty/whitespace counts as missing) ---
     label = {
         "location": "Location: Building X, Level Y",
         "area":     "Zone / Grid / Area: ...",
@@ -182,21 +244,15 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         if not found.get(key):
             errors.append(f"Missing '{label[key]}'")
 
-
     # Parse "Location" into building + level
     building = level = None
     if found["location"]:
         lm = LOC_SPLIT_RE.search(found["location"])
         if lm:
             braw = lm.group("b")
-            # Normalize like "Building B"
-            building = (
-                braw if braw.lower().startswith("building")
-                else f"Building {braw}"
-            )
+            building = (braw if braw.lower().startswith("building") else f"Building {braw}")
             level = lm.group("l")
         else:
-            # couldn't split, keep raw
             building = found["location"]
 
     # Parse "Zone / Grid / Area" into (grid, wing)
@@ -206,23 +262,29 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         grid = parts[0] if parts else None
         wing = parts[1] if len(parts) > 1 else None
 
-    # Force internal date to be the timestamp date of the Telegram message,
-    # because that's the actual reporting time. Ignore user-entered Date: field.
-    # message_dt_iso example: "2025-10-31T03:07:39+00:00"
+    # Force internal date to Telegram message date (YYYY-MM-DD)
     date_iso = message_dt_iso.split("T", 1)[0]
 
-    # Silent normalization / correction
+    # --- Canonicalization / polishing ---
     if building:
         building = _closest_canon(building, BUILDINGS_CANON)
     if level:
         level = _closest_canon(str(level), LEVELS_CANON)
-    if found["task"]:
-        fixed_task = _fix_common_words(found["task"])
-        found["task"] = _closest_canon(fixed_task, TASKS_CANON)
-    if found["status"]:
-        found["status"] = _closest_canon(found["status"], STATUSES_CANON)
-    if found["remarks"]:
-        found["remarks"] = _fix_common_words(found["remarks"])
+
+    grid, wing = _normalize_area_parts(grid, wing)
+    found["task"] = _canonicalize_task(found["task"])
+    found["status"] = _canonicalize_status(found["status"])
+    found["remarks"] = _polish_remarks(found["remarks"])
+
+    # Reject if task/status failed to map to canon
+    if found.get("task") and found["task"] not in TASKS_CANON:
+        errors.append("Unrecognized 'Task'. Allowed: " + ", ".join(TASKS_CANON))
+    if found.get("status") and found["status"] not in STATUSES_CANON:
+        errors.append("Unrecognized 'Status'. Allowed: " + ", ".join(STATUSES_CANON))
+
+    # If any errors, bail out now
+    if errors:
+        return ({}, errors)
 
     parsed = {
         "type": "UPDATE",
@@ -234,7 +296,8 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         "remarks": found["remarks"] or None,
     }
 
-    return (parsed, errors)
+    return (parsed, [])
+
 
 def _normalize_and_strip(s: str) -> str | None:
     if s is None:

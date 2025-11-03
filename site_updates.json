@@ -40,5 +40,26 @@
       "date": "2025-11-03",
       "remarks": "Ready for inspection"
     }
+  },
+  {
+    "guid": "9f0c1d64-0cf1-4c6f-8d0f-1b0a4c9a78c7",
+    "version": 1,
+    "date": "2025-11-03",
+    "parsed": {
+      "type": "UPDATE",
+      "location": {
+        "building": "Building C",
+        "level": null
+      },
+      "area": {
+        "zone": null,
+        "grid": "Grid 5-7",
+        "wing": "East"
+      },
+      "task": "Internal Partition Walls",
+      "status": "Com",
+      "date": "2025-11-03",
+      "remarks": "Reay for inspect"
+    }
   }
 ]
