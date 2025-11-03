@@ -114,6 +114,7 @@ FIELD_RE = re.compile(
     ^\s*GUID\s*:\s*(?P<guid>.*)\s*$
     """,
     re.MULTILINE | re.IGNORECASE | re.VERBOSE
+    
 )
 
 
@@ -164,21 +165,23 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         gd = fm.groupdict()
         for k in found:
             if gd.get(k) is not None:
-                # Strip leading/trailing spaces
-                cleaned = gd[k].strip()
-                # If it's empty or only spaces, treat it as missing (None)
-                found[k] = cleaned if cleaned != "" else None
+                found[k] = _normalize_and_strip(gd[k])
+                
+    print("DEBUG found =", repr(found))
+
 
     # Build list of validation errors for required fields
+    label = {
+        "location": "Location: Building X, Level Y",
+        "area":     "Zone / Grid / Area: ...",
+        "task":     "Task: ...",
+        "status":   "Status: ...",
+    }
     errors: List[str] = []
-    if not found["location"]:
-        errors.append("Missing 'Location: Building X, Level Y'.")
-    if not found["area"]:
-        errors.append("Missing 'Zone / Grid / Area: ...'.")
-    if not found["task"]:
-        errors.append("Missing 'Task: ...'.")
-    if not found["status"]:
-        errors.append("Missing 'Status: ...'.")
+    for key in ("location", "area", "task", "status"):
+        if not found.get(key):
+            errors.append(f"Missing '{label[key]}'")
+
 
     # Parse "Location" into building + level
     building = level = None
@@ -232,6 +235,17 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
     }
 
     return (parsed, errors)
+
+def _normalize_and_strip(s: str) -> str | None:
+    if s is None:
+        return None
+    # Convert common unicode spaces to normal space, then strip
+    s = (s.replace("\u00A0", " ")   # NBSP
+         .replace("\u2007", " ")    # Figure space
+         .replace("\u202F", " "))   # Narrow NBSP
+    s = s.strip()
+    return s if s != "" else None
+
 
 
 # -------------------------------------------------
@@ -337,3 +351,5 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
+
