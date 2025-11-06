@@ -19,24 +19,22 @@ from telegram.ext import (
     filters,
 )
 
-# -------------------------------------------------
-# ENV CONFIG for talking to Flask backend
-# -------------------------------------------------
+
+# ENV CONFIG for talking to Flask backend ---------------------------------------
 FLASK_BASE = os.environ.get("FLASK_BASE", "http://localhost:8080")
 FLASK_TOKEN = os.environ.get("SITE_UPDATES_TOKEN", "super-secret-token")
 
-# ----------------------------
-# Setup: logs directory & file
-# ----------------------------
+
+# Setup: logs directory & file ----------------------------
 LOG_DIR = pathlib.Path("logs")
 LOG_DIR.mkdir(exist_ok=True)
 
 def log_path() -> pathlib.Path:
     return LOG_DIR / "log_message.jsonl"
 
-# -------------------------------------
-# Optional helper: /template quick reply
-# -------------------------------------
+
+# Optional helper: /template quick reply -------------------------------------
+
 TEMPLATE = (
     "[UPDATE]\n"
     "Location: Building A, Level 3\n"
@@ -51,9 +49,8 @@ TEMPLATE = (
 async def cmd_template(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text("Copy, edit, and send this format:\n\n" + TEMPLATE)
 
-# -------------------------
-# Canon + typo-fix helpers
-# -------------------------
+
+# Canon + typo-fix helpers -------------------------
 BUILDINGS_CANON = ["Building A", "Building B", "Building C", "Block A", "Block B"]
 LEVELS_CANON    = ["B3", "B2", "B1", "1", "2", "3", "4", "5", "6", "7"]
 TASKS_CANON     = [
@@ -92,9 +89,8 @@ def _fix_common_words(text: str) -> str:
             words[i] = COMMON_WORD_FIXES[core] + suffix
     return " ".join(words)
 
-# ------------------------------------------
-# Regexes & parsing
-# ------------------------------------------
+
+# Regexes & parsing ------------------------------------------
 UPDATE_BLOCK_RE = re.compile(
     r"""
     ^\s*\[UPDATE\]\s*
@@ -117,6 +113,10 @@ FIELD_RE = re.compile(
     
 )
 
+LINE_RE = re.compile(
+    r"^\s*(?P<key>[^:]+?)\s*:\s*(?P<val>.*)\s*$",
+    re.IGNORECASE,
+)
 
 LOC_SPLIT_RE = re.compile(
     r"Building\s*(?P<b>[A-Za-z0-9\-]+)\s*,\s*Level\s*(?P<l>[A-Za-z0-9\-]+)",
@@ -148,7 +148,7 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
 
     body = m.group("body")
 
-    # Collect fields; treat blanks/whitespace as None
+    # We'll collect all fields, forcing whitespace-only values to None
     found = {
         "location": None,
         "area": None,
@@ -157,13 +157,30 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         "date": None,
         "remarks": None,
     }
-    for fm in FIELD_RE.finditer(body):
-        gd = fm.groupdict()
-        for k in found:
-            if gd.get(k) is not None:
-                found[k] = _normalize_and_strip(gd[k])
 
-    # DEBUG
+    # Parse line by line so each field is mapped correctly
+    for raw_line in body.splitlines():
+        m = LINE_RE.match(raw_line)
+        if not m:
+            continue
+
+        key = m.group("key").strip().lower()
+        val = _normalize_and_strip(m.group("val"))
+
+        if key.startswith("location"):
+            found["location"] = val
+        elif key.startswith("zone") or key.startswith("grid") or key.startswith("area"):
+            found["area"] = val
+        elif key == "task":
+            found["task"] = val
+        elif key == "status":
+            found["status"] = val
+        elif key == "date":
+            found["date"] = val
+        elif key == "remarks":
+            found["remarks"] = val
+        # GUID is handled separately by extract_guid_block_format()
+
     print("DEBUG found =", repr(found))
 
     # Requireds
@@ -376,9 +393,7 @@ def _normalize_and_strip(s: str) -> str | None:
 
 
 
-# -------------------------------------------------
-# Send parsed update to Flask backend
-# -------------------------------------------------
+# Send parsed update to Flask backend -------------------------------------------------
 def send_to_flask_api(guid: str, message, parsed: Dict[str, Any]) -> Tuple[bool, str]:
     raw_text = (message.text or message.caption or "").strip()
 
@@ -410,9 +425,8 @@ def send_to_flask_api(guid: str, message, parsed: Dict[str, Any]) -> Tuple[bool,
     except Exception as e:
         return False, str(e)
 
-# -------------------------------------------------
-# Telegram handler
-# -------------------------------------------------
+
+# Telegram handler -------------------------------------------------
 async def one_shot_update_handler(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     # Only act in group chats
     if update.effective_chat.type not in ("group", "supergroup"):
@@ -461,9 +475,8 @@ async def one_shot_update_handler(update: Update, context: ContextTypes.DEFAULT_
         await msg.reply_text("Update logged.")
 
 
-# ------------- 
-# Main bootstrap
-# -------------
+
+# Main bootstrap ------------- 
 def main() -> None:
     token = os.environ.get("TELEGRAM_TOKEN")
     if not token:
