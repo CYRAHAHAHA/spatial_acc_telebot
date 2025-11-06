@@ -1,33 +1,187 @@
-#Set up guide
+# spatial_acc_telebot — Repo Overview
 
-#functions to add in and document
+## Top-level layout
 
-#Modularising Branch
-1) cd C:\Users\User\Documents\GitHub\spatial_acc_telebot
-2) Create python venv python -m venv .venv (Should be okay as long as >Python3.10)
-3) pip install -r requirements.txt
-4) cd C:\Users\User\Documents\GitHub\spatial_acc_telebot\backend
-5) Add your own environment variables in .env (havent git ignore LOL)
-6) Run python .\main.py
-6) Follow instructions on the webpage to switch user (For e.g. Yirong's case, switch to YR)
-7) Can press button to retrieve all stats about assets
-8) MODULARISED because, auth and everyt else settled, refer to routes, just need run 
-    @require_access_token("/fetch_assets_config") prior to putting your own route and function
+- root/
+  - app/ — Flask application and server code
+  - data/ — Generated CSV and hardcoded JSON payload files used by previews and creation
 
-1) Starting up a telebot
+- README.md (this file)
 
-2) Authorization Call (dict: all the relevant clients)
+---
 
-3) Update Issues (int: GUID, str:ISSUE_ID, int: ISSUE_NAME)
+## app/ (Flask app)
 
-4) Update Status (int: GUID, str:STATUS_NAME, str:STATUS_SET) - Yirong
+- **init**.py
 
-5) Create Custom Fields - Yirong
+  - Initializes Flask `app`, CORS and the AutodeskAuth/token manager.
+  - Serves static files from `app/src` (SPA).
 
-6) Create Status Sets 
+- **routes**.py
 
-7) Create Categories
+  - Registers HTTP routes:
 
-8) NLP function (telegram text to useful parameters) (preferably GUID and some kind of value parameter)
+    - Auth & flow:
+      - `GET /authorize` — start Autodesk OAuth
+      - `GET /callback` — OAuth callback
+      - `GET /switch_user/<user>` — change configured user in `config`
+    - Creation endpoints (protected):
+      - `POST /create_status_sets_from_json` — expects JSON array; calls `create_status_sets(...)`
+      - `POST /create_custom_fields_from_json` — expects JSON array; calls `create_custom_fields(...)`
+    - Update assets:
+      - `POST /update_status` — accepts `{ asset_guid, status_value }`, maps status name → status_id and PATCHes APS Assets batch API
+    - Fetch operations:
+      - `GET /fetch_assets_config` — triggers `fetch_assets_config(...)` to fetch config from ACC and write CSVs
+      - `GET /fetch_all_assets_info` — triggers `fetch_all_assets_info(...)` to fetch all assets and save `data/assets_total.csv`
 
-9) Frontend to customize all initial setting up of 
+    ---
+    API calls for demo Single Page App purposes
+    - Status / config:
+      - `GET /api/status` — token and env info
+      - `GET /api/categories` — categories + hierarchy (from session)
+    - CSV previews (read-only):
+      - `GET /api/preview/status_sets` — reads `data/status_sets.csv`, groups rows by status_set_id and returns `{ count, items }`
+      - `GET /api/preview/custom_fields` — reads `data/custom_fields.csv`, normalizes enum values and returns `{ count, items }`
+    - Hardcoded JSON payloads for creation:
+      - `GET /api/payload/status_sets` — returns `data/new_status_sets.json`
+      - `GET /api/payload/custom_fields` — returns `data/new_custom_fields.json`
+    ---
+  - Routes are implemented to let the frontend:
+    - Preview CSV data (`/api/preview/*`)
+    - Fetch hardcoded JSON payloads to POST to creation endpoints (`/api/payload/*`)
+    - Create resources by posting that payload to protected endpoints
+
+- functions/
+
+  - fetch_assets_config.py
+    - Fetches project-level config from ACC, builds `status_sets.csv`, `custom_fields.csv`, and `categories.csv`.
+    - Writes CSVs with explicit comma delimiter and `sep=,` Excel hint.
+  - **fetch_all_assets_info.py 📌**
+    - Calls ACC Assets v2 GET endpoint (paginated) and writes `data/assets_total.csv`.
+  - create_status_sets.py
+    - Accepts normalized JSON array and posts status sets to ACC (implementation details live here).
+  - create_custom_fields.py
+    - Accepts normalized JSON array and posts custom fields to ACC.
+  - **update_status.py 📌**
+    - Looks up `status_id` from `data/status_sets.csv` using `status_label`.
+    - Resolves asset id (current placeholder: asset_guid → assetId passthrough).
+    - Calls APS Assets Batch PATCH v2 (`/construction/assets/v2/projects/{projectId}/assets:batch`) with body:
+      {
+      "<assetId>": { "statusId": "<statusId>" }
+      }
+  - fetch_assets_config.py, fetch_all_assets_info.py, etc. write CSVs to `data/`.
+
+- utils.py (contains decorator `require_access_token` used to guard endpoints)
+
+- config.py
+  - App configuration holder; `project_id`, client secrets, etc.
+
+---
+
+## app/src (front-end SPA)
+
+- index.html
+
+  - SPA skeleton. Sections for token status, Create buttons, previews, and update form.
+
+- script.js
+
+  - Controls UI and calls backend APIs:
+    - On load:
+      - `GET /api/status` to populate token info
+      - `GET /api/categories` to render category tree (session data)
+      - `GET /api/preview/status_sets` and `GET /api/preview/custom_fields` to render preview tables from CSVs
+    - Create buttons:
+      - `GET /api/payload/status_sets` → returns `data/new_status_sets.json`
+      - `POST /create_status_sets_from_json` with that JSON
+      - `GET /api/payload/custom_fields` → returns `data/new_custom_fields.json`
+      - `POST /create_custom_fields_from_json` with that JSON
+    - Update Status form:
+      - Posts `{ asset_guid, status_value }` to `POST /update_status`
+      - `{ const resp = await fetch("/update_status",  {method: "POST", 
+      headers: { "Content-Type": "application/json" }, credentials: "include",
+      body: JSON.stringify({ asset_guid: assetGuid, status_value: assetStatus }) });`
+      - Backend resolves status id and calls ACC PATCH API
+  - The frontend separates preview (CSV backed) from creation (JSON payloads).
+
+- styles.css
+  - App styling, responsive layout, table styles, faint horizontal dividers for table rows, and extra horizontal padding for wide screens.
+
+---
+
+## data/ (payloads & exported CSVs)
+
+- status_sets.csv — generated by `fetch_assets_config.py`; used by preview routes and status id lookup.
+- custom_fields.csv — generated by `fetch_assets_config.py`; used by preview routes.
+- categories.csv — generated by `fetch_assets_config.py`.
+- assets_total.csv — generated by `fetch_all_assets_info.py` (all assets).
+- new_status_sets.json — hardcoded JSON payload used by `/api/payload/status_sets` and sent to creation endpoint.
+- new_custom_fields.json — hardcoded JSON payload used by `/api/payload/custom_fields` and sent to creation endpoint.
+- custom_fields.csv (example data) — earlier sample CSV used in previews.
+
+---
+
+## Key flows & notes
+
+- Preview vs Creation:
+
+  - Previews in the UI come from CSVs via `/api/preview/*`.
+  - Creation is intentionally simulated by reading hardcoded JSON files (`/api/payload/*`) and posting them to creation endpoints that call ACC APIs. This mimics receiving JSON payloads from an external source.
+
+- CSV/Excel behavior:
+
+  - CSV writer adds `sep=,` header to force Excel to interpret comma as delimiter even if cell values include semicolons.
+
+- Update Status flow:
+  - Frontend sends `{ asset_guid, status_value }` to `POST /update_status`.
+  - Backend looks up `status_id` from `data/status_sets.csv`.
+  - Backend maps `asset_guid` → assetId (currently passthrough; replace with real lookup as needed).
+  - Backend PATCHes the APS Assets batch endpoint with the body:
+    {
+    "<assetId>": { "statusId": "<statusId>" }
+    }
+
+---
+
+## Running locally (basic)
+
+1. Ensure Python environment with dependencies (Flask, requests, etc.).
+2. Configure `app.config` with Autodesk client id/secret and `project_id`.
+3. Run Flask app (example):
+   - On Windows PowerShell:
+     - set environment variables as needed
+     - `flask run` or run via your IDE
+4. Open `http://localhost:5000/` to load the SPA.
+
+---
+
+## Helpful endpoints (summary)
+
+- Public/read-only previews:
+  - GET /api/preview/status_sets
+  - GET /api/preview/custom_fields
+- Hardcoded payloads (for creation):
+  - GET /api/payload/status_sets
+  - GET /api/payload/custom_fields
+- Creation (require token):
+  - POST /create_status_sets_from_json
+  - POST /create_custom_fields_from_json
+- Update:
+  - POST /update_status (body: { asset_guid, status_value })
+- Fetching:
+  - GET /fetch_assets_config
+  - GET /fetch_all_assets_info
+- Auth:
+  - GET /authorize
+  - GET /callback
+- App status:
+  - GET /api/status
+  - GET /api/categories
+
+---
+
+If you want, I can:
+
+- generate a shorter quickstart with exact env vars and commands,
+- add example curl commands for the important API calls,
+- or create unit tests for the CSV parsing functions.

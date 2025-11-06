@@ -205,12 +205,14 @@
       }
       const payload = await payloadRes.json();
       console.log("Creating status sets with payload:", payload);
+      // Post to creation endpoint
       const resp = await fetch("/create_status_sets_from_json", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
         body: JSON.stringify(payload),
       });
+
       if (resp.redirected) { window.location.href = resp.url; return; }
       if (resp.ok) {
         const data = await resp.json().catch(() => ({}));
