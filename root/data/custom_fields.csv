@@ -1,0 +1,8 @@
+﻿project_id,custom_attribute_id,name,display_name,description,data_type,required,values,values_and_ids
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,8151d4ab-5df3-4e47-b0ef-5361cb159d81,ca1,IFCGlobalId,Unique IFC identifier,text,True,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,5ae8d86e-e46e-46fb-94cc-43aa47977953,ca2,IFC_Type,Component type,text,True,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,521fc486-3576-4db5-9d3d-808f988a89a2,ca3,Discipline,Trade category,multi_select,False,,Architecture(ff49a95f-e2da-45bb-b7dd-06d2217f1d3a);Structural(f1dc2833-8297-4b6c-9393-ab4d8259c1e1);Mechanical(23f089ec-e9ac-493b-be62-8ad2822760da);Electrical(367ae5cc-7b58-45f6-8d31-d3b1318bd614);Plumbing(6592a0d5-8488-452d-b800-fad09e9aeace)
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,a359e86e-5fa5-4028-b141-f52133fca4b6,ca4,Subcontractor,Responsible party,text,False,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,ccb6025b-a539-4fe0-98cb-32aea26d1111,ca5,Planned Date,Construction plan,date,False,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,b05bca3c-11c4-4c91-bfab-75544e9249a6,ca12,Asset Value,Cost data,numeric,False,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,28dbd448-1388-43d7-a7fd-c31c5c8f96b5,ca22,Notes,Additional remarks or special handling instructions,text,False,,

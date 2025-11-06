@@ -1,0 +1,84 @@
+:root {
+  --bg: #0f172a;
+  --card: #111827;
+  --text: #e5e7eb;
+  --muted: #9ca3af;
+  --border: #1f2937;
+  --accent: #2563eb;
+  --accent-600: #1d4ed8;
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  /* extra horizontal padding for wide screens */
+  padding: 24px 56px;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+  background: linear-gradient(180deg, #0b1022, #0a0c16 60%, #06070c);
+  color: var(--text);
+}
+
+.page-header h1 { margin: 0 0 16px; font-size: 22px; }
+
+.card {
+  background: linear-gradient(180deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 16px;
+  margin: 16px 0;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06);
+}
+
+.mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+.muted { color: var(--muted); }
+
+.env summary { cursor: pointer; }
+.env ul { margin: 8px 0 0; padding-left: 18px; }
+
+.actions { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+
+.stack { display: grid; gap: 10px; }
+
+.grid-2 { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; }
+
+.filelabel { display: none; } /* hide file inputs since we use server-side JSON */
+
+.btn {
+  appearance: none;
+  border: 1px solid var(--border);
+  background: linear-gradient(180deg, #1f2937, #111827);
+  color: var(--text);
+  padding: 8px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.05s ease, box-shadow 0.2s ease, background 0.2s ease;
+}
+.btn:hover { transform: translateY(-1px); }
+.btn.primary { background: linear-gradient(180deg, var(--accent), var(--accent-600)); border-color: transparent; }
+
+ul.tree, ul.tree ul { list-style: none; margin: 0; padding-left: 18px; }
+ul.tree > li { margin: 4px 0; }
+
+.msg { padding: 10px 12px; border: 1px solid var(--border); border-radius: 10px; margin: 10px 0; }
+
+/* Tables */
+.table { 
+  width: 100%; 
+  border-collapse: collapse; 
+  background: rgba(255,255,255,0.02);
+}
+.table th, .table td { 
+  padding: 8px 10px; 
+  text-align: left; 
+  vertical-align: top; 
+}
+.table thead th { 
+  color: var(--muted); 
+  font-weight: 600; 
+  border-bottom: 1px solid rgba(255,255,255,0.12); /* slightly stronger for header */
+}
+/* faint horizontal line between body rows */
+.table tbody tr + tr td { 
+  border-top: 1px solid rgba(255,255,255,0.07); 
+}

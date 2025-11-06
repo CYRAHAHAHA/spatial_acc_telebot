@@ -1,0 +1,128 @@
+[
+  {
+    "displayName": "Material Type",
+    "description": "Type of material used in construction",
+    "enumValues": ["Steel", "Concrete", "Wood", "Plastic"],
+    "requiredOnIngress": true,
+    "maxLengthOnIngress": null,
+    "defaultValue": "Steel",
+    "dataType": "select"
+  },
+  {
+    "displayName": "Installation Date",
+    "description": "Date when asset was installed",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "2025-01-01",
+    "dataType": "date"
+  },
+  {
+    "displayName": "Inspection Passed",
+    "description": "Indicates whether inspection is complete",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": false,
+    "dataType": "boolean"
+  },
+  {
+    "displayName": "Component ID",
+    "description": "Unique identifier for component",
+    "enumValues": [],
+    "requiredOnIngress": true,
+    "maxLengthOnIngress": 50,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Weight (kg)",
+    "description": "Weight of the component in kilograms",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": 0,
+    "dataType": "numeric"
+  },
+  {
+    "displayName": "Surface Finish",
+    "description": "Surface finishing material",
+    "enumValues": ["Matte", "Glossy", "Satin", "Textured"],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "Matte",
+    "dataType": "multi_select"
+  },
+  {
+    "displayName": "Color Code",
+    "description": "Surface color code",
+    "enumValues": ["Red", "Blue", "Green", "Gray", "White"],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "Gray",
+    "dataType": "select"
+  },
+  {
+    "displayName": "Warranty Expiration",
+    "description": "Expiration date of warranty",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "2026-12-31",
+    "dataType": "date"
+  },
+  {
+    "displayName": "Requires Maintenance",
+    "description": "Whether the asset needs maintenance",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": true,
+    "dataType": "boolean"
+  },
+  {
+    "displayName": "Notes",
+    "description": "Additional remarks or special handling instructions",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 200,
+    "defaultValue": "Handle with care.",
+    "dataType": "text"
+  },
+  {
+    "displayName": "Temperature Range (°C)",
+    "description": "Operational temperature range",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "0-100",
+    "dataType": "text"
+  },
+  {
+    "displayName": "Asset Category",
+    "description": "Asset classification",
+    "enumValues": ["Mechanical", "Electrical", "Plumbing", "Structural"],
+    "requiredOnIngress": true,
+    "maxLengthOnIngress": null,
+    "defaultValue": "Mechanical",
+    "dataType": "select"
+  },
+  {
+    "displayName": "Permitted Inspectors",
+    "description": "List of allowed inspection roles",
+    "enumValues": ["Engineer", "Supervisor", "Contractor"],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "Engineer",
+    "dataType": "multi_select"
+  },
+  {
+    "displayName": "Energy Efficiency Rating",
+    "description": "Rating according to efficiency label",
+    "enumValues": ["A+", "A", "B", "C", "D"],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "A+",
+    "dataType": "select"
+  }
+]
