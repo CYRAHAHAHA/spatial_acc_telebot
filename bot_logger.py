@@ -139,17 +139,16 @@ def extract_guid_block_format(text: str):
 def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], List[str]]:
     """
     Parse a single-shot [UPDATE] message.
-    Returns: (parsed_json, errors)
-    - parsed_json: dict with normalized fields
-    - errors: list of validation error strings (empty if OK)
+    Always returns (parsed_dict, errors_list).
+    If there are validation errors, parsed_dict will be {} and errors_list non-empty.
     """
-    m = UPDATE_BLOCK_RE.match(text)
+    m = UPDATE_BLOCK_RE.match(text or "")
     if not m:
         return ({}, ["Message must start with [UPDATE]."])
 
     body = m.group("body")
 
-    # We'll collect all fields, forcing whitespace-only values to None
+    # Collect fields; treat blanks/whitespace as None
     found = {
         "location": None,
         "area": None,
@@ -158,14 +157,80 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         "date": None,
         "remarks": None,
     }
-
-    # Extract each field match from the message using FIELD_RE
-    # FIELD_RE already has groups: location, area, task, status, date, remarks
     for fm in FIELD_RE.finditer(body):
         gd = fm.groupdict()
         for k in found:
             if gd.get(k) is not None:
                 found[k] = _normalize_and_strip(gd[k])
+
+    # DEBUG
+    print("DEBUG found =", repr(found))
+
+    # Requireds
+    label = {
+        "location": "Location: Building X, Level Y",
+        "area":     "Zone / Grid / Area: ...",
+        "task":     "Task: ...",
+        "status":   "Status: ...",
+    }
+    errors: List[str] = []
+    for key in ("location", "area", "task", "status"):
+        if not found.get(key):
+            errors.append(f"Missing '{label[key]}'")
+
+    # Location -> building, level
+    building = level = None
+    if found["location"]:
+        lm = LOC_SPLIT_RE.search(found["location"])
+        if lm:
+            braw = lm.group("b")
+            building = (braw if braw.lower().startswith("building") else f"Building {braw}")
+            level = lm.group("l")
+        else:
+            building = found["location"]
+
+    # Area -> grid, wing
+    grid = wing = None
+    if found["area"]:
+        parts = [p.strip() for p in found["area"].split(",", 1)]
+        grid = parts[0] if parts else None
+        wing = parts[1] if len(parts) > 1 else None
+
+    # Use message date (YYYY-MM-DD)
+    date_iso = (message_dt_iso or "").split("T", 1)[0] or dt.utcnow().date().isoformat()
+
+    # Canonicalization / polishing
+    if building:
+        building = _closest_canon(building, BUILDINGS_CANON)
+    if level:
+        level = _closest_canon(str(level), LEVELS_CANON)
+
+    grid, wing = _normalize_area_parts(grid, wing)
+    found["task"] = _canonicalize_task(found["task"])
+    found["status"] = _canonicalize_status(found["status"])
+    found["remarks"] = _polish_remarks(found["remarks"])
+
+    # Enforce canon values
+    if found.get("task") and found["task"] not in TASKS_CANON:
+        errors.append("Unrecognized 'Task'. Allowed: " + ", ".join(TASKS_CANON))
+    if found.get("status") and found["status"] not in STATUSES_CANON:
+        errors.append("Unrecognized 'Status'. Allowed: " + ", ".join(STATUSES_CANON))
+
+    # If any errors, return tuple with {} + errors
+    if errors:
+        return ({}, errors)
+
+    parsed = {
+        "type": "UPDATE",
+        "location": {"building": building, "level": level},
+        "area": {"zone": None, "grid": grid, "wing": wing},
+        "task": found["task"],
+        "status": found["status"],
+        "date": date_iso,
+        "remarks": found["remarks"] or None,
+    }
+    return (parsed, [])
+
 
 
 # Expand typo map - typo helper
