@@ -8,12 +8,16 @@ from app.config import config
 
 API_BASE_V2 = "https://developer.api.autodesk.com/construction/assets/v2/projects"
 
+# Base dir = root folder (…\spatial_acc_telebot\root - added base path) 
+BASE_DIR = Path(__file__).resolve().parents[2]
+DATA_DIR = BASE_DIR / "data"
+
 def _lookup_status_id_by_label(label: str) -> Optional[str]:
     """
     Look up a statusId in data/status_sets.csv by matching status_label (case-insensitive).
     Returns the first match.
     """
-    csv_path = Path("./data/status_sets.csv")
+    csv_path = DATA_DIR / "status_sets.csv"
     if not csv_path.exists():
         return None
     needle = (label or "").strip().lower()
@@ -29,7 +33,7 @@ def _lookup_status_id_by_label(label: str) -> Optional[str]:
 
 def _resolve_asset_id_from_guid(asset_guid: str) -> Optional[str]:
     # with the asset_guid, search root\data\assets_total.csv to find the header ifc_global_id and then get the corresponding b3f_id
-    csv_path = Path("./data/assets_total.csv")
+    csv_path = DATA_DIR / "assets_total.csv"
     if not csv_path.exists():
         print("no assets_total.csv found")
         return None

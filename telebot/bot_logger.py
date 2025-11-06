@@ -124,9 +124,10 @@ LOC_SPLIT_RE = re.compile(
 )
 
 GUID_LINE_RE = re.compile(
-    r"^GUID\s*:\s*(?P<guid>[0-9a-fA-F]{8}-(?:[0-9a-fA-F]{4}-){3}[0-9a-fA-F]{12})\s*$",
+    r"^GUID\s*:\s*(?P<guid>.+?)\s*$",
     re.MULTILINE | re.IGNORECASE
 )
+
 
 def extract_guid_block_format(text: str):
     if not text:

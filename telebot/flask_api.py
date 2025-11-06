@@ -84,9 +84,12 @@ def update_guid(guid: str):
     if not auth_header.startswith("Bearer ") or auth_header.split(" ", 1)[1] != AUTH_TOKEN:
         abort(401)
 
-    # Validate GUID format
-    if not GUID_RE.match(guid) or not is_guid(guid):
+    # Basic GUID/ID validation: just ensure it's non-empty.
+    # IFC global IDs (like 1$p8tACJ938vr1_lKOJJ9g) are not standard UUIDs,
+    # so we don't use the UUID-based check here.
+    if not guid or not guid.strip():
         return jsonify({"ok": False, "error": "invalid_guid"}), 400
+
 
     payload = request.get_json(force=True) or {}
     print("Flask: received payload for GUID", guid)  # debug
