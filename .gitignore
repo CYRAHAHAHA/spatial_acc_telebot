@@ -1,3 +1,67 @@
-.venv
-/.venv/*
-root\.env
+# Python virtual environment
+venv/
+.venv/
+env/
+ENV/
+
+# Python cache
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+
+# Environment variables and secrets
+.env
+.env.local
+.env.*.local
+*.pem
+*.key
+
+# Tokens and credentials
+**/autodesk_tokens.json
+root/autodesk_tokens.json
+telebot/autodesk_tokens.json
+
+# Logs
+logs/
+*.log
+telebot/logs/
+root/logs/
+
+# Data files (generated)
+root/data/*.csv
+telebot/site_updates.json
+
+# Process IDs
+*.pid
+pids.txt
+
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Distribution
+dist/
+build/
+*.egg-info/
+
+#ifc files
+model_files/
+*.ifc

@@ -10,6 +10,7 @@ from datetime import datetime as dt
 from typing import Dict, List, Any, Tuple
 
 import requests
+from dotenv import load_dotenv, find_dotenv
 from telegram import Update
 from telegram.ext import (
     Application,
@@ -19,6 +20,9 @@ from telegram.ext import (
     filters,
 )
 
+
+# Load environment variables (supports running from /telebot)
+load_dotenv(find_dotenv(usecwd=True))
 
 # ENV CONFIG for talking to Flask backend ---------------------------------------
 FLASK_BASE = os.environ.get("FLASK_BASE", "http://localhost:8080")
@@ -492,5 +496,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
 
