@@ -14,7 +14,32 @@ The core workflow: Telegram messages with `[UPDATE]` format → Bot parses and l
 
 ## Running the Application
 
-### Flask Web App (Port 8080)
+### Quick Start - All Services at Once
+
+**Recommended for development and EC2 deployment:**
+
+```bash
+# Set required environment variable
+export TELEGRAM_TOKEN="your-bot-token"
+
+# Start all three services
+./start_all.sh
+
+# Check status
+./status.sh
+
+# View logs
+tail -f logs/*.log
+
+# Stop all services
+./stop_all.sh
+```
+
+The `start_all.sh` script runs all three components in the background with proper logging. See `EC2_DEPLOYMENT.md` for production deployment instructions.
+
+### Manual Startup (Individual Components)
+
+#### Flask Web App (Port 8080)
 ```bash
 # Navigate to root directory
 cd root
@@ -22,7 +47,7 @@ python main.py
 ```
 The app runs on `http://localhost:8080` and serves a SPA at `/`.
 
-### Telegram Bot
+#### Telegram Bot
 ```bash
 # Navigate to telebot directory
 cd telebot
@@ -32,7 +57,7 @@ export SITE_UPDATES_TOKEN="super-secret-token"  # must match flask_api.py
 python bot_logger.py
 ```
 
-### Flask API Server (for Telegram integration)
+#### Flask API Server (for Telegram integration)
 ```bash
 # Navigate to telebot directory
 cd telebot
@@ -189,11 +214,47 @@ Bot uses fuzzy matching (difflib) with 60% cutoff to correct typos.
 
 ## Testing the Integration
 
-1. Start Flask web app: `cd root && python main.py`
-2. Authenticate: Visit `http://localhost:8080/authorize`
-3. Fetch config: `GET /fetch_assets_config` (populates CSVs)
-4. Fetch assets: `GET /fetch_all_assets_info` (populates assets_total.csv with GUIDs)
-5. Start Flask API: `cd telebot && python flask_api.py`
-6. Start Telegram bot: `cd telebot && python bot_logger.py`
-7. Send `[UPDATE]` message in Telegram group with valid GUID
-8. Verify: Check `telebot/site_updates.json` and ACC Assets for status update
+1. Set environment variable: `export TELEGRAM_TOKEN="your-token"`
+2. Start all services: `./start_all.sh`
+3. Authenticate: Visit `http://localhost:8080/authorize`
+4. Fetch config: `curl http://localhost:8080/fetch_assets_config` (populates CSVs)
+5. Fetch assets: `curl http://localhost:8080/fetch_all_assets_info` (populates assets_total.csv with GUIDs)
+6. Send `[UPDATE]` message in Telegram group with valid GUID
+7. Verify: Check `telebot/site_updates.json` and ACC Assets for status update
+8. Check logs: `tail -f logs/*.log`
+
+## Deployment Scripts
+
+Three bash scripts are provided for managing all services:
+
+- **`start_all.sh`**: Starts all three services (Flask Web App, Flask API, Telegram Bot) in background with logging to `logs/` directory. Saves PIDs for later management.
+- **`stop_all.sh`**: Gracefully stops all running services using saved PIDs. Falls back to force kill if needed.
+- **`status.sh`**: Checks if services are running and displays uptime, memory usage, and log locations.
+- **`deploy_refresh.sh`**: Automated deployment script that updates dependencies, stops services, and restarts them. Used by GitHub Actions.
+
+## Automated Deployment with GitHub Actions
+
+The repository includes a GitHub Actions workflow (`.github/workflows/deploy.yml`) that automatically deploys to EC2 when you push to the `main` branch.
+
+### Features:
+- Automatic deployment on push to main
+- Syncs code changes using rsync (excludes venv, logs, tokens)
+- Creates `.env` file from GitHub Secrets
+- Updates Python dependencies
+- Restarts all services
+- Verifies deployment success
+
+### Setup:
+1. Add GitHub Secrets (see `GITHUB_ACTIONS_SETUP.md` for full list):
+   - `EC2_SSH_KEY`, `EC2_HOST`, `EC2_USER`, `EC2_DEPLOY_PATH`
+   - `TELEGRAM_TOKEN`, `SITE_UPDATES_TOKEN`
+   - `AUTODESK_CLIENT_ID`, `AUTODESK_CLIENT_SECRET`, etc.
+2. Push to main branch or trigger manually from Actions tab
+
+See `GITHUB_ACTIONS_SETUP.md` for complete setup instructions.
+
+## Manual EC2 Deployment
+
+For EC2 deployment:
+- **Amazon Linux 2023 users**: See `QUICKSTART_AL2023.md` for a streamlined deployment guide using `dnf`
+- **All platforms**: See `EC2_DEPLOYMENT.md` for comprehensive deployment instructions including systemd service configuration

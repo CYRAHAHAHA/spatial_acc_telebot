@@ -1,0 +1,33 @@
+[Unit]
+Description=Spatial ACC Telegram Bot - All Services
+After=network.target
+
+[Service]
+Type=forking
+# Change 'ec2-user' to 'ubuntu' if using Ubuntu
+User=ec2-user
+Group=ec2-user
+# Update this path if you installed to a different location
+WorkingDirectory=/home/ec2-user/spatial_acc_telebot
+
+# Environment variables - load from repo .env file
+EnvironmentFile=/home/ec2-user/spatial_acc_telebot/.env
+
+# Use the start script - UPDATE PATH if different
+ExecStart=/home/ec2-user/spatial_acc_telebot/start_all.sh
+ExecStop=/home/ec2-user/spatial_acc_telebot/stop_all.sh
+
+# Restart policy
+Restart=on-failure
+RestartSec=10
+
+# Logging - UPDATE PATH if different
+StandardOutput=append:/home/ec2-user/spatial_acc_telebot/logs/systemd.log
+StandardError=append:/home/ec2-user/spatial_acc_telebot/logs/systemd_error.log
+
+# Security settings
+NoNewPrivileges=true
+PrivateTmp=true
+
+[Install]
+WantedBy=multi-user.target

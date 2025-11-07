@@ -1,7 +1,13 @@
 import os
-from dotenv import load_dotenv
+from pathlib import Path
+from dotenv import load_dotenv, find_dotenv
 
-load_dotenv()
+# Ensure .env is discovered even when running from nested folders
+dotenv_path = find_dotenv(usecwd=True)
+if not dotenv_path:
+    # Fallback to repo root (two levels up from this file)
+    dotenv_path = Path(__file__).resolve().parents[2] / ".env"
+load_dotenv(dotenv_path=dotenv_path, override=False)
 
 class Config:
     """Holds all user-specific environment variables."""
