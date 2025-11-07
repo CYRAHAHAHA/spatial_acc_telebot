@@ -157,49 +157,44 @@ def update_guid(guid: str):
 
         append_pretty_update(clean_payload)
 
-    # --- 🔹 APS/ACC Update Section (New) ---
+    # --- NEW: call ACC to update the asset status ---
+    acc_result = None
+
     status_value = flattened_parsed.get("status")
+    if status_value:
+        try:
+            # Use your existing auth class
+            auth = AutodeskAuth(
+                client_id=config.client_id,
+                client_secret=config.client_secret,
+                redirect_uri=config.redirect_uri,
+                scopes=config.scopes,
+            )
+            access_token = auth.get_access_token()
+        except Exception as e:
+            access_token = None
+            acc_result = {"error": f"Failed to get access token: {e}"}
 
-    # If no status is found, skip the ACC update
-    if not status_value:
+        if access_token:
+            # guid here is the IFC global id
+            acc_result, acc_status = update_assets(
+                access_token=access_token,
+                asset_guid=guid,
+                status_value=status_value,
+            )
+        else:
+            acc_status = 500
+
+        # Merge both local logging + ACC result into the response
         return jsonify({
             "ok": True,
             "guid": guid,
             "version": DB[guid]["version"],
-            "note": "Update logged locally, but no status provided so ACC update skipped."
-        }), 200
+            "acc_update": acc_result
+        }), 200 if acc_status and 200 <= acc_status < 300 else acc_status
 
-    # Get Autodesk access token using your authentication.py class
-    try:
-        access_token = auth.get_access_token()
-    except Exception as e:
-        return jsonify({
-            "ok": True,
-            "guid": guid,
-            "version": DB[guid]["version"],
-            "warning": f"Update logged, but failed to get APS token: {e}"
-        }), 200
-
-    # Call your teammate’s update_assets() to update the status in ACC
-    acc_resp, acc_status = update_assets(
-        access_token=access_token,
-        asset_guid=guid,          # The GUID from Telegram → IFC Global ID
-        status_value=status_value # The parsed “Completed” / “In Progress” label
-    )
-
-    # Try reading ACC response body
-    try:
-        acc_body = acc_resp.get_json()
-    except Exception:
-        acc_body = str(acc_resp)
-
-    # Return combined response (local + ACC)
-    return jsonify({
-        "ok": True,
-        "guid": guid,
-        "version": DB[guid]["version"],
-        "acc_update": acc_body
-    }), acc_status
+    # If no status, just local log response
+    return jsonify({"ok": True, "guid": guid, "version": DB[guid]["version"]})
 
 
 if __name__ == "__main__":
