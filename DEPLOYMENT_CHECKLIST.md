@@ -37,12 +37,14 @@ Use this checklist to ensure everything is properly configured for automated dep
 Go to: **Settings → Secrets and variables → Actions → New repository secret**
 
 ### EC2 Connection
+
 - [ ] `EC2_SSH_KEY` - Contents of your `.pem` file
 - [ ] `EC2_HOST` - EC2 public IP or hostname
 - [ ] `EC2_USER` - `ec2-user`
 - [ ] `EC2_DEPLOY_PATH` - `/home/ec2-user/spatial_acc_telebot`
 
 ### Autodesk Configuration
+
 - [ ] `AUTODESK_CLIENT_ID` - Your Autodesk client ID
 - [ ] `AUTODESK_CLIENT_SECRET` - Your Autodesk client secret
 - [ ] `AUTODESK_REDIRECT_URI` - `http://your-ec2-ip:8080/callback`
@@ -50,6 +52,7 @@ Go to: **Settings → Secrets and variables → Actions → New repository secre
 - [ ] `AUTODESK_PROJECT_ID` - Your ACC project ID
 
 ### Telegram Configuration
+
 - [ ] `TELEGRAM_TOKEN` - Your Telegram bot token
 - [ ] `SITE_UPDATES_TOKEN` - Secure random token (generate: `openssl rand -hex 32`)
 
@@ -125,7 +128,7 @@ tail -f logs/*.log
 cat .env
 
 # Check Python dependencies
-source venv/bin/activate
+source .venv/Scripts/activate
 pip list
 
 # Manually restart services
@@ -153,6 +156,7 @@ sudo journalctl -u spatial_acc_telebot -f
 ## Support
 
 If you encounter issues:
+
 1. Check the troubleshooting section in `GITHUB_ACTIONS_SETUP.md`
 2. Review GitHub Actions workflow logs
 3. Check EC2 service logs: `logs/*.log`
