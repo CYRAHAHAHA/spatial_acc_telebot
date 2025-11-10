@@ -48,11 +48,11 @@ def create_custom_fields(access_token: str, data: List[Dict[str, Any]]) -> List[
     """
     items = _normalize_items(data)
     if not items:
-        print("⚠️ Empty or invalid payload for custom fields.")
+        print("WARNING: Empty or invalid payload for custom fields.")
         return []
 
     if not access_token:
-        print("❌ Missing access token.")
+        print("ERROR: Missing access token.")
         return []
 
     project_id = config.project_id
@@ -74,12 +74,12 @@ def create_custom_fields(access_token: str, data: List[Dict[str, Any]]) -> List[
             required_on_ingress = _to_bool(row.get("requiredOnIngress"))
 
             if not display_name or not data_type:
-                print(f"⚠️ Item {idx}: missing displayName or dataType. Skipping.")
+                print(f"WARNING: Item {idx}: missing displayName or dataType. Skipping.")
                 continue
 
             enum_values = _to_list(row.get("enumValues"))
             if data_type in ("select", "multi_select") and not enum_values:
-                print(f"⚠️ Item {idx} ({display_name}): dataType={data_type} requires enumValues. Skipping.")
+                print(f"WARNING: Item {idx} ({display_name}): dataType={data_type} requires enumValues. Skipping.")
                 continue
 
             max_len = _to_int(row.get("maxLengthOnIngress")) if data_type == "text" else None
@@ -111,11 +111,11 @@ def create_custom_fields(access_token: str, data: List[Dict[str, Any]]) -> List[
             resp = requests.post(url, headers=headers, json=payload, timeout=30)
             if 200 <= resp.status_code < 300:
                 data_resp = resp.json() if resp.content else {"displayName": display_name}
-                print(f"✅ Created '{display_name}'")
+                print(f"SUCCESS: Created '{display_name}'")
                 created.append(data_resp)
             else:
-                print(f"❌ Failed to create '{display_name}': {resp.status_code} {resp.text}")
+                print(f"ERROR: Failed to create '{display_name}': {resp.status_code} {resp.text}")
         except Exception as ex:
-            print(f"❌ Exception processing item {idx}: {ex}")
+            print(f"ERROR: Exception processing item {idx}: {ex}")
 
     return created

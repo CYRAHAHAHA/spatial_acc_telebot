@@ -18,6 +18,13 @@
     statusSetsLoading: document.getElementById("statusSetsLoading"),
     customFieldsLoading: document.getElementById("customFieldsLoading"),
     categoriesLoading: document.getElementById("categoriesLoading"),
+    // Create Status Set form elements
+    createStatusSetForm: document.getElementById("createStatusSetForm"),
+    statusSetName: document.getElementById("statusSetName"),
+    statusSetDescription: document.getElementById("statusSetDescription"),
+    statusValuesContainer: document.getElementById("statusValuesContainer"),
+    addStatusValueBtn: document.getElementById("addStatusValueBtn"),
+    resetStatusSetForm: document.getElementById("resetStatusSetForm"),
   };
 
   // Toast notification system
@@ -88,6 +95,149 @@
     if (container) container.hidden = true;
   }
 
+  // ========================================
+  // DYNAMIC STATUS VALUE FORM
+  // ========================================
+
+  const AUTODESK_COLORS = [
+    'adsk-black', 'adsk-white', 
+    'adsk-charcoal-900', 'adsk-charcoal-800', 'adsk-charcoal-700', 'adsk-charcoal-600', 
+    'adsk-charcoal-500', 'adsk-charcoal-400', 'adsk-charcoal-300', 'adsk-charcoal-200', 
+    'adsk-charcoal-100', 'adsk-charcoal-050',
+    'adsk-blue-700', 'adsk-blue-500', 'adsk-blue-300', 'adsk-blue-100',
+    'adsk-red-700', 'adsk-red-500', 'adsk-red-300',
+    'adsk-green-700', 'adsk-green-500', 'adsk-green-300',
+    'adsk-yellow-orange-700', 'adsk-yellow-orange-500', 'adsk-yellow-orange-300',
+    'adsk-dark-blue-700', 'adsk-dark-blue-500', 'adsk-dark-blue-300',
+    'adsk-pink-700', 'adsk-pink-500', 'adsk-pink-300',
+    'adsk-turquoise-700', 'adsk-turquoise-500', 'adsk-turquoise-300',
+    'adsk-purple-700', 'adsk-purple-500', 'adsk-purple-300',
+    'adsk-salmon-700', 'adsk-salmon-500', 'adsk-salmon-300',
+    'adsk-brown-700', 'adsk-brown-500', 'adsk-brown-300'
+  ];
+
+  let statusValueCounter = 0;
+
+  function createStatusValueRow() {
+    statusValueCounter++;
+    const rowId = `status-value-${statusValueCounter}`;
+    
+    const row = document.createElement('div');
+    row.className = 'status-value-row';
+    row.dataset.rowId = rowId;
+    
+    row.innerHTML = `
+      <div class="status-value-field">
+        <label for="${rowId}-label">Status Label *</label>
+        <input 
+          type="text" 
+          id="${rowId}-label" 
+          class="forge-input status-label-input" 
+          placeholder="e.g., Pending"
+          required
+        />
+      </div>
+      
+      <div class="status-value-field">
+        <label for="${rowId}-description">Description *</label>
+        <input 
+          type="text" 
+          id="${rowId}-description" 
+          class="forge-input status-description-input" 
+          placeholder="e.g., Pending"
+          required
+        />
+      </div>
+      
+      <div class="status-value-field">
+        <label for="${rowId}-color">Color *</label>
+        <select 
+          id="${rowId}-color" 
+          class="forge-select status-color-select"
+          required
+        >
+          <option value="">Select a color...</option>
+          ${AUTODESK_COLORS.map(color => 
+            `<option value="${color}">${color}</option>`
+          ).join('')}
+        </select>
+      </div>
+      
+      <button type="button" class="remove-status-btn" data-row-id="${rowId}">
+        <svg viewBox="0 0 16 16" fill="currentColor">
+          <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
+          <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+        </svg>
+      </button>
+    `;
+    
+    // Add remove button handler
+    const removeBtn = row.querySelector('.remove-status-btn');
+    removeBtn.addEventListener('click', () => {
+      row.remove();
+      // If no rows left, add one
+      if (el.statusValuesContainer.children.length === 0) {
+        el.statusValuesContainer.appendChild(createStatusValueRow());
+      }
+    });
+    
+    return row;
+  }
+
+  function resetStatusSetForm() {
+    el.statusSetName.value = '';
+    el.statusSetDescription.value = '';
+    el.statusValuesContainer.innerHTML = '';
+    // Add one initial row
+    el.statusValuesContainer.appendChild(createStatusValueRow());
+  }
+
+  function collectStatusSetFormData() {
+    const name = el.statusSetName.value.trim();
+    const description = el.statusSetDescription.value.trim();
+    
+    if (!name || !description) {
+      showToast('error', 'Validation Error', 'Status set name and description are required');
+      return null;
+    }
+    
+    const rows = el.statusValuesContainer.querySelectorAll('.status-value-row');
+    if (rows.length === 0) {
+      showToast('error', 'Validation Error', 'At least one status value is required');
+      return null;
+    }
+    
+    const statusLabels = [];
+    const descriptions = [];
+    const statusColors = [];
+    
+    for (let row of rows) {
+      const label = row.querySelector('.status-label-input').value.trim();
+      const desc = row.querySelector('.status-description-input').value.trim();
+      const color = row.querySelector('.status-color-select').value;
+      
+      if (!label || !desc || !color) {
+        showToast('error', 'Validation Error', 'All status value fields must be filled');
+        return null;
+      }
+      
+      statusLabels.push(label);
+      descriptions.push(desc);
+      statusColors.push(color);
+    }
+    
+    return {
+      name: name,
+      status_set_description: description,
+      status_label: statusLabels,
+      description: descriptions,
+      status_colors: statusColors
+    };
+  }
+
+  // ========================================
+  // END DYNAMIC STATUS VALUE FORM
+  // ========================================
 
   function renderEnv(env) {
     el.envList.innerHTML = "";
@@ -544,6 +694,67 @@
     }
   });
 
+  // Handle Create Status Set form
+  el.addStatusValueBtn?.addEventListener('click', () => {
+    el.statusValuesContainer.appendChild(createStatusValueRow());
+  });
+
+  el.resetStatusSetForm?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+      resetStatusSetForm();
+      showToast('success', 'Form reset', 'The form has been cleared.');
+    }
+  });
+
+  el.createStatusSetForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = collectStatusSetFormData();
+    if (!formData) {
+      return; // Validation error already shown
+    }
+    
+    try {
+      // Wrap in array as the API expects an array of status sets
+      const payload = [formData];
+      
+      console.log('Creating status set with payload:', payload);
+      
+      const resp = await fetch("/create_status_sets_from_json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+      
+      if (resp.redirected) { 
+        window.location.href = resp.url; 
+        return; 
+      }
+      
+      if (resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        showToast('success', 'Status set created', `Status set "${formData.name}" created successfully with ${formData.status_label.length} status values.`);
+        
+        // Reset form and refresh preview
+        resetStatusSetForm();
+        await renderStatusSetsPreview();
+        
+        // Optionally switch to Status Sets tab to see the result
+        const statusSetsTab = document.querySelector('.forge-tab[data-tab="status-sets"]');
+        if (statusSetsTab) {
+          statusSetsTab.click();
+        }
+      } else {
+        const text = await resp.text();
+        showToast('error', 'Failed to create status set', text);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('error', 'Failed to create status set', err.message);
+    }
+  });
+
   // Tab switching
   document.querySelectorAll('.forge-tab').forEach(tab => {
     tab.addEventListener('click', () => {
@@ -578,4 +789,9 @@
   await loadCategories();
   await renderStatusSetsPreview();
   await renderCustomFieldsPreview();
+  
+  // Initialize create status set form with one row
+  if (el.statusValuesContainer) {
+    el.statusValuesContainer.appendChild(createStatusValueRow());
+  }
 })();

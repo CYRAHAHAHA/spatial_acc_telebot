@@ -926,3 +926,79 @@ body {
   opacity: 0.5;
 }
 
+/* ========================================
+   DYNAMIC STATUS VALUE ROWS
+   ======================================== */
+
+.status-value-row {
+  display: grid;
+  grid-template-columns: 2fr 2fr 2fr auto;
+  gap: var(--forge-space-md);
+  align-items: start;
+  padding: var(--forge-space-md);
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid var(--forge-border);
+  border-radius: var(--forge-radius-md);
+  margin-bottom: var(--forge-space-md);
+  transition: all var(--forge-transition);
+}
+
+.status-value-row:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: var(--forge-gray-500);
+}
+
+.status-value-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--forge-space-xs);
+}
+
+.status-value-field label {
+  font-size: 0.75rem;
+  font-weight: 500;
+  color: var(--forge-text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.status-value-field input,
+.status-value-field select {
+  width: 100%;
+}
+
+.remove-status-btn {
+  background: transparent;
+  border: 1px solid var(--forge-error);
+  color: var(--forge-error);
+  padding: var(--forge-space-sm);
+  border-radius: var(--forge-radius-md);
+  cursor: pointer;
+  transition: all var(--forge-transition);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-top: 24px;
+}
+
+.remove-status-btn:hover {
+  background: rgba(234, 67, 53, 0.1);
+  transform: scale(1.05);
+}
+
+.remove-status-btn svg {
+  width: 16px;
+  height: 16px;
+}
+
+@media (max-width: 768px) {
+  .status-value-row {
+    grid-template-columns: 1fr;
+  }
+  
+  .remove-status-btn {
+    margin-top: var(--forge-space-sm);
+    width: 100%;
+  }
+}
+

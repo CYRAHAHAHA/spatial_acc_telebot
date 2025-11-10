@@ -131,6 +131,14 @@
           </button>
           <button
             class="forge-tab"
+            data-tab="create-status-set"
+            role="tab"
+            aria-selected="false"
+          >
+            Create Status Set
+          </button>
+          <button
+            class="forge-tab"
             data-tab="update-asset"
             role="tab"
             aria-selected="false"
@@ -251,6 +259,97 @@
               </div>
 
               <div id="categoryTree" class="category-tree-container"></div>
+            </div>
+          </section>
+
+          <!-- CREATE STATUS SET TAB -->
+          <section
+            id="tab-create-status-set"
+            class="forge-tab-panel"
+            role="tabpanel"
+            hidden
+          >
+            <div class="forge-panel-header">
+              <h2>Create New Status Set</h2>
+            </div>
+            <div class="forge-panel-body">
+              <form id="createStatusSetForm" class="forge-form">
+                <div class="forge-form-group">
+                  <label for="statusSetName" class="forge-label"
+                    >Status Set Name *</label
+                  >
+                  <input
+                    type="text"
+                    id="statusSetName"
+                    class="forge-input"
+                    placeholder="e.g., Fabrication"
+                    required
+                  />
+                  <small class="forge-help-text"
+                    >The name of the status set</small
+                  >
+                </div>
+
+                <div class="forge-form-group">
+                  <label for="statusSetDescription" class="forge-label"
+                    >Description *</label
+                  >
+                  <input
+                    type="text"
+                    id="statusSetDescription"
+                    class="forge-input"
+                    placeholder="e.g., Stages of fabrication"
+                    required
+                  />
+                  <small class="forge-help-text"
+                    >Brief description of this status set</small
+                  >
+                </div>
+
+                <div class="forge-form-group">
+                  <label class="forge-label">Status Values</label>
+                  <small
+                    class="forge-help-text"
+                    style="display: block; margin-bottom: 12px"
+                  >
+                    Define the individual status values for this set (minimum 1
+                    required)
+                  </small>
+
+                  <div id="statusValuesContainer">
+                    <!-- Status value rows will be added here dynamically -->
+                  </div>
+
+                  <button
+                    type="button"
+                    id="addStatusValueBtn"
+                    class="forge-btn"
+                    style="margin-top: 12px"
+                  >
+                    <svg width="16" height="16" fill="currentColor">
+                      <path
+                        d="M8 2v12M2 8h12"
+                        stroke="currentColor"
+                        stroke-width="2"
+                      />
+                    </svg>
+                    Add Status Value
+                  </button>
+                </div>
+
+                <div class="forge-form-actions">
+                  <button type="submit" class="forge-btn forge-btn-primary">
+                    Create Status Set
+                  </button>
+                  <button
+                    type="button"
+                    id="resetStatusSetForm"
+                    class="forge-btn"
+                  >
+                    Reset Form
+                  </button>
+                </div>
+              </form>
             </div>
           </section>
 
