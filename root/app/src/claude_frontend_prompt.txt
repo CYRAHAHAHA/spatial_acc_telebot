@@ -13,12 +13,7 @@ Design a frontend interface that allows users to:
 5. Handle all responses (success/error/loading) gracefully
 
 REPO CONTEXT:
-- Backend is Flask, serving static files from: root/src
-- Relevant backend files: 
-  - root/app/routes.py
-  - root/app/config.py
-  - root/app/functions/fetch_assets_config.py
-  - root/app/functions/fetch_all_assets_info.py
+- Backend is Flask, read on for what is relevant in apisFormat.md
 - Frontend files should be:
   - index.html
   - styles.css
@@ -26,84 +21,7 @@ REPO CONTEXT:
 
 BACKEND ENDPOINTS:
 
-1. GET /api/status
-   Returns Autodesk project info.
-   Example response:
-   {
-     "user": "YR",
-     "project_id": "abcd1234",
-     "token": { "valid": true, "expiresAt": "2025-11-11T23:59:00Z", "expiresInMinutes": 50 },
-     "env": { "region": "EMEA" },
-     "message": "Connected"
-   }
-
-2. GET /api/preview/status_sets
-   Returns a list of existing status sets.
-   Example response:
-   {
-     "count": 2,
-     "items": [
-       {
-         "statusSetId": "100",
-         "name": "Design Review",
-         "statuses": [
-           { "statusId": "1", "label": "Pending", "description": "Waiting for review" },
-           { "statusId": "2", "label": "Approved", "description": "Review complete" }
-         ]
-       }
-     ]
-   }
-
-3. GET /api/preview/custom_fields
-   Returns existing custom fields.
-   Example response:
-   {
-     "count": 1,
-     "items": [
-       {
-         "id": "cf_001",
-         "displayName": "Priority",
-         "dataType": "string",
-         "requiredOnIngress": false,
-         "enumValues": []
-       }
-     ]
-   }
-
-4. GET /api/preview/categories
-   Returns existing categories.
-   Example response:
-   {
-     "count": 3,
-     "items": [
-       { "categoryId": "cat_01", "categoryName": "Electrical", "parentId": null },
-       { "categoryId": "cat_02", "categoryName": "HVAC", "parentId": null }
-     ]
-   }
-
-5. POST /create_status_sets_from_json
-   Accepts JSON array of status set objects.
-   Example payload:
-   [
-     { "name": "New Status Set", "statuses": [{ "label": "Pending" }, { "label": "Done" }] }
-   ]
-   Returns: { "created": 1 }
-
-6. POST /create_custom_fields_from_json
-   Accepts JSON array of custom field objects.
-   Example payload:
-   [
-     { "displayName": "Priority", "dataType": "enum", "enumValues": [{"label": "High"},{"label":"Low"}], "requiredOnIngress": true }
-   ]
-   Returns: { "created": 1 }
-
-7. POST /create_categories_from_json
-   Accepts JSON array of category objects.
-   Example payload:
-   [
-     { "categoryName": "Mechanical", "parentId": null, "statusSetId": "100" }
-   ]
-   Returns: { "created": 1 }
+All described in apisFormat.md
 
 FRONTEND FUNCTIONALITY:
 - Dashboard with tabs:
@@ -113,8 +31,7 @@ FRONTEND FUNCTIONALITY:
   4. Categories
 - Each tab displays existing data in a table or list
 - "Add New" button opens modal/form for creation
-- Form submission sends POST requests to the backend
-- Download CSV button exports table data
+- Form submission sends POST requests to the backend, and reads value to package JSON payload accordingly
 - Project Info section displays /api/status info with refresh button
 - Loading indicators during fetch
 - Error handling via toast notifications
@@ -140,9 +57,8 @@ ACCEPTANCE TESTS:
 1. Project Info loads on page load
 2. Clicking Status Sets tab fetches /api/preview/status_sets and renders correctly
 3. Add New buttons open forms and POST correctly
-4. Download CSV exports correct data
-5. Error responses show toast messages
-6. Loading indicators disappear after fetch completes
+4. Error responses show toast messages
+5. Loading indicators disappear after fetch completes
 
 OUTPUT INSTRUCTIONS:
 - Return complete files in separate code blocks:

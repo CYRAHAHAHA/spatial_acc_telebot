@@ -708,7 +708,9 @@
           ]
         }
       ],
-      "children": []
+      "children": [
+        "12"
+      ]
     },
     {
       "categoryName": "Doors",
@@ -952,6 +954,76 @@
       "categoryName": "Windows",
       "categoryId": "5",
       "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": "Unique IFC identifier",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "IFC_Type",
+          "description": "Component type",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Discipline",
+          "description": "Trade category",
+          "dataType": "multi_select",
+          "enumValues": [
+            "Architecture",
+            "Structural",
+            "Mechanical",
+            "Electrical",
+            "Plumbing"
+          ]
+        },
+        {
+          "displayName": "Subcontractor",
+          "description": "Responsible party",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Planned Date",
+          "description": "Construction plan",
+          "dataType": "date",
+          "enumValues": []
+        },
+        {
+          "displayName": "Asset Value",
+          "description": "Cost data",
+          "dataType": "numeric",
+          "enumValues": []
+        },
+        {
+          "displayName": "Notes",
+          "description": "Additional remarks or special handling instructions",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Size of Material",
+          "description": "Sizes",
+          "dataType": "select",
+          "enumValues": [
+            "Large",
+            "Big",
+            "Medium",
+            "Small"
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "Custom SubCategory",
+      "categoryId": "12",
+      "parentId": "2",
       "statusSetId": null,
       "statusSetName": "No Status Set (system)",
       "statuses": [],
