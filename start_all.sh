@@ -37,6 +37,8 @@ fi
 if [ -d ".venv" ]; then
     echo "Activating virtual environment..."
     source .venv/Scripts/activate
+    # print the python version
+    echo "Using Python version: $(python --version)"
 else
     echo "WARNING: No virtual environment found at ./.venv"
     echo "It's recommended to create one with: python -m venv .venv"
