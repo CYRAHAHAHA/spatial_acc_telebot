@@ -1,9 +1,12 @@
-from click import Path
+from pathlib import Path
 from flask import Flask, jsonify, request, session
 from app.config import config
 from app.authentication import AutodeskAuth
 from datetime import datetime, timezone
 from flask_cors import CORS
+import csv
+import json
+import re
 
 app = Flask(__name__, static_folder="src", static_url_path="/")
 app.secret_key = "supersecretkey"
@@ -28,6 +31,7 @@ def index():
     # Serve the SPA/static page
     return app.send_static_file("index.html")
 
+# ---- Routes for UI interface ---- (not API) ---- #
 # ---- API: token/env status ----
 @app.route("/api/status")
 def api_status():
@@ -117,3 +121,110 @@ def api_categories():
         "categories": cats,
         "tree": tree
     })
+
+# --- Payload APIs (read hardcoded JSON files for creation) ---
+@app.route("/api/payload/status_sets")
+def api_payload_status_sets():
+    data_dir = Path(__file__).resolve().parents[1] / "output"
+    p = data_dir / "new_status_sets.json"
+    try:
+        with p.open("r", encoding="utf-8") as f:
+            items = json.load(f)
+        if not isinstance(items, list):
+            return jsonify({"error": "new_status_sets.json must be a JSON array."}), 400
+        return jsonify(items)
+    except Exception as ex:
+        return jsonify({"error": f"Failed to read new_status_sets.json: {ex}"}), 404
+
+@app.route("/api/payload/custom_fields")
+def api_payload_custom_fields():
+    data_dir = Path(__file__).resolve().parents[1] / "output"
+    p = data_dir / "new_custom_fields.json"
+    try:
+        with p.open("r", encoding="utf-8") as f:
+            items = json.load(f)
+        if not isinstance(items, list):
+            return jsonify({"error": "new_custom_fields.json must be a JSON array."}), 400
+        return jsonify(items)
+    except Exception as ex:
+        return jsonify({"error": f"Failed to read new_custom_fields.json: {ex}"}), 404
+
+# --- CSV preview APIs (no auth required) ---
+@app.route("/api/preview/status_sets")
+def api_preview_status_sets():
+    """
+    Read data/status_sets.csv and return grouped JSON by status_set_id.
+    """
+    data_dir = Path(__file__).resolve().parents[1] / "output"
+    p = data_dir / "status_sets.csv"
+    if not p.exists():
+        return jsonify({"error": "status_sets.csv not found"}), 404
+
+    sets = {}
+    try:
+        with p.open("r", encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                ss_id = row.get("status_set_id") or ""
+                ss_name = row.get("status_set_name") or ""
+                status = {
+                    "statusId": row.get("status_id") or "",
+                    "label": row.get("status_label") or "",
+                    "description": row.get("status_description") or "",
+                }
+                if ss_id not in sets:
+                    sets[ss_id] = {
+                        "statusSetId": ss_id,
+                        "name": ss_name,
+                        "statuses": [],
+                    }
+                sets[ss_id]["statuses"].append(status)
+        items = list(sets.values())
+        return jsonify({"count": len(items), "items": items})
+    except Exception as ex:
+        return jsonify({"error": f"Failed to read status_sets.csv: {ex}"}), 500
+
+@app.route("/api/preview/custom_fields")
+def api_preview_custom_fields():
+    """
+    Read data/custom_fields.csv and return normalized JSON list.
+    """
+    data_dir = Path(__file__).resolve().parents[1] / "output"
+    p = data_dir / "custom_fields.csv"
+    if not p.exists():
+        return jsonify({"error": "custom_fields.csv not found"}), 404
+
+    out = []
+    pat = re.compile(r"^(.*)\(([^)]+)\)$")  # Label(id)
+    try:
+        with p.open("r", encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                enum_pairs = []
+                raw = (row.get("values_and_ids") or "").strip()
+                if raw:
+                    parts = [s.strip() for s in raw.split(";") if s.strip()]
+                    for part in parts:
+                        m = pat.match(part)
+                        if m:
+                            enum_pairs.append({"label": m.group(1).strip(), "id": m.group(2).strip()})
+                        else:
+                            enum_pairs.append({"label": part, "id": ""})
+                else:
+                    raw_vals = (row.get("values") or "").strip()
+                    if raw_vals:
+                        enum_pairs = [{"label": s.strip(), "id": ""} for s in raw_vals.split(",") if s.strip()]
+
+                item = {
+                    "id": row.get("custom_attribute_id") or "",
+                    "displayName": row.get("display_name") or "",
+                    "description": row.get("description") or "",
+                    "dataType": row.get("data_type") or "",
+                    "requiredOnIngress": str(row.get("required") or "").strip().lower() in ("true", "1", "yes", "y"),
+                    "enumValues": enum_pairs,  # list of {label,id}
+                }
+                out.append(item)
+        return jsonify({"count": len(out), "items": out})
+    except Exception as ex:
+        return jsonify({"error": f"Failed to read custom_fields.csv: {ex}"}), 500
+

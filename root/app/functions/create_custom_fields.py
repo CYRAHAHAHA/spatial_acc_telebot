@@ -55,10 +55,7 @@ def create_custom_fields(access_token: str, data: List[Dict[str, Any]]) -> List[
         print("❌ Missing access token.")
         return []
 
-    project_id = getattr(config, "project_id", None) or getattr(config, "PROJECT_ID", None)
-    if not project_id:
-        print("❌ Missing project_id in config.")
-        return []
+    project_id = config.project_id
 
     headers = {
         "Authorization": f"Bearer {access_token}",

@@ -59,21 +59,18 @@ echo "==============================================="
 echo "Starting spatial_acc_telebot services..."
 echo "==============================================="
 
-# Start Flask Web App (root/main.py)
+# Start Flask Web App
 echo "[1/2] Starting Flask Web App and API Server on port 8080..."
 cd "$SCRIPT_DIR/root"
-nohup python main.py > "$SCRIPT_DIR/logs/flask_webapp.log" 2>&1 &
+nohup env PYTHONUNBUFFERED=1 python main.py > "$SCRIPT_DIR/logs/flask_webapp.log" 2>&1 &
 FLASK_WEBAPP_PID=$!
 echo "  → PID: $FLASK_WEBAPP_PID"
 cd "$SCRIPT_DIR"
 
-# Wait a bit for Flask to start
-sleep 2
-
-# Start Telegram Bot (telebot/bot_logger.py)
+# Start Telegram Bot
 echo "[2/2] Starting Telegram Bot..."
 cd "$SCRIPT_DIR/telebot"
-nohup python bot_logger.py > "$SCRIPT_DIR/logs/telegram_bot.log" 2>&1 &
+nohup env PYTHONUNBUFFERED=1 python bot_logger.py > "$SCRIPT_DIR/logs/telegram_bot.log" 2>&1 &
 TELEGRAM_BOT_PID=$!
 echo "  → PID: $TELEGRAM_BOT_PID"
 cd "$SCRIPT_DIR"

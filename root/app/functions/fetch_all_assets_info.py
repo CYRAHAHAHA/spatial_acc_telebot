@@ -14,9 +14,7 @@ def fetch_all_assets_info(token: str):
     Calls GET /construction/assets/v2/projects/{projectId}/assets (paginated),
     aggregates all assets, and writes them to data/assets_total.csv.
     """
-    project_id = getattr(config, "project_id", None) or getattr(config, "projectId", None)
-    if not project_id:
-        return jsonify({"error": "Missing project_id in config."}), 500
+    project_id = config.project_id
 
     headers = {
         "Authorization": f"Bearer {token}",
@@ -54,7 +52,7 @@ def fetch_all_assets_info(token: str):
         if not records:
             break
         # log this raw data into a json file for debugging
-        with open("./data/assets_raw.json", "w", encoding="utf-8") as f:
+        with open("./output/assets_raw.json", "w", encoding="utf-8") as f:
             #with indentation for readability jsonify
             f.write(jsonify(data).get_data(as_text=True))
 
@@ -65,7 +63,7 @@ def fetch_all_assets_info(token: str):
         offset += limit
 
     # Write CSV next to status_sets.csv
-    data_dir = Path("./data")
+    data_dir = Path("./output")
     data_dir.mkdir(parents=True, exist_ok=True)
     csv_path = data_dir / "assets_total.csv"
 
@@ -114,4 +112,5 @@ def fetch_all_assets_info(token: str):
             writer.writerow(row)
 
     msg = f"Saved assets_total.csv with {len(all_assets)} assets"
+    print(msg)
     return redirect(f"/?msg={quote_plus(msg)}")

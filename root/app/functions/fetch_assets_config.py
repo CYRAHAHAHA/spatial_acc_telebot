@@ -5,18 +5,15 @@ from pathlib import Path
 import csv
 
 def fetch_assets_config(access_token: str):
-    """
-    Refactored to accept token from route decorator.
-    Use 'access_token' instead of reading from session/request.
-    """
+
+    project_id = config.project_id
+    base_url = "https://developer.api.autodesk.com/construction/assets/v1/projects"
+
     headers = {
         "Authorization": f"Bearer {access_token}",
         "Content-Type": "application/json",
         "Accept": "application/json"
     }
-
-    project_id = config.project_id
-    base_url = "https://developer.api.autodesk.com/construction/assets/v1/projects"
 
     try:
         # === 1️⃣ Fetch custom attributes ===
@@ -97,7 +94,7 @@ def fetch_assets_config(access_token: str):
         session["aggregated_data"] = aggregated_data
 
         # === 7️⃣ Save all raw and mapped data to log.json ===
-        log_path = Path("./data/log.json")
+        log_path = Path("./output/log.json")
         with log_path.open("w", encoding="utf-8") as f:
             json.dump({
                 "customAttributesRaw": custom_attributes,
@@ -111,7 +108,7 @@ def fetch_assets_config(access_token: str):
         print(log_path.resolve())
 
         # === 8️⃣ Save aggregated data to log_aggregated.json ===
-        log_aggregated_path = Path("./data/log_aggregated.json")
+        log_aggregated_path = Path("./output/log_aggregated.json")
         with log_aggregated_path.open("w", encoding="utf-8") as f:
             json.dump(aggregated_data, f, indent=2)
         print("\n=== Saved log_aggregated.json with aggregated data ===")
@@ -135,7 +132,7 @@ def fetch_assets_config(access_token: str):
                     "status_label": status.get("label"),
                     "status_description": status.get("description", "")
                 })
-        status_sets_csv_path = Path("./data/status_sets.csv")
+        status_sets_csv_path = Path("./output/status_sets.csv")
         with status_sets_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
             writer = csv.writer(f, delimiter=",", lineterminator="\n")
             writer.writerow(["project_id","status_set_id","status_set_name","status_id","status_label","status_description"])
@@ -179,7 +176,7 @@ def fetch_assets_config(access_token: str):
                 "values_and_ids": values_and_ids_raw
             })
 
-        custom_fields_csv_path = Path("./data/custom_fields.csv")
+        custom_fields_csv_path = Path("./output/custom_fields.csv")
         with custom_fields_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
             writer = csv.writer(f, delimiter=",", lineterminator="\n")
             writer.writerow(["project_id","custom_attribute_id","name","display_name","description","data_type","required","values","values_and_ids"])
@@ -209,7 +206,7 @@ def fetch_assets_config(access_token: str):
                 "status_set_name": cat.get("statusSetName"),
                 "custom_attributes": ";".join([ca.get("displayName") for ca in cat.get("customAttributes", []) if ca.get("displayName")])
             })
-        categories_csv_path = Path("./data/categories.csv")
+        categories_csv_path = Path("./output/categories.csv")
         with categories_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
             writer = csv.writer(f, delimiter=",", lineterminator="\n")
             writer.writerow(["project_id","category_id","category_name","parent_id","status_set_id","status_set_name","custom_attributes"])
@@ -223,6 +220,8 @@ def fetch_assets_config(access_token: str):
                     row.get("status_set_name") or "",
                     row.get("custom_attributes") or "",
                 ])
+
+        print(msg)
         return redirect(f"/?msg={msg}")
 
     except Exception as e:
