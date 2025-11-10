@@ -8,6 +8,7 @@
     fetchConfigBtn: document.getElementById("fetchConfigBtn"),
     createStatusBtn: document.getElementById("createStatusBtn"),
     createFieldsBtn: document.getElementById("createFieldsBtn"),
+    createCategoriesBtn: document.getElementById("createCategoriesBtn"),
     categorySummary: document.getElementById("categorySummary"),
     categoryTree: document.getElementById("categoryTree"),
     statusSetsHost: document.getElementById("StatusSets"),
@@ -192,6 +193,36 @@
 
   el.fetchAssetsInfo?.addEventListener("click", async () => {
     window.location.href = "/fetch_all_assets_info";
+  });
+
+  el.createCategoriesBtn?.addEventListener("click", async () => {
+    try {
+      const payloadRes = await fetch("/api/payload/categories", { credentials: "include" });
+      if (!payloadRes.ok) {
+        const t = await payloadRes.text();
+        setMsg(`Failed to load categories JSON: ${t}`);
+        return;
+      }
+      const payload = await payloadRes.json();
+      const resp = await fetch("/create_categories_from_json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+      if (resp.redirected) { window.location.href = resp.url; return; }
+      if (resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        setMsg(`Created categories${data.created != null ? `: ${data.created}` : ""}.`);
+        await loadCategories();
+      } else {
+        const text = await resp.text();
+        setMsg(`Failed: ${text}`);
+      }
+    } catch (e) {
+      console.error(e);
+      setMsg("Failed creating categories. Check console.");
+    }
   });
 
   // Creation buttons: fetch JSON directly from server-side files via payload APIs, then post as body

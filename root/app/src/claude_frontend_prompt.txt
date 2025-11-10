@@ -1,0 +1,155 @@
+TASK:
+You are an expert full-stack engineer specializing in frontend design for REST APIs. 
+You will read the backend routes in this workspace and help refactor the current files, while extending
+its functionalities and not removing them, a modern, responsive 
+frontend (index.html, styles.css, script.js) that integrates with the existing Flask backend.
+
+GOAL:
+Design a frontend interface that allows users to:
+1. View Autodesk Construction project info (from /api/status, already implemented)
+2. View existing Status Sets, Custom Fields, and Categories
+3. Create new Status Sets, Custom Fields, and Categories via forms, formatted into suitable JSON formats as a payload
+4. Display previews of data (currently done already, for status sets, custom fields, and category)
+5. Handle all responses (success/error/loading) gracefully
+
+REPO CONTEXT:
+- Backend is Flask, serving static files from: root/src
+- Relevant backend files: 
+  - root/app/routes.py
+  - root/app/config.py
+  - root/app/functions/fetch_assets_config.py
+  - root/app/functions/fetch_all_assets_info.py
+- Frontend files should be:
+  - index.html
+  - styles.css
+  - script.js
+
+BACKEND ENDPOINTS:
+
+1. GET /api/status
+   Returns Autodesk project info.
+   Example response:
+   {
+     "user": "YR",
+     "project_id": "abcd1234",
+     "token": { "valid": true, "expiresAt": "2025-11-11T23:59:00Z", "expiresInMinutes": 50 },
+     "env": { "region": "EMEA" },
+     "message": "Connected"
+   }
+
+2. GET /api/preview/status_sets
+   Returns a list of existing status sets.
+   Example response:
+   {
+     "count": 2,
+     "items": [
+       {
+         "statusSetId": "100",
+         "name": "Design Review",
+         "statuses": [
+           { "statusId": "1", "label": "Pending", "description": "Waiting for review" },
+           { "statusId": "2", "label": "Approved", "description": "Review complete" }
+         ]
+       }
+     ]
+   }
+
+3. GET /api/preview/custom_fields
+   Returns existing custom fields.
+   Example response:
+   {
+     "count": 1,
+     "items": [
+       {
+         "id": "cf_001",
+         "displayName": "Priority",
+         "dataType": "string",
+         "requiredOnIngress": false,
+         "enumValues": []
+       }
+     ]
+   }
+
+4. GET /api/preview/categories
+   Returns existing categories.
+   Example response:
+   {
+     "count": 3,
+     "items": [
+       { "categoryId": "cat_01", "categoryName": "Electrical", "parentId": null },
+       { "categoryId": "cat_02", "categoryName": "HVAC", "parentId": null }
+     ]
+   }
+
+5. POST /create_status_sets_from_json
+   Accepts JSON array of status set objects.
+   Example payload:
+   [
+     { "name": "New Status Set", "statuses": [{ "label": "Pending" }, { "label": "Done" }] }
+   ]
+   Returns: { "created": 1 }
+
+6. POST /create_custom_fields_from_json
+   Accepts JSON array of custom field objects.
+   Example payload:
+   [
+     { "displayName": "Priority", "dataType": "enum", "enumValues": [{"label": "High"},{"label":"Low"}], "requiredOnIngress": true }
+   ]
+   Returns: { "created": 1 }
+
+7. POST /create_categories_from_json
+   Accepts JSON array of category objects.
+   Example payload:
+   [
+     { "categoryName": "Mechanical", "parentId": null, "statusSetId": "100" }
+   ]
+   Returns: { "created": 1 }
+
+FRONTEND FUNCTIONALITY:
+- Dashboard with tabs:
+  1. Project Info (header)
+  2. Status Sets
+  3. Custom Fields
+  4. Categories
+- Each tab displays existing data in a table or list
+- "Add New" button opens modal/form for creation
+- Form submission sends POST requests to the backend
+- Download CSV button exports table data
+- Project Info section displays /api/status info with refresh button
+- Loading indicators during fetch
+- Error handling via toast notifications
+- Responsive design (desktop/mobile)
+- Accessible forms (labels, aria-live, focus states)
+
+TECHNICAL CONSTRAINTS:
+- Vanilla HTML, CSS, JS only (ES6 modules allowed)
+- Use Fetch API for backend communication
+- Relative URLs for API requests
+- Handle JSON errors gracefully
+- Include inline comments explaining JS functions
+- CSS should use variables for theme colors
+
+DELIVERABLES:
+1. Full `index.html` (with semantic HTML structure)
+2. Full `styles.css`
+3. Full `script.js`
+4. Inline comments describing each section
+5. QA checklist in index.html comments
+
+ACCEPTANCE TESTS:
+1. Project Info loads on page load
+2. Clicking Status Sets tab fetches /api/preview/status_sets and renders correctly
+3. Add New buttons open forms and POST correctly
+4. Download CSV exports correct data
+5. Error responses show toast messages
+6. Loading indicators disappear after fetch completes
+
+OUTPUT INSTRUCTIONS:
+- Return complete files in separate code blocks:
+```html index.html```
+```css styles.css```
+```js script.js```
+- Include proper <link> and <script> tags in index.html
+- Use semantic elements: header, nav, main, section, footer
+- Use IDs or data attributes for JS hooks
+- Inline comments marking start/end of each section
