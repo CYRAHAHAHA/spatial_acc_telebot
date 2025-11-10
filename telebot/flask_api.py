@@ -7,29 +7,18 @@ from datetime import datetime
 from threading import Lock
 from uuid import UUID
 from pathlib import Path
-import sys
 
-# --- Fix Python path so we can import from root/app ---
-sys.path.append(str(Path(__file__).resolve().parents[1] / "root"))
+import requests
+from dotenv import load_dotenv, find_dotenv
 
-# --- Project imports ---
-from app.authentication import AutodeskAuth
-from app.config import config
-from app.functions.update_status import update_assets
-
-          
+# Ensure env vars are available when running from /telebot
+load_dotenv(find_dotenv(usecwd=True))
 
 app = Flask(__name__)
 
 AUTH_TOKEN = os.getenv("SITE_UPDATES_TOKEN", "super-secret-token")
-
-# Initialize AutodeskAuth using credentials from config.py
-auth = AutodeskAuth(
-    client_id=config.client_id,
-    client_secret=config.client_secret,
-    redirect_uri=config.redirect_uri,
-    scopes=config.scopes or "data:read data:write account:read"
-)
+ROOT_APP_BASE = os.getenv("ROOT_APP_BASE", "http://localhost:8000").rstrip("/")
+ROOT_UPDATE_URL = f"{ROOT_APP_BASE}/update_status"
 
 
 # Base dir of this file so we always write to the same folder as flask_api.py
@@ -75,6 +64,30 @@ def append_pretty_update(entry: dict) -> None:
         json.dump(data, wf, ensure_ascii=False, indent=2)
         wf.write("\n")
     print("Flask: write complete, total entries:", len(data))  # debug
+
+
+def forward_status_to_root(guid: str, status_value: str):
+    """
+    Call the root Flask app endpoint so the canonical APS logic runs there.
+    """
+    payload = {
+        "asset_guid": guid,
+        "status_value": status_value,
+    }
+    try:
+        resp = requests.post(
+            ROOT_UPDATE_URL,
+            json=payload,
+            timeout=10,
+        )
+    except Exception as exc:
+        return None, {"error": f"Failed to reach root /update_status: {exc}"}
+
+    try:
+        body = resp.json()
+    except Exception:
+        body = resp.text
+    return resp.status_code, body
 
 
 @app.route("/site-updates/<guid>", methods=["POST"])
@@ -193,8 +206,21 @@ def update_guid(guid: str):
             "acc_update": acc_result
         }), 200 if acc_status and 200 <= acc_status < 300 else acc_status
 
-    # If no status, just local log response
-    return jsonify({"ok": True, "guid": guid, "version": DB[guid]["version"]})
+    # Forward status update to the canonical root Flask app endpoint
+    root_status, root_body = forward_status_to_root(guid, status_value)
+
+    response_payload = {
+        "ok": True,
+        "guid": guid,
+        "version": DB[guid]["version"],
+        "root_update": root_body,
+    }
+
+    if root_status is None:
+        response_payload["warning"] = "Update logged locally but failed to reach root /update_status."
+        return jsonify(response_payload), 200
+
+    return jsonify(response_payload), root_status
 
 
 if __name__ == "__main__":

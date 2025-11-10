@@ -1,8 +1,2 @@
-# Bot’s secret token from BotFather
-# Telegram group: Site Update (Test)
-# Open Powershell to save token in environment
-#Note: Only one person should run the bot at a time to prevent conflict
-
-TELEGRAM_TOKEN=7971750300:AAG-Z5uxX77aYA8DV2MakPU_kzi7ijBndF4
- 
-
+# Deprecated helper file.
+# Tokens are now loaded from the top-level .env file via python-dotenv.

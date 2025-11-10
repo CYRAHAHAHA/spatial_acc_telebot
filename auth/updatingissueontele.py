@@ -1,17 +1,37 @@
+import os
+
 import telebot
 from flask import Flask, request, redirect
 import requests, threading
 from auth import AutodeskAuth
+from dotenv import load_dotenv, find_dotenv
+
+load_dotenv(find_dotenv(usecwd=True))
 
 # ----------------------------------------
 # CONFIGURATION
 # ----------------------------------------
-BOT_TOKEN = "8168413961:AAHnwqzUZKpsfFGTNsTK_Fk5PzDKqaBUeI8"
-CLIENT_ID = "GdxVaoVK9GponGjg5ekGhIkdxEIOipoAjROfwqA2RvXPM5k9"
-CLIENT_SECRET = "QCtZ3oMGXfjUvVkJ80KCJDUMz99MtTFTgdHDVbVFMGWXa5m7GE6VzLMBKUVsuRtV"
-REDIRECT_URI = "http://localhost:8080/callback"
-SCOPES = "data:read data:write account:read"
-PROJECT_ID = "b8df4eae-1fdb-454d-8928-a1d6b68b18af"
+BOT_TOKEN = os.getenv("TELEGRAM_TOKEN")
+CLIENT_ID = os.getenv("YR_CLIENT_ID") or os.getenv("CLIENT_ID")
+CLIENT_SECRET = os.getenv("YR_CLIENT_SECRET") or os.getenv("CLIENT_SECRET")
+REDIRECT_URI = os.getenv("YR_REDIRECT_URI") or os.getenv("REDIRECT_URI")
+SCOPES = os.getenv("YR_SCOPES") or os.getenv("SCOPES")
+PROJECT_ID = os.getenv("PROJECT_ID") or os.getenv("YR_PROJECT_ID")
+
+missing = [
+    name
+    for name, value in (
+        ("TELEGRAM_TOKEN", BOT_TOKEN),
+        ("YR_CLIENT_ID", CLIENT_ID),
+        ("YR_CLIENT_SECRET", CLIENT_SECRET),
+        ("YR_REDIRECT_URI", REDIRECT_URI),
+        ("YR_SCOPES", SCOPES),
+        ("PROJECT_ID", PROJECT_ID),
+    )
+    if not value
+]
+if missing:
+    raise RuntimeError(f"Missing required environment variables: {', '.join(missing)}")
 
 # ----------------------------------------
 # AUTODESK AUTH SETUP
