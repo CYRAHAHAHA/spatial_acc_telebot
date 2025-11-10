@@ -27,8 +27,7 @@ if [ ${#PIDS[@]} -eq 0 ]; then
 fi
 
 FLASK_WEBAPP_PID=${PIDS[0]:-}
-FLASK_API_PID=${PIDS[1]:-}
-TELEGRAM_BOT_PID=${PIDS[2]:-}
+TELEGRAM_BOT_PID=${PIDS[1]:-}
 
 # Function to check process status
 check_process() {
@@ -42,8 +41,7 @@ check_process() {
 
     if ps -p $PID > /dev/null 2>&1; then
         # Get process info
-        local UPTIME=$(ps -p $PID -o etime= | tr -d ' ')
-        local MEM=$(ps -p $PID -o rss= | awk '{printf "%.1f MB", $1/1024}')
+        local PROC_INFO=$(ps -p $PID)
         echo "[$NAME] RUNNING (PID: $PID, Uptime: $UPTIME, Memory: $MEM)"
         return 0
     else
@@ -56,25 +54,23 @@ check_process() {
 RUNNING_COUNT=0
 
 check_process "$FLASK_WEBAPP_PID" "Flask Web App" && ((RUNNING_COUNT++))
-check_process "$FLASK_API_PID" "Flask API Server" && ((RUNNING_COUNT++))
 check_process "$TELEGRAM_BOT_PID" "Telegram Bot" && ((RUNNING_COUNT++))
 
 echo ""
 echo "-----------------------------------------------"
-if [ $RUNNING_COUNT -eq 3 ]; then
+if [ $RUNNING_COUNT -eq 2 ]; then
     echo "Overall Status: ALL SERVICES RUNNING ✓"
 elif [ $RUNNING_COUNT -eq 0 ]; then
     echo "Overall Status: ALL SERVICES STOPPED"
     echo "Run ./start_all.sh to start services"
 else
-    echo "Overall Status: PARTIAL ($RUNNING_COUNT/3 services running) ⚠"
+    echo "Overall Status: PARTIAL ($RUNNING_COUNT/2 services running) ⚠"
     echo "Consider restarting: ./stop_all.sh && ./start_all.sh"
 fi
 echo "-----------------------------------------------"
 echo ""
 echo "Log files:"
 echo "  - logs/flask_webapp.log"
-echo "  - logs/flask_api.log"
 echo "  - logs/telegram_bot.log"
 echo ""
 echo "To view live logs: tail -f logs/*.log"
