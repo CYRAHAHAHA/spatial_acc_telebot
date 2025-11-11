@@ -175,6 +175,77 @@
       "createdBy": "26T24R4NKFREYN6X",
       "updatedAt": "2025-10-30T15:23:13.482Z",
       "updatedBy": "26T24R4NKFREYN6X"
+    },
+    {
+      "name": "ca27",
+      "displayName": "Size of Material",
+      "description": "Sizes",
+      "dataType": "select",
+      "requiredOnIngress": false,
+      "values": [
+        {
+          "id": "903ada8d-1e86-4759-b54a-1ddc4f38d2f9",
+          "version": 14353814,
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "displayName": "Large",
+          "customAttributeId": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
+          "createdAt": "2025-11-04T17:01:19.056Z",
+          "createdBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-11-04T17:01:19.056Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "isActive": true
+        },
+        {
+          "id": "e5171040-89c6-4cf3-823b-6fe5dd6c3f13",
+          "version": 14353815,
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "displayName": "Big",
+          "customAttributeId": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
+          "createdAt": "2025-11-04T17:01:19.056Z",
+          "createdBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-11-04T17:01:19.056Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "isActive": true
+        },
+        {
+          "id": "5edcc036-4400-4249-a733-495e4afc353c",
+          "version": 14353816,
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "displayName": "Medium",
+          "customAttributeId": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
+          "createdAt": "2025-11-04T17:01:19.056Z",
+          "createdBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-11-04T17:01:19.056Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "isActive": true
+        },
+        {
+          "id": "e42ffe32-db6b-4139-b026-86ed94a3b99e",
+          "version": 14353817,
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "displayName": "Small",
+          "customAttributeId": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
+          "createdAt": "2025-11-04T17:01:19.056Z",
+          "createdBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-11-04T17:01:19.056Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "isActive": true
+        }
+      ],
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "id": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
+      "version": 3207523,
+      "isActive": true,
+      "createdAt": "2025-11-04T17:01:19.048Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T17:01:19.048Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "enumValues": [
+        "Large",
+        "Big",
+        "Medium",
+        "Small"
+      ]
     }
   ],
   "statusSetsRaw": [
@@ -619,6 +690,69 @@
       "updatedAt": "2025-10-30T14:11:16.091Z",
       "updatedBy": "26T24R4NKFREYN6X",
       "isActive": true
+    },
+    {
+      "id": "776683ae-f7d1-48dc-99c1-0ea55be14880",
+      "version": 5040696,
+      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "name": "Sample Status Set",
+      "description": "For testing",
+      "isDefault": false,
+      "values": [
+        {
+          "id": "6d4862fc-b2de-4753-b91b-63b88d57445e",
+          "version": 72350560,
+          "description": "Yo",
+          "bucket": "status_1_1762276508499",
+          "label": "Status 1",
+          "color": "adsk-charcoal-900",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "776683ae-f7d1-48dc-99c1-0ea55be14880",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-11-04T17:15:08.499Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-11-04T17:15:08.499Z",
+          "isActive": true
+        },
+        {
+          "id": "2d40c591-c5d3-46fe-82ce-3225b4e2d9f8",
+          "version": 72350561,
+          "description": "Hi",
+          "bucket": "status_2_1762276508499",
+          "label": "Status 2",
+          "color": "adsk-yellow-orange-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "776683ae-f7d1-48dc-99c1-0ea55be14880",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-11-04T17:15:08.499Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-11-04T17:15:08.499Z",
+          "isActive": true
+        },
+        {
+          "id": "18021158-63ad-40fd-904e-1edc4e80110c",
+          "version": 72350562,
+          "description": "Hey",
+          "bucket": "status_3_1762276508499",
+          "label": "Status 3",
+          "color": "adsk-blue-500",
+          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+          "statusStepSetId": "776683ae-f7d1-48dc-99c1-0ea55be14880",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-11-04T17:15:08.499Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-11-04T17:15:08.499Z",
+          "isActive": true
+        }
+      ],
+      "createdAt": "2025-11-04T17:15:08.496Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T17:15:08.496Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true
     }
   ],
   "categoriesRaw": [
@@ -633,7 +767,8 @@
       "subcategoryIds": [
         "2",
         "3",
-        "4"
+        "4",
+        "5"
       ],
       "isActive": true,
       "isRoot": true,
@@ -672,6 +807,19 @@
       "createdAt": "2025-10-27T09:37:54.770Z",
       "createdBy": "26T24R4NKFREYN6X",
       "updatedAt": "2025-10-27T09:37:54.770Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "5",
+      "name": "Windows",
+      "parentId": "1",
+      "createdAt": "2025-11-04T17:04:57.078Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T17:04:57.078Z",
       "updatedBy": "26T24R4NKFREYN6X",
       "subcategoryIds": [],
       "isActive": true,
@@ -749,12 +897,24 @@
           "description": "Additional remarks or special handling instructions",
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Size of Material",
+          "description": "Sizes",
+          "dataType": "select",
+          "enumValues": [
+            "Large",
+            "Big",
+            "Medium",
+            "Small"
+          ]
         }
       ],
       "children": [
         "2",
         "3",
-        "4"
+        "4",
+        "5"
       ]
     },
     {
@@ -877,6 +1037,17 @@
           "description": "Additional remarks or special handling instructions",
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Size of Material",
+          "description": "Sizes",
+          "dataType": "select",
+          "enumValues": [
+            "Large",
+            "Big",
+            "Medium",
+            "Small"
+          ]
         }
       ],
       "children": []
@@ -985,6 +1156,17 @@
           "description": "Additional remarks or special handling instructions",
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Size of Material",
+          "description": "Sizes",
+          "dataType": "select",
+          "enumValues": [
+            "Large",
+            "Big",
+            "Medium",
+            "Small"
+          ]
         }
       ],
       "children": []
@@ -1093,6 +1275,87 @@
           "description": "Additional remarks or special handling instructions",
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Size of Material",
+          "description": "Sizes",
+          "dataType": "select",
+          "enumValues": [
+            "Large",
+            "Big",
+            "Medium",
+            "Small"
+          ]
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "Windows",
+      "categoryId": "5",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": "Unique IFC identifier",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "IFC_Type",
+          "description": "Component type",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Discipline",
+          "description": "Trade category",
+          "dataType": "multi_select",
+          "enumValues": [
+            "Architecture",
+            "Structural",
+            "Mechanical",
+            "Electrical",
+            "Plumbing"
+          ]
+        },
+        {
+          "displayName": "Subcontractor",
+          "description": "Responsible party",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Planned Date",
+          "description": "Construction plan",
+          "dataType": "date",
+          "enumValues": []
+        },
+        {
+          "displayName": "Asset Value",
+          "description": "Cost data",
+          "dataType": "numeric",
+          "enumValues": []
+        },
+        {
+          "displayName": "Notes",
+          "description": "Additional remarks or special handling instructions",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Size of Material",
+          "description": "Sizes",
+          "dataType": "select",
+          "enumValues": [
+            "Large",
+            "Big",
+            "Medium",
+            "Small"
+          ]
         }
       ],
       "children": []

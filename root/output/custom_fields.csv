@@ -6,3 +6,4 @@ a824e4c7-7bdb-42e0-a874-6ab45fb74d84,a359e86e-5fa5-4028-b141-f52133fca4b6,ca4,Su
 a824e4c7-7bdb-42e0-a874-6ab45fb74d84,ccb6025b-a539-4fe0-98cb-32aea26d1111,ca5,Planned Date,Construction plan,date,False,,
 a824e4c7-7bdb-42e0-a874-6ab45fb74d84,b05bca3c-11c4-4c91-bfab-75544e9249a6,ca12,Asset Value,Cost data,numeric,False,,
 a824e4c7-7bdb-42e0-a874-6ab45fb74d84,28dbd448-1388-43d7-a7fd-c31c5c8f96b5,ca22,Notes,Additional remarks or special handling instructions,text,False,,
+a824e4c7-7bdb-42e0-a874-6ab45fb74d84,e273fac5-ebb2-49d3-8b73-1033f4e0d9e5,ca27,Size of Material,Sizes,select,False,,Large(903ada8d-1e86-4759-b54a-1ddc4f38d2f9);Big(e5171040-89c6-4cf3-823b-6fe5dd6c3f13);Medium(5edcc036-4400-4249-a733-495e4afc353c);Small(e42ffe32-db6b-4139-b026-86ed94a3b99e)

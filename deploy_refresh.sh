@@ -34,15 +34,15 @@ echo "  ✓ TELEGRAM_TOKEN is set"
 echo "[2/5] Setting up Python virtual environment..."
 
 # Check if venv exists
-if [ -d "venv" ]; then
+if [ -d ".venv" ]; then
     echo "  ✓ Virtual environment exists"
 else
     echo "  → Creating virtual environment..."
-    python3 -m venv venv
+    python3 -m venv .venv
 fi
 
 # Activate venv
-source venv/bin/activate
+source .venv/Scripts/activate
 
 # Upgrade pip and install/update dependencies
 echo "  → Updating dependencies..."

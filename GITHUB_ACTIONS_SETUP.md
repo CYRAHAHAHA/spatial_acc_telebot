@@ -5,6 +5,7 @@ This guide explains how to set up automated deployment to your EC2 instance usin
 ## Overview
 
 The GitHub Actions workflow automatically:
+
 1. ✅ Deploys code changes when you push to the `main` branch
 2. ✅ Syncs files to EC2 using rsync (excludes venv, logs, etc.)
 3. ✅ Creates `.env` file from GitHub Secrets
@@ -61,29 +62,29 @@ Add the following secrets:
 
 ### Required Secrets
 
-| Secret Name | Description | Example Value |
-|------------|-------------|---------------|
-| `EC2_SSH_KEY` | Private SSH key for EC2 | Contents of your `.pem` file |
-| `EC2_HOST` | EC2 public IP or hostname | `ec2-12-34-56-78.compute.amazonaws.com` or `12.34.56.78` |
-| `EC2_USER` | EC2 username | `ec2-user` (for Amazon Linux) |
-| `EC2_DEPLOY_PATH` | Deployment directory path | `/home/ec2-user/spatial_acc_telebot` |
+| Secret Name       | Description               | Example Value                                            |
+| ----------------- | ------------------------- | -------------------------------------------------------- |
+| `EC2_SSH_KEY`     | Private SSH key for EC2   | Contents of your `.pem` file                             |
+| `EC2_HOST`        | EC2 public IP or hostname | `ec2-12-34-56-78.compute.amazonaws.com` or `12.34.56.78` |
+| `EC2_USER`        | EC2 username              | `ec2-user` (for Amazon Linux)                            |
+| `EC2_DEPLOY_PATH` | Deployment directory path | `/home/ec2-user/spatial_acc_telebot`                     |
 
 ### Autodesk Configuration Secrets
 
-| Secret Name | Description | Example Value |
-|------------|-------------|---------------|
-| `AUTODESK_CLIENT_ID` | Your Autodesk client ID | `abc123xyz...` |
-| `AUTODESK_CLIENT_SECRET` | Your Autodesk client secret | `xyz789abc...` |
-| `AUTODESK_REDIRECT_URI` | OAuth redirect URI | `http://your-ec2-ip:8080/callback` |
-| `AUTODESK_SCOPES` | API scopes | `data:read data:write data:create` |
-| `AUTODESK_PROJECT_ID` | ACC Project ID | `b.abc123...` |
+| Secret Name              | Description                 | Example Value                      |
+| ------------------------ | --------------------------- | ---------------------------------- |
+| `AUTODESK_CLIENT_ID`     | Your Autodesk client ID     | `abc123xyz...`                     |
+| `AUTODESK_CLIENT_SECRET` | Your Autodesk client secret | `xyz789abc...`                     |
+| `AUTODESK_REDIRECT_URI`  | OAuth redirect URI          | `http://your-ec2-ip:8080/callback` |
+| `AUTODESK_SCOPES`        | API scopes                  | `data:read data:write data:create` |
+| `AUTODESK_PROJECT_ID`    | ACC Project ID              | `b.abc123...`                      |
 
 ### Telegram Configuration Secrets
 
-| Secret Name | Description | Example Value |
-|------------|-------------|---------------|
-| `TELEGRAM_TOKEN` | Telegram bot token | `1234567890:ABCdefGHIjklMNOpqrsTUVwxyz...` |
-| `SITE_UPDATES_TOKEN` | API authentication token | `your-secure-random-token-here` |
+| Secret Name          | Description              | Example Value                              |
+| -------------------- | ------------------------ | ------------------------------------------ |
+| `TELEGRAM_TOKEN`     | Telegram bot token       | `1234567890:ABCdefGHIjklMNOpqrsTUVwxyz...` |
+| `SITE_UPDATES_TOKEN` | API authentication token | `your-secure-random-token-here`            |
 
 ## Step 3: How to Add Secrets
 
@@ -125,6 +126,7 @@ gh secret set AUTODESK_PROJECT_ID -b "your-project-id"
 The workflow file is located at `.github/workflows/deploy.yml`
 
 Key features:
+
 - **Triggers**: Runs on push to `main` branch or manual trigger
 - **File sync**: Uses rsync to efficiently sync only changed files
 - **Excludes**: Automatically excludes venv, logs, cache files
@@ -202,6 +204,7 @@ git push origin main
 **Issue**: SSH key permissions or authentication failure
 
 **Solution**:
+
 ```bash
 # Verify EC2_SSH_KEY secret contains the full private key
 # Including -----BEGIN RSA PRIVATE KEY----- and -----END RSA PRIVATE KEY-----
@@ -215,6 +218,7 @@ ssh -i your-key.pem ec2-user@your-ec2-ip
 **Issue**: rsync not installed on EC2
 
 **Solution**:
+
 ```bash
 # SSH into EC2 and install rsync
 sudo dnf install -y rsync
@@ -225,6 +229,7 @@ sudo dnf install -y rsync
 **Issue**: Environment variables not properly set or Python dependencies missing
 
 **Solution**:
+
 ```bash
 # SSH into EC2
 ssh -i your-key.pem ec2-user@your-ec2-ip
@@ -247,6 +252,7 @@ tail -f logs/*.log
 **Issue**: Security Group or firewall blocking SSH
 
 **Solution**:
+
 1. Check AWS Security Group has SSH (port 22) open for GitHub Actions IPs
 2. Or open port 22 to 0.0.0.0/0 (less secure but simpler)
 3. Verify firewalld allows SSH:
@@ -275,7 +281,6 @@ on:
   push:
     branches:
       - develop
-
 # Use different secrets: EC2_HOST_STAGING, etc.
 ```
 
@@ -307,7 +312,7 @@ If GitHub Actions is down, deploy manually:
 
 ```bash
 # From your local machine
-rsync -avz --exclude 'venv/' --exclude '.git/' \
+rsync -avz --exclude '.venv/' --exclude '.git/' \
   -e "ssh -i your-key.pem" \
   ./ ec2-user@your-ec2-ip:/home/ec2-user/spatial_acc_telebot/
 
@@ -326,6 +331,7 @@ cd /home/ec2-user/spatial_acc_telebot
 5. ✅ Set up monitoring/alerting for production
 
 For more information:
+
 - See `QUICKSTART_AL2023.md` for EC2 setup
 - See `EC2_DEPLOYMENT.md` for detailed deployment guide
 - See GitHub Actions documentation: https://docs.github.com/en/actions

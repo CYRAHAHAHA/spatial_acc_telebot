@@ -25,8 +25,7 @@ if [ ${#PIDS[@]} -eq 0 ]; then
 fi
 
 FLASK_WEBAPP_PID=${PIDS[0]:-}
-FLASK_API_PID=${PIDS[1]:-}
-TELEGRAM_BOT_PID=${PIDS[2]:-}
+TELEGRAM_BOT_PID=${PIDS[1]:-}
 
 # Function to stop a process gracefully
 stop_process() {
@@ -64,7 +63,6 @@ stop_process() {
 
 # Stop all processes
 stop_process "$FLASK_WEBAPP_PID" "Flask Web App"
-stop_process "$FLASK_API_PID" "Flask API Server"
 stop_process "$TELEGRAM_BOT_PID" "Telegram Bot"
 
 # Remove PID file

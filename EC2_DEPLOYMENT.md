@@ -13,12 +13,14 @@ This guide walks you through deploying the spatial_acc_telebot application on an
 ## Step 1: Launch and Configure EC2 Instance
 
 1. Launch an EC2 instance with the following specifications:
+
    - **Instance Type**: t2.small or larger (minimum 2GB RAM)
    - **OS**: Amazon Linux 2023, Ubuntu 22.04 LTS, or Amazon Linux 2
    - **Storage**: 20GB minimum
    - **Security Group**: Open ports 8080 (or configure behind reverse proxy)
 
 2. SSH into your instance:
+
    ```bash
    # For Amazon Linux
    ssh -i your-key.pem ec2-user@your-ec2-ip
@@ -32,6 +34,7 @@ This guide walks you through deploying the spatial_acc_telebot application on an
 ### For Amazon Linux 2023 (recommended):
 
 **Option A: Python 3.9 (default)**
+
 ```bash
 sudo dnf update -y
 sudo dnf install -y python3 python3-pip git
@@ -39,6 +42,7 @@ python3 --version  # Verify Python 3.9.x
 ```
 
 **Option B: Python 3.11 (recommended for better performance)**
+
 ```bash
 sudo dnf update -y
 sudo dnf install -y python3.11 python3.11-pip git
@@ -48,12 +52,14 @@ python3 --version  # Verify Python 3.11.x
 ```
 
 ### For Ubuntu/Debian:
+
 ```bash
 sudo apt update
 sudo apt install -y python3 python3-pip python3-venv git
 ```
 
 ### For Amazon Linux 2:
+
 ```bash
 sudo yum update -y
 sudo yum install -y python3 python3-pip git
@@ -74,6 +80,7 @@ cd spatial_acc_telebot
 ```
 
 Or upload files using SCP:
+
 ```bash
 # From your local machine (Amazon Linux)
 scp -i your-key.pem -r /path/to/spatial_acc_telebot ec2-user@your-ec2-ip:/home/ec2-user/
@@ -85,8 +92,8 @@ scp -i your-key.pem -r /path/to/spatial_acc_telebot ubuntu@your-ec2-ip:/home/ubu
 ## Step 4: Set Up Python Virtual Environment
 
 ```bash
-python3 -m venv venv
-source venv/bin/activate
+python3 -m venv .venv
+source .venv/Scripts/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 ```
@@ -94,11 +101,13 @@ pip install -r requirements.txt
 ## Step 5: Configure Environment Variables
 
 1. Create the `.env` file:
+
    ```bash
    nano root/.env
    ```
 
 2. Add your configuration:
+
    ```
    YR_CLIENT_ID=your_autodesk_client_id
    YR_CLIENT_SECRET=your_autodesk_client_secret
@@ -108,6 +117,7 @@ pip install -r requirements.txt
    ```
 
 3. Set environment variables for the session:
+
    ```bash
    export TELEGRAM_TOKEN="your_telegram_bot_token"
    export SITE_UPDATES_TOKEN="super-secret-token"  # Change this to a secure token
@@ -145,16 +155,19 @@ tail -f logs/*.log
 For production deployments, use systemd to manage services and auto-restart on failure/reboot.
 
 1. Copy the service file:
+
    ```bash
    sudo cp spatial_acc_telebot.service /etc/systemd/system/
    ```
 
 2. Edit the service file with your paths and credentials:
+
    ```bash
    sudo nano /etc/systemd/system/spatial_acc_telebot.service
    ```
 
    Update the following fields:
+
    - `User=ec2-user` (or `ubuntu` for Ubuntu)
    - `Group=ec2-user` (or `ubuntu` for Ubuntu)
    - `WorkingDirectory=/home/ec2-user/spatial_acc_telebot` (adjust path as needed)
@@ -162,6 +175,7 @@ For production deployments, use systemd to manage services and auto-restart on f
    - Update paths in `ExecStart` and `ExecStop` to match your installation directory
 
 3. Enable and start the service:
+
    ```bash
    sudo systemctl daemon-reload
    sudo systemctl enable spatial_acc_telebot
@@ -169,11 +183,13 @@ For production deployments, use systemd to manage services and auto-restart on f
    ```
 
 4. Check service status:
+
    ```bash
    sudo systemctl status spatial_acc_telebot
    ```
 
 5. View logs:
+
    ```bash
    # Live logs
    sudo journalctl -u spatial_acc_telebot -f
@@ -185,6 +201,7 @@ For production deployments, use systemd to manage services and auto-restart on f
 ## Step 8: Configure Firewall
 
 ### Amazon Linux 2023/Amazon Linux 2 (firewalld):
+
 ```bash
 # Check if firewalld is running
 sudo systemctl status firewalld
@@ -202,13 +219,16 @@ sudo firewall-cmd --list-ports
 ```
 
 ### Ubuntu (UFW):
+
 ```bash
 sudo ufw allow 8080/tcp
 sudo ufw enable
 ```
 
 ### AWS Security Group (Required for all):
+
 Add an inbound rule in your EC2 Security Group:
+
 - Type: Custom TCP
 - Port: 8080
 - Source: Your IP or 0.0.0.0/0 (for public access)
@@ -252,27 +272,33 @@ tail -f logs/*.log
 ## Troubleshooting
 
 ### Services won't start
+
 - Check environment variables: `echo $TELEGRAM_TOKEN`
 - Verify `.env` file exists: `ls -la root/.env`
 - Check Python dependencies: `pip list`
 - View error logs: `cat logs/*.log`
 
 ### Port 8080 conflicts
+
 Both Flask Web App and Flask API try to use port 8080. This is intentional - they serve different purposes:
+
 - **Flask Web App** (`root/main.py`): Serves the SPA and ACC integration endpoints
 - **Flask API** (`telebot/flask_api.py`): Receives updates from Telegram bot
 
 If you get a port conflict, modify one of them:
+
 1. Edit `telebot/flask_api.py`, change line: `app.run(host="0.0.0.0", port=8081, debug=True)`
 2. Update `FLASK_BASE` env var: `export FLASK_BASE="http://localhost:8081"`
 
 ### Telegram bot not receiving messages
+
 - Verify bot is added to the group
 - Check bot has permission to read messages
 - Ensure `TELEGRAM_TOKEN` is set correctly
 - View bot logs: `tail -f logs/telegram_bot.log`
 
 ### ACC API calls failing
+
 - Check token validity: `curl http://localhost:8080/api/status`
 - Re-authenticate if needed: Visit `/authorize`
 - Verify project_id is correct in `.env`
@@ -320,6 +346,7 @@ Set up basic monitoring:
 ## Backup Important Files
 
 Regularly backup:
+
 - `root/.env` (credentials)
 - `root/autodesk_tokens.json` (auth tokens)
 - `root/data/*.csv` (cached ACC data)

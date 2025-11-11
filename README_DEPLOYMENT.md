@@ -5,12 +5,14 @@ Complete automation solution for deploying to Amazon Linux 2023 EC2 instances us
 ## 🚀 Quick Start (3 Steps)
 
 ### 1. Set Up GitHub Secrets
+
 ```bash
 # Go to: Repository Settings → Secrets and variables → Actions
 # Add 11 secrets (see .github/secrets.template for full list)
 ```
 
 ### 2. Prepare EC2 Instance
+
 ```bash
 ssh -i your-key.pem ec2-user@your-ec2-ip
 sudo dnf update -y
@@ -21,6 +23,7 @@ sudo firewall-cmd --reload
 ```
 
 ### 3. Deploy
+
 ```bash
 # Push to main branch
 git push origin main
@@ -33,22 +36,26 @@ That's it! GitHub Actions handles everything else.
 ## 📁 Documentation Index
 
 ### Getting Started
+
 - **`QUICKSTART_AL2023.md`** - 5-minute setup guide for Amazon Linux 2023
 - **`DEPLOYMENT_CHECKLIST.md`** - Complete checklist for deployment
 - **`PYTHON_VERSION_FIX.md`** - Fix Python compatibility issues
 
 ### Deployment
+
 - **`GITHUB_ACTIONS_SETUP.md`** - Configure automated GitHub Actions deployment
 - **`EC2_DEPLOYMENT.md`** - Comprehensive manual deployment guide
 - **`.github/secrets.template`** - Template for GitHub Secrets
 
 ### Architecture & Development
+
 - **`CLAUDE.md`** - Codebase architecture and development guide
 - **`README.md`** - Original project documentation
 
 ## 🔧 What Gets Deployed
 
 ### Included in Deployment
+
 ✅ All Python code (`.py` files)
 ✅ Requirements file (`requirements.txt`)
 ✅ Configuration templates
@@ -56,7 +63,8 @@ That's it! GitHub Actions handles everything else.
 ✅ Static files (SPA frontend)
 
 ### Excluded from Deployment (Preserved on Server)
-❌ Virtual environment (`venv/`)
+
+❌ Virtual environment (`.venv/`)
 ❌ Log files (`logs/`)
 ❌ OAuth tokens (`autodesk_tokens.json`)
 ❌ Generated CSVs (`root/data/*.csv`)
@@ -67,6 +75,7 @@ That's it! GitHub Actions handles everything else.
 Add these 11 secrets to GitHub:
 
 ### EC2 Connection (4)
+
 ```
 EC2_SSH_KEY          # Your .pem file contents
 EC2_HOST             # EC2 IP or hostname
@@ -75,6 +84,7 @@ EC2_DEPLOY_PATH      # /home/ec2-user/spatial_acc_telebot
 ```
 
 ### Autodesk API (5)
+
 ```
 AUTODESK_CLIENT_ID
 AUTODESK_CLIENT_SECRET
@@ -84,6 +94,7 @@ AUTODESK_PROJECT_ID
 ```
 
 ### Telegram (2)
+
 ```
 TELEGRAM_TOKEN
 SITE_UPDATES_TOKEN       # Random secure token
@@ -136,6 +147,7 @@ tail -f logs/*.log
 After deployment, check:
 
 1. **Services Running**:
+
    ```bash
    ssh -i your-key.pem ec2-user@your-ec2-ip
    cd /home/ec2-user/spatial_acc_telebot
@@ -151,20 +163,24 @@ After deployment, check:
 ## 🐛 Troubleshooting
 
 ### GitHub Actions fails
+
 → Check workflow logs in Actions tab
 → Verify all 11 secrets are set
 → Test SSH: `ssh -i your-key.pem ec2-user@your-ec2-ip`
 
 ### Services don't start
+
 → SSH to EC2 and run `./status.sh`
 → Check logs: `tail -f logs/*.log`
 → Verify .env file: `cat .env`
 
 ### Python dependency errors
+
 → See `PYTHON_VERSION_FIX.md`
 → Upgrade to Python 3.11 if needed
 
 ### Port 8080 conflicts
+
 → See `QUICKSTART_AL2023.md` troubleshooting section
 
 ## 📊 Architecture

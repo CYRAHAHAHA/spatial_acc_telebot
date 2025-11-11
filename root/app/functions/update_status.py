@@ -14,10 +14,10 @@ DATA_DIR = BASE_DIR / "data"
 
 def _lookup_status_id_by_label(label: str) -> Optional[str]:
     """
-    Look up a statusId in data/status_sets.csv by matching status_label (case-insensitive).
+    Look up a statusId in output/status_sets.csv by matching status_label (case-insensitive).
     Returns the first match.
     """
-    csv_path = DATA_DIR / "status_sets.csv"
+    csv_path = Path("./output/status_sets.csv")
     if not csv_path.exists():
         return None
     needle = (label or "").strip().lower()
@@ -32,8 +32,8 @@ def _lookup_status_id_by_label(label: str) -> Optional[str]:
     return None
 
 def _resolve_asset_id_from_guid(asset_guid: str) -> Optional[str]:
-    # with the asset_guid, search root\data\assets_total.csv to find the header ifc_global_id and then get the corresponding b3f_id
-    csv_path = DATA_DIR / "assets_total.csv"
+    # with the asset_guid, search root\output\assets_total.csv to find the header ifc_global_id and then get the corresponding b3f_id
+    csv_path = Path("./output/assets_total.csv")
     if not csv_path.exists():
         print("no assets_total.csv found")
         return None
@@ -59,10 +59,8 @@ def update_assets(access_token: str, asset_guid: str, status_value: str):
         "<assetId>": { "statusId": "<statusId>" }
       }
     """
-    project_id = getattr(config, "project_id", None) or getattr(config, "projectId", None)
-    if not project_id:
-        return jsonify({"error": "Missing project_id in config."}), 500
-
+    project_id = config.project_id
+    
     status_id = _lookup_status_id_by_label(status_value)
     if not status_id:
         return jsonify({"error": f"Status '{status_value}' not found in status_sets.csv"}), 404

@@ -18,10 +18,7 @@ def create_status_sets(access_token: str, data: List[Dict[str, Any]]):
         print("⚠️ Empty or invalid payload for status sets.")
         return []
 
-    project_id = getattr(config, "project_id", None) or getattr(config, "PROJECT_ID", None)
-    if not project_id:
-        print("❌ Missing project_id in config.")
-        return []
+    project_id = config.project_id
 
     base_url = "https://developer.api.autodesk.com/construction/assets/v1/projects"
     headers = {
