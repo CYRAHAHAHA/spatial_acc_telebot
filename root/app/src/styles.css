@@ -1634,65 +1634,26 @@ body {
 .category-card-header {
   display: flex;
   align-items: center;
-  gap: var(--forge-space-md);
-  padding: var(--forge-space-md);
+  justify-content: flex-end;
+  padding: 8px 12px;
   background: rgba(255, 255, 255, 0.02);
   border-bottom: 1px solid var(--forge-border);
-}
-
-.category-card-header .category-icon {
-  flex-shrink: 0;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: rgba(6, 150, 215, 0.1);
-  border-radius: var(--forge-radius-md);
-  color: var(--forge-primary);
-}
-
-.category-card-header .category-icon svg {
-  width: 20px;
-  height: 20px;
-}
-
-.category-card-title {
-  flex: 1;
-}
-
-.category-card-title .cat-name-input {
-  width: 100%;
-  padding: var(--forge-space-sm) var(--forge-space-md);
-  font-size: 1rem;
-  font-weight: 600;
-  border: 1px solid var(--forge-border);
-  border-radius: var(--forge-radius-md);
-  background: var(--forge-bg);
-  color: var(--forge-text);
-  transition: all var(--forge-transition);
-}
-
-.category-card-title .cat-name-input:focus {
-  outline: none;
-  border-color: var(--forge-primary);
-  box-shadow: 0 0 0 3px rgba(6, 150, 215, 0.1);
+  min-height: 40px;
 }
 
 .remove-category-btn {
-  flex-shrink: 0;
   background: transparent;
   border: 1px solid var(--forge-error);
   color: var(--forge-error);
-  padding: var(--forge-space-sm);
+  padding: 6px;
   border-radius: var(--forge-radius-md);
   cursor: pointer;
   transition: all var(--forge-transition);
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
 }
 
 .remove-category-btn:hover {
@@ -1712,7 +1673,14 @@ body {
   gap: var(--forge-space-sm);
 }
 
-/* Three-column row layout */
+/* Four-column row layout for main fields */
+.category-form-row-main {
+  display: grid;
+  grid-template-columns: 1.2fr 1.5fr 1fr 1fr;
+  gap: var(--forge-space-sm);
+}
+
+/* Three-column row layout (kept for backward compatibility if needed) */
 .category-form-row {
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
@@ -1892,21 +1860,13 @@ body {
     flex-wrap: wrap;
   }
   
-  .category-card-title {
-    width: 100%;
-    order: 1;
-  }
-  
-  .remove-category-btn {
-    order: 2;
-  }
-  
   .category-card-body {
     padding: var(--forge-space-md);
   }
   
   /* Stack columns vertically on mobile */
-  .category-form-row {
+  .category-form-row,
+  .category-form-row-main {
     grid-template-columns: 1fr;
   }
 }

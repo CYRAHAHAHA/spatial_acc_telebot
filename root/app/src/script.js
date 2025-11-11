@@ -716,19 +716,6 @@
     
     card.innerHTML = `
       <div class="category-card-header">
-        <div class="category-icon">
-          <svg viewBox="0 0 16 16" fill="currentColor">
-            <path d="M2 4a1 1 0 011-1h10a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4zm2 1v6h8V5H4z"/>
-          </svg>
-        </div>
-        <div class="category-card-title">
-          <input 
-            type="text" 
-            class="cat-name-input" 
-            placeholder="Category Name *" 
-            required
-          />
-        </div>
         <button type="button" class="remove-category-btn" title="Remove category">
           <svg viewBox="0 0 16 16" fill="currentColor">
             <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
@@ -738,8 +725,18 @@
       </div>
       
       <div class="category-card-body">
-        <!-- Three-column row for Description, Parent Category, and Status Set -->
-        <div class="category-form-row">
+        <!-- Four-column row for Category Name, Description, Parent Category, and Status Set -->
+        <div class="category-form-row-main">
+          <div class="category-form-group">
+            <label>Category Name *</label>
+            <input 
+              type="text" 
+              class="cat-name-input" 
+              placeholder="Category name..." 
+              required
+            />
+          </div>
+          
           <div class="category-form-group">
             <label>Description *</label>
             <input 
@@ -762,7 +759,7 @@
               <svg width="14" height="14" fill="var(--forge-success)">
                 <circle cx="7" cy="7" r="5"/>
               </svg>
-              <label style="margin: 0; font-size: 0.8rem;">Status Set *</label>
+              <label style="margin: 0; font-size: 0.75rem;">Status Set *</label>
             </div>
             <select class="cat-statusset-select" required>
               <option value="">Select status set...</option>
