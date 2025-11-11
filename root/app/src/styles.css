@@ -331,7 +331,7 @@ body {
   gap: var(--forge-space-sm);
   border-bottom: 2px solid var(--forge-border);
   margin-bottom: var(--forge-space-lg);
-  overflow-x: auto;
+  overflow-x: visible;
 }
 
 .forge-tab {
