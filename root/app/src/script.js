@@ -28,11 +28,7 @@
     resetCustomFieldForm: document.getElementById("resetCustomFieldForm"),
     // Create Categories form elements
     createCategoryForm: document.getElementById("createCategoryForm"),
-    categoryName: document.getElementById("categoryName"),
-    categoryDescription: document.getElementById("categoryDescription"),
-    parentCategoryInput: document.getElementById("parentCategoryInput"),
-    statusSetInput: document.getElementById("statusSetInput"),
-    customFieldsInput: document.getElementById("customFieldsInput"),
+    categoryCardsContainer: document.getElementById("categoryCardsContainer"),
     resetCategoryForm: document.getElementById("resetCategoryForm"),
   };
 
@@ -699,6 +695,386 @@
   // END DYNAMIC CUSTOM FIELDS FORM
   // ========================================
 
+  // ========================================
+  // DYNAMIC CATEGORY CARDS FORM
+  // ========================================
+
+  // Store loaded data for dropdowns
+  let availableStatusSets = [];
+  let availableCustomFields = [];
+  let availableCategories = [];
+  
+  let categoryCardCounter = 0;
+
+  function createCategoryCard() {
+    categoryCardCounter++;
+    const cardId = `cat-card-${categoryCardCounter}`;
+    
+    const card = document.createElement('div');
+    card.className = 'category-creation-card';
+    card.dataset.cardId = cardId;
+    
+    card.innerHTML = `
+      <div class="category-card-header">
+        <div class="category-icon">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d="M2 4a1 1 0 011-1h10a1 1 0 011 1v8a1 1 0 01-1 1H3a1 1 0 01-1-1V4zm2 1v6h8V5H4z"/>
+          </svg>
+        </div>
+        <div class="category-card-title">
+          <input 
+            type="text" 
+            class="cat-name-input" 
+            placeholder="Category Name *" 
+            required
+          />
+        </div>
+        <button type="button" class="remove-category-btn" title="Remove category">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+          </svg>
+        </button>
+      </div>
+      
+      <div class="category-card-body">
+        <!-- Three-column row for Description, Parent Category, and Status Set -->
+        <div class="category-form-row">
+          <div class="category-form-group">
+            <label>Description *</label>
+            <input 
+              type="text" 
+              class="cat-description-input" 
+              placeholder="Brief description..." 
+              required
+            />
+          </div>
+          
+          <div class="category-form-group">
+            <label>Parent Category *</label>
+            <select class="cat-parent-select" required>
+              <option value="">Select parent...</option>
+            </select>
+          </div>
+          
+          <div class="category-form-group cat-statusset-group">
+            <div style="display: flex; align-items: center; gap: 6px;">
+              <svg width="14" height="14" fill="var(--forge-success)">
+                <circle cx="7" cy="7" r="5"/>
+              </svg>
+              <label style="margin: 0; font-size: 0.8rem;">Status Set *</label>
+            </div>
+            <select class="cat-statusset-select" required>
+              <option value="">Select status set...</option>
+            </select>
+            <div class="inheritance-warning" style="display: none;">
+              <svg width="12" height="12" fill="var(--forge-warning)" style="flex-shrink: 0;">
+                <path d="M7.938 2.016A.13.13 0 018 2.151V4.5a.5.5 0 01-1 0V2.15a.13.13 0 01.062-.135zm-.702 8.027a.75.75 0 10-1.5 0 .75.75 0 001.5 0z"/>
+              </svg>
+              <span style="font-size: 0.7rem; color: var(--forge-warning);">Inherited</span>
+            </div>
+          </div>
+        </div>
+        
+        <!-- Custom Attributes full-width -->
+        <div class="category-form-group cat-customfields-group">
+          <div style="display: flex; align-items: center; gap: 8px;">
+            <svg width="16" height="16" fill="var(--forge-warning)">
+              <rect x="2" y="4" width="12" height="8" rx="2" />
+            </svg>
+            <label style="margin: 0;">Custom Attributes (Optional)</label>
+          </div>
+          <div class="custom-fields-selector">
+            <div class="selected-fields-display">
+              <span class="placeholder-text">Click to select custom fields...</span>
+            </div>
+            <div class="custom-fields-dropdown" style="display: none;">
+              <!-- Checkboxes will be populated here -->
+            </div>
+          </div>
+          <div class="inheritance-warning" style="display: none;">
+            <svg width="14" height="14" fill="var(--forge-warning)" style="flex-shrink: 0;">
+              <path d="M7.938 2.016A.13.13 0 018 2.151V4.5a.5.5 0 01-1 0V2.15a.13.13 0 01.062-.135zm-.702 8.027a.75.75 0 10-1.5 0 .75.75 0 001.5 0z"/>
+            </svg>
+            <span style="font-size: 0.75rem; color: var(--forge-warning);">
+              Inherited from parent category
+            </span>
+          </div>
+        </div>
+      </div>
+    `;
+    
+    // Populate parent category dropdown
+    const parentSelect = card.querySelector('.cat-parent-select');
+    availableCategories.forEach(cat => {
+      const option = document.createElement('option');
+      option.value = cat.category_id;
+      option.textContent = `${cat.category_name} (ID: ${cat.category_id})`;
+      option.dataset.parentId = cat.parent_id;
+      parentSelect.appendChild(option);
+    });
+    
+    // Populate status set dropdown
+    const statusSetSelect = card.querySelector('.cat-statusset-select');
+    const uniqueStatusSets = [...new Set(availableStatusSets.map(ss => ss.status_set_name))];
+    uniqueStatusSets.forEach(ssName => {
+      const option = document.createElement('option');
+      option.value = ssName;
+      option.textContent = ssName;
+      statusSetSelect.appendChild(option);
+    });
+    
+    // Default to "Default" status set
+    if (uniqueStatusSets.includes('Default')) {
+      statusSetSelect.value = 'Default';
+    }
+    
+    // Populate custom fields checkboxes
+    const customFieldsDropdown = card.querySelector('.custom-fields-dropdown');
+    availableCustomFields.forEach(cf => {
+      const label = document.createElement('label');
+      label.className = 'custom-field-checkbox-label';
+      label.innerHTML = `
+        <input type="checkbox" value="${cf.name}" />
+        <span>${cf.display_name}</span>
+      `;
+      customFieldsDropdown.appendChild(label);
+    });
+    
+    // Custom fields selector toggle
+    const selectedFieldsDisplay = card.querySelector('.selected-fields-display');
+    selectedFieldsDisplay.addEventListener('click', () => {
+      const dropdown = card.querySelector('.custom-fields-dropdown');
+      dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
+    });
+    
+    // Update selected fields display when checkboxes change
+    const checkboxes = card.querySelectorAll('.custom-fields-dropdown input[type="checkbox"]');
+    checkboxes.forEach(checkbox => {
+      checkbox.addEventListener('change', () => {
+        updateSelectedFieldsDisplay(card);
+      });
+    });
+    
+    // Close dropdown when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!card.contains(e.target)) {
+        const dropdown = card.querySelector('.custom-fields-dropdown');
+        dropdown.style.display = 'none';
+      }
+    });
+    
+    // Parent category change handler - check inheritance rules
+    parentSelect.addEventListener('change', () => {
+      const selectedOption = parentSelect.options[parentSelect.selectedIndex];
+      if (!selectedOption.value) {
+        // No parent selected, enable everything
+        enableStatusSetAndCustomFields(card);
+        return;
+      }
+      
+      const parentId = selectedOption.value;
+      const grandParentId = selectedOption.dataset.parentId;
+      
+      // Allow customization if:
+      // 1. Parent is ROOT (ID = 1), OR
+      // 2. Parent's parent is ROOT (grandParentId = 1)
+      if (parentId === '1' || grandParentId === '1') {
+        enableStatusSetAndCustomFields(card);
+      } else {
+        // Parent is a sub-category (grandparent is not ROOT)
+        disableStatusSetAndCustomFields(card);
+      }
+    });
+    
+    // Remove button handler
+    const removeBtn = card.querySelector('.remove-category-btn');
+    removeBtn.addEventListener('click', () => {
+      const container = card.closest('#categoryCardsContainer');
+      const cards = container.querySelectorAll('.category-creation-card');
+      if (cards.length > 1) {
+        card.remove();
+      } else {
+        showToast('warning', 'Cannot remove', 'At least one category must remain');
+      }
+    });
+    
+    return card;
+  }
+
+  function updateSelectedFieldsDisplay(card) {
+    const checkboxes = card.querySelectorAll('.custom-fields-dropdown input[type="checkbox"]:checked');
+    const display = card.querySelector('.selected-fields-display');
+    
+    if (checkboxes.length === 0) {
+      display.innerHTML = '<span class="placeholder-text">Click to select custom fields...</span>';
+    } else {
+      display.innerHTML = '';
+      checkboxes.forEach((checkbox, index) => {
+        const tag = document.createElement('span');
+        tag.className = 'selected-field-tag';
+        tag.textContent = checkbox.nextElementSibling.textContent;
+        display.appendChild(tag);
+        
+        if (index < checkboxes.length - 1) {
+          display.appendChild(document.createTextNode(' '));
+        }
+      });
+    }
+  }
+
+  function disableStatusSetAndCustomFields(card) {
+    const statusSetGroup = card.querySelector('.cat-statusset-group');
+    const customFieldsGroup = card.querySelector('.cat-customfields-group');
+    
+    const statusSetSelect = card.querySelector('.cat-statusset-select');
+    const customFieldsSelector = card.querySelector('.custom-fields-selector');
+    
+    // Disable and clear selections
+    statusSetSelect.disabled = true;
+    statusSetSelect.value = '';
+    customFieldsSelector.style.pointerEvents = 'none';
+    customFieldsSelector.style.opacity = '0.5';
+    
+    // Uncheck all custom field checkboxes
+    card.querySelectorAll('.custom-fields-dropdown input[type="checkbox"]').forEach(cb => {
+      cb.checked = false;
+    });
+    updateSelectedFieldsDisplay(card);
+    
+    // Show warnings
+    statusSetGroup.querySelector('.inheritance-warning').style.display = 'flex';
+    customFieldsGroup.querySelector('.inheritance-warning').style.display = 'flex';
+  }
+
+  function enableStatusSetAndCustomFields(card) {
+    const statusSetGroup = card.querySelector('.cat-statusset-group');
+    const customFieldsGroup = card.querySelector('.cat-customfields-group');
+    
+    const statusSetSelect = card.querySelector('.cat-statusset-select');
+    const customFieldsSelector = card.querySelector('.custom-fields-selector');
+    
+    // Enable selections
+    statusSetSelect.disabled = false;
+    
+    // Reset to Default if available
+    const uniqueStatusSets = [...new Set(availableStatusSets.map(ss => ss.status_set_name))];
+    if (uniqueStatusSets.includes('Default')) {
+      statusSetSelect.value = 'Default';
+    }
+    
+    customFieldsSelector.style.pointerEvents = '';
+    customFieldsSelector.style.opacity = '';
+    
+    // Hide warnings
+    statusSetGroup.querySelector('.inheritance-warning').style.display = 'none';
+    customFieldsGroup.querySelector('.inheritance-warning').style.display = 'none';
+  }
+
+  function createAddCategoryButton() {
+    const buttonContainer = document.createElement('div');
+    buttonContainer.className = 'add-category-button-container';
+    buttonContainer.innerHTML = `
+      <button type="button" class="add-category-btn">
+        <svg viewBox="0 0 16 16" fill="currentColor">
+          <path d="M8 4a.5.5 0 01.5.5v3h3a.5.5 0 010 1h-3v3a.5.5 0 01-1 0v-3h-3a.5.5 0 010-1h3v-3A.5.5 0 018 4z"/>
+        </svg>
+        Add Category
+      </button>
+    `;
+    
+    const addBtn = buttonContainer.querySelector('.add-category-btn');
+    addBtn.addEventListener('click', () => {
+      const container = document.getElementById('categoryCardsContainer');
+      const newCard = createCategoryCard();
+      // Insert before the button container
+      container.insertBefore(newCard, buttonContainer);
+    });
+    
+    return buttonContainer;
+  }
+
+  function collectCategoriesData() {
+    const cards = el.categoryCardsContainer.querySelectorAll('.category-creation-card');
+    
+    if (cards.length === 0) {
+      showToast('error', 'Validation Error', 'At least one category is required');
+      return null;
+    }
+    
+    const categories = [];
+    
+    for (const card of cards) {
+      const name = card.querySelector('.cat-name-input').value.trim();
+      const description = card.querySelector('.cat-description-input').value.trim();
+      const parentSelect = card.querySelector('.cat-parent-select');
+      const statusSetSelect = card.querySelector('.cat-statusset-select');
+      
+      if (!name || !description) {
+        showToast('error', 'Validation Error', 'Category name and description are required for all cards');
+        return null;
+      }
+      
+      if (!parentSelect.value) {
+        showToast('error', 'Validation Error', `Parent category is required for "${name}"`);
+        return null;
+      }
+      
+      const selectedParentOption = parentSelect.options[parentSelect.selectedIndex];
+      const parentId = parseInt(selectedParentOption.value);
+      const parentName = selectedParentOption.textContent.split(' (ID:')[0];
+      const grandParentId = selectedParentOption.dataset.parentId;
+      
+      // Get selected custom fields
+      const selectedFields = [];
+      card.querySelectorAll('.custom-fields-dropdown input[type="checkbox"]:checked').forEach(cb => {
+        selectedFields.push(cb.value);
+      });
+      
+      // Determine if status set and custom fields should be included based on inheritance
+      // Allow customization if parent is ROOT (ID=1) OR parent's parent is ROOT (grandParentId=1)
+      let statusSetName = '';
+      let customFields = [];
+      
+      if (parentId === 1 || grandParentId === '1') {
+        // Direct child of ROOT or grandchild of ROOT - use selections
+        if (!statusSetSelect.value) {
+          showToast('error', 'Validation Error', `Status set is required for "${name}"`);
+          return null;
+        }
+        statusSetName = statusSetSelect.value;
+        customFields = selectedFields;
+      } else {
+        // Deeper nesting - inherited from parent, leave empty
+        statusSetName = '';
+        customFields = [];
+      }
+      
+      categories.push({
+        name: name,
+        description: description,
+        category_parent_name: parentName,
+        category_parent_id: parentId,
+        status_set_name: statusSetName,
+        custom_fields: customFields
+      });
+    }
+    
+    return categories;
+  }
+
+  function resetCategoryForm() {
+    el.categoryCardsContainer.innerHTML = '';
+    // Add one initial card
+    el.categoryCardsContainer.appendChild(createCategoryCard());
+    // Add the "Add Category" button
+    el.categoryCardsContainer.appendChild(createAddCategoryButton());
+  }
+
+  // ========================================
+  // END DYNAMIC CATEGORY CARDS FORM
+  // ========================================
+
   function renderEnv(env) {
     el.envList.innerHTML = "";
     Object.entries(env || {}).forEach(([k, v]) => {
@@ -815,6 +1191,24 @@
       const res = await fetch("/api/categories", { credentials: "include" });
       const data = await res.json();
       
+      // Store categories data for category creation (flatten the tree into a list)
+      availableCategories = [];
+      const flattenCategories = (nodes, parentId = null) => {
+        (nodes || []).forEach(node => {
+          availableCategories.push({
+            category_id: node.categoryId,
+            category_name: node.categoryName,
+            parent_id: parentId,
+            status_set_name: node.statusSetName,
+            custom_attributes: node.customAttributes || []
+          });
+          if (node.children && node.children.length > 0) {
+            flattenCategories(node.children, node.categoryId);
+          }
+        });
+      };
+      flattenCategories(data.tree);
+      
       el.categorySummary.textContent = data.count 
         ? `${data.count} ${data.count === 1 ? 'category' : 'categories'} loaded.` 
         : "No categories found. Please ensure categories.csv exists in the output folder.";
@@ -889,6 +1283,17 @@
       const { items = [] } = await res.json();
       console.log("Status Sets Preview Items:", items);
       
+      // Store status sets data for category creation
+      availableStatusSets = items.flatMap(item => 
+        (item.statuses || []).map(status => ({
+          status_set_name: item.name,
+          status_set_id: item.statusSetId,
+          status_id: status.statusId,
+          status_label: status.label,
+          status_description: status.description
+        }))
+      );
+      
       if (items.length === 0) {
         el.statusSetsHost.innerHTML = '<p class="text-muted">No status sets found. Click "Fetch Assets Config" to load.</p>';
         return;
@@ -947,6 +1352,15 @@
       }
       const { items = [] } = await res.json();
       console.log("Custom Fields Preview Items:", items);
+      
+      // Store custom fields data for category creation
+      availableCustomFields = items.map(item => ({
+        name: item.name || '',
+        display_name: item.displayName || '',
+        description: item.description || '',
+        data_type: item.dataType || '',
+        required: item.requiredOnIngress || false
+      }));
       
       if (items.length === 0) {
         el.customFieldsHost.innerHTML = '<p class="text-muted">No custom fields found. Click "Fetch Assets Config" to load.</p>';
@@ -1280,50 +1694,19 @@
   el.createCategoryForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const categoryName = el.categoryName.value.trim();
-    const categoryDescription = el.categoryDescription.value.trim();
-    const statusSetName = el.statusSetInput.value.trim();
-    const customFieldsInput = el.customFieldsInput.value.trim();
-    
-    if (!categoryName) {
-      showToast('error', 'Validation Error', 'Category name is required');
-      return;
-    }
-    
-    if (!statusSetName) {
-      showToast('error', 'Validation Error', 'Status set is required');
-      return;
-    }
-    
-    // Parse custom fields from comma-separated input
-    const customFieldNames = customFieldsInput
-      ? customFieldsInput.split(',').map(f => f.trim()).filter(f => f)
-      : [];
-    
-    const categoryData = {
-      name: categoryName,
-      description: categoryDescription || '',
-      status_set_name: statusSetName,
-      custom_fields: customFieldNames
-    };
-    
-    // Add parent category if provided
-    const parentCategoryName = el.parentCategoryInput.value.trim();
-    if (parentCategoryName) {
-      categoryData.parent_category_name = parentCategoryName;
+    const categoriesData = collectCategoriesData();
+    if (!categoriesData) {
+      return; // Validation errors already shown in collectCategoriesData
     }
     
     try {
-      // Wrap in array as the API expects an array of categories
-      const payload = [categoryData];
-      
-      console.log('Creating category with payload:', payload);
+      console.log('Creating categories with payload:', categoriesData);
       
       const resp = await fetch("/create_categories_from_json", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(payload),
+        body: JSON.stringify(categoriesData),
       });
       
       if (resp.redirected) { 
@@ -1333,16 +1716,10 @@
       
       if (resp.ok) {
         const data = await resp.json().catch(() => ({}));
-        const customFieldsText = customFieldNames.length > 0 ? ` with ${customFieldNames.length} custom field(s)` : '';
-        showToast('success', 'Category created', `Category "${categoryName}" created successfully${customFieldsText}.`);
+        showToast('success', 'Categories created', `${categoriesData.length} ${categoriesData.length === 1 ? 'category' : 'categories'} created successfully.`);
         
         // Reset form and refresh preview
-        el.categoryName.value = '';
-        el.categoryDescription.value = '';
-        el.parentCategoryInput.value = '';
-        el.statusSetInput.value = '';
-        el.customFieldsInput.value = '';
-        
+        resetCategoryForm();
         await loadCategories();
         
         // Switch to Categories tab to see the result
@@ -1352,11 +1729,18 @@
         }
       } else {
         const text = await resp.text();
-        showToast('error', 'Failed to create category', text);
+        showToast('error', 'Failed to create categories', text);
       }
     } catch (err) {
       console.error(err);
-      showToast('error', 'Failed to create category', err.message);
+      showToast('error', 'Failed to create categories', err.message);
+    }
+  });
+
+  // Reset category form handler
+  el.resetCategoryForm?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all category cards?')) {
+      resetCategoryForm();
     }
   });
 
@@ -1405,5 +1789,11 @@
   if (el.customFieldsTableBody) {
     el.customFieldsTableBody.appendChild(createCustomFieldRow());
     el.customFieldsTableBody.appendChild(createAddRowButton());
+  }
+  
+  // Initialize create categories form with one card and Add Category button
+  if (el.categoryCardsContainer) {
+    el.categoryCardsContainer.appendChild(createCategoryCard());
+    el.categoryCardsContainer.appendChild(createAddCategoryButton());
   }
 })();

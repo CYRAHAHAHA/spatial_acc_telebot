@@ -45,10 +45,15 @@ def fetch_assets_config(access_token: str):
         category_ids = [cat["id"] for cat in categories_raw]
         batch_url = f"{base_url}/{project_id}/category-status-step-sets/status-step-sets:batch-get"
         batch_payload = {"ids": category_ids}
+        print("HIII CHECK ME OUT")
+        params = {
+            "includeInherited": "true"   # query string ?includeInherited=true
+        }
         print("Fetching category to status set mappings via batch API...", batch_payload)
-        batch_resp = requests.post(batch_url, headers=headers, json=batch_payload)
+        batch_resp = requests.post(batch_url, headers=headers, json=batch_payload, params=params)
         category_status_raw = batch_resp.json().get("results", []) if batch_resp.status_code == 200 else []
-
+        print("GOTCHA")
+        print(category_status_raw)
         # Build a mapping: categoryId -> statusStepSetId
         category_to_statusSet = {c["categoryId"]: c.get("statusStepSetId") for c in category_status_raw}
 

@@ -364,98 +364,58 @@
             hidden
           >
             <div class="forge-panel-header">
-              <h2>Create New Category</h2>
+              <h2>Create Categories</h2>
+              <p
+                style="
+                  margin: 8px 0;
+                  color: var(--forge-text-muted);
+                  font-size: 0.875rem;
+                "
+              >
+                Create multiple categories at once using cards below
+              </p>
             </div>
             <div class="forge-panel-body">
+              <!-- Legend -->
+              <div class="category-legend" style="margin-bottom: 16px">
+                <div class="legend-item">
+                  <svg width="16" height="16" fill="var(--forge-primary)">
+                    <rect x="2" y="2" width="12" height="12" rx="2" />
+                  </svg>
+                  <span>Category</span>
+                </div>
+                <div class="legend-item">
+                  <svg width="16" height="16" fill="var(--forge-success)">
+                    <circle cx="8" cy="8" r="6" />
+                  </svg>
+                  <span>Status Set</span>
+                </div>
+                <div class="legend-item">
+                  <svg width="16" height="16" fill="var(--forge-warning)">
+                    <rect x="2" y="4" width="12" height="8" rx="2" />
+                  </svg>
+                  <span>Custom Attributes</span>
+                </div>
+              </div>
+
               <form id="createCategoryForm" class="forge-form">
-                <div class="forge-form-group">
-                  <label for="categoryName" class="forge-label"
-                    >Category Name *</label
-                  >
-                  <input
-                    type="text"
-                    id="categoryName"
-                    class="forge-input"
-                    placeholder="e.g., HVAC Equipment"
-                    required
-                  />
-                  <small class="forge-help-text"
-                    >The name of the new category</small
-                  >
+                <div
+                  id="categoryCardsContainer"
+                  class="category-cards-container"
+                >
+                  <!-- Category cards will be added here dynamically -->
                 </div>
 
-                <div class="forge-form-group">
-                  <label for="categoryDescription" class="forge-label"
-                    >Description</label
-                  >
-                  <input
-                    type="text"
-                    id="categoryDescription"
-                    class="forge-input"
-                    placeholder="e.g., Heating, ventilation, and air conditioning systems"
-                  />
-                  <small class="forge-help-text"
-                    >Optional description for this category</small
-                  >
-                </div>
-
-                <div class="forge-form-group">
-                  <label for="parentCategoryInput" class="forge-label"
-                    >Parent Category</label
-                  >
-                  <input
-                    type="text"
-                    id="parentCategoryInput"
-                    class="forge-input"
-                    placeholder="Parent category name (optional for root categories)"
-                  />
-                  <small class="forge-help-text"
-                    >Enter parent category name (optional for root
-                    categories)</small
-                  >
-                </div>
-
-                <div class="forge-form-group">
-                  <label for="statusSetInput" class="forge-label"
-                    >Status Set *</label
-                  >
-                  <input
-                    type="text"
-                    id="statusSetInput"
-                    class="forge-input"
-                    placeholder="Status set name"
-                    required
-                  />
-                  <small class="forge-help-text"
-                    >Enter status set name (required)</small
-                  >
-                </div>
-
-                <div class="forge-form-group">
-                  <label for="customFieldsInput" class="forge-label"
-                    >Custom Fields</label
-                  >
-                  <input
-                    type="text"
-                    id="customFieldsInput"
-                    class="forge-input"
-                    placeholder="Field names separated by commas"
-                  />
-                  <small class="forge-help-text"
-                    >Enter field names separated by commas (optional)</small
-                  >
-                </div>
-
-                <div class="forge-form-actions">
+                <div class="forge-form-actions" style="margin-top: 16px">
                   <button type="submit" class="forge-btn forge-btn-primary">
-                    Create Category
+                    Create All Categories
                   </button>
                   <button
                     type="button"
                     id="resetCategoryForm"
                     class="forge-btn"
                   >
-                    Reset Form
+                    Clear All
                   </button>
                 </div>
               </form>
