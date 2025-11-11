@@ -1,2 +1,0 @@
-# Deprecated helper file.
-# Tokens are now loaded from the top-level .env file via python-dotenv.
