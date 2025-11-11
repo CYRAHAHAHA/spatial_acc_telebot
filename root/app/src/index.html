@@ -139,6 +139,22 @@
           </button>
           <button
             class="forge-tab"
+            data-tab="create-custom-fields"
+            role="tab"
+            aria-selected="false"
+          >
+            Create Custom Fields
+          </button>
+          <button
+            class="forge-tab"
+            data-tab="create-categories"
+            role="tab"
+            aria-selected="false"
+          >
+            Create Categories
+          </button>
+          <button
+            class="forge-tab"
             data-tab="update-asset"
             role="tab"
             aria-selected="false"
@@ -157,16 +173,6 @@
           >
             <div class="forge-panel-header">
               <h2>Status Sets</h2>
-              <button id="createStatusBtn" class="forge-btn forge-btn-success">
-                <svg width="16" height="16" fill="currentColor">
-                  <path
-                    d="M8 2v12M2 8h12"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  />
-                </svg>
-                Create from JSON
-              </button>
             </div>
             <div class="forge-panel-body">
               <div id="statusSetsLoading" class="forge-spinner" hidden>
@@ -186,16 +192,6 @@
           >
             <div class="forge-panel-header">
               <h2>Custom Fields</h2>
-              <button id="createFieldsBtn" class="forge-btn forge-btn-success">
-                <svg width="16" height="16" fill="currentColor">
-                  <path
-                    d="M8 2v12M2 8h12"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  />
-                </svg>
-                Create from JSON
-              </button>
             </div>
             <div class="forge-panel-body">
               <div id="customFieldsLoading" class="forge-spinner" hidden>
@@ -215,19 +211,6 @@
           >
             <div class="forge-panel-header">
               <h2>Categories & Hierarchy</h2>
-              <button
-                id="createCategoriesBtn"
-                class="forge-btn forge-btn-success"
-              >
-                <svg width="16" height="16" fill="currentColor">
-                  <path
-                    d="M8 2v12M2 8h12"
-                    stroke="currentColor"
-                    stroke-width="2"
-                  />
-                </svg>
-                Create from JSON
-              </button>
             </div>
             <div class="forge-panel-body">
               <div id="categoriesLoading" class="forge-spinner" hidden>
@@ -270,80 +253,206 @@
             hidden
           >
             <div class="forge-panel-header">
-              <h2>Create New Status Set</h2>
+              <h2>Create Status Sets</h2>
+              <p
+                style="
+                  margin: 8px 0;
+                  color: var(--forge-text-muted);
+                  font-size: 0.875rem;
+                "
+              >
+                Create multiple status sets at once using the table below
+              </p>
             </div>
             <div class="forge-panel-body">
               <form id="createStatusSetForm" class="forge-form">
-                <div class="forge-form-group">
-                  <label for="statusSetName" class="forge-label"
-                    >Status Set Name *</label
-                  >
-                  <input
-                    type="text"
-                    id="statusSetName"
-                    class="forge-input"
-                    placeholder="e.g., Fabrication"
-                    required
-                  />
-                  <small class="forge-help-text"
-                    >The name of the status set</small
-                  >
+                <div class="status-sets-table-wrapper">
+                  <table class="status-sets-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 20%">Status Set Name *</th>
+                        <th style="width: 25%">Description *</th>
+                        <th style="width: 50%">Status Values</th>
+                        <th style="width: 50px"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="statusSetsTableBody">
+                      <!-- Rows will be added dynamically -->
+                    </tbody>
+                  </table>
                 </div>
 
-                <div class="forge-form-group">
-                  <label for="statusSetDescription" class="forge-label"
-                    >Description *</label
-                  >
-                  <input
-                    type="text"
-                    id="statusSetDescription"
-                    class="forge-input"
-                    placeholder="e.g., Stages of fabrication"
-                    required
-                  />
-                  <small class="forge-help-text"
-                    >Brief description of this status set</small
-                  >
-                </div>
-
-                <div class="forge-form-group">
-                  <label class="forge-label">Status Values</label>
-                  <small
-                    class="forge-help-text"
-                    style="display: block; margin-bottom: 12px"
-                  >
-                    Define the individual status values for this set (minimum 1
-                    required)
-                  </small>
-
-                  <div id="statusValuesContainer">
-                    <!-- Status value rows will be added here dynamically -->
-                  </div>
-
-                  <button
-                    type="button"
-                    id="addStatusValueBtn"
-                    class="forge-btn"
-                    style="margin-top: 12px"
-                  >
-                    <svg width="16" height="16" fill="currentColor">
-                      <path
-                        d="M8 2v12M2 8h12"
-                        stroke="currentColor"
-                        stroke-width="2"
-                      />
-                    </svg>
-                    Add Status Value
-                  </button>
-                </div>
-
-                <div class="forge-form-actions">
+                <div class="forge-form-actions" style="margin-top: 16px">
                   <button type="submit" class="forge-btn forge-btn-primary">
-                    Create Status Set
+                    Create All Status Sets
                   </button>
                   <button
                     type="button"
                     id="resetStatusSetForm"
+                    class="forge-btn"
+                  >
+                    Clear All
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- CREATE CUSTOM FIELDS TAB -->
+          <section
+            id="tab-create-custom-fields"
+            class="forge-tab-panel"
+            role="tabpanel"
+            hidden
+          >
+            <div class="forge-panel-header">
+              <h2>Create Custom Fields</h2>
+              <p
+                style="
+                  margin: 8px 0;
+                  color: var(--forge-text-muted);
+                  font-size: 0.875rem;
+                "
+              >
+                Add multiple custom fields at once using the table below
+              </p>
+            </div>
+            <div class="forge-panel-body">
+              <form id="createCustomFieldForm" class="forge-form">
+                <div class="custom-fields-table-wrapper">
+                  <table class="custom-fields-table">
+                    <thead>
+                      <tr>
+                        <th style="width: 20%">Display Name *</th>
+                        <th style="width: 25%">Description</th>
+                        <th style="width: 15%">Data Type *</th>
+                        <th style="width: 8%; text-align: center">Required</th>
+                        <th style="width: 22%">
+                          Enum Values (comma-separated)
+                        </th>
+                        <th style="width: 15%">Default Value</th>
+                        <th style="width: 50px"></th>
+                      </tr>
+                    </thead>
+                    <tbody id="customFieldsTableBody">
+                      <!-- Rows will be added dynamically -->
+                    </tbody>
+                  </table>
+                </div>
+
+                <div class="forge-form-actions" style="margin-top: 16px">
+                  <button type="submit" class="forge-btn forge-btn-primary">
+                    Create All Custom Fields
+                  </button>
+                  <button
+                    type="button"
+                    id="resetCustomFieldForm"
+                    class="forge-btn"
+                  >
+                    Clear All
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- CREATE CATEGORIES TAB -->
+          <section
+            id="tab-create-categories"
+            class="forge-tab-panel"
+            role="tabpanel"
+            hidden
+          >
+            <div class="forge-panel-header">
+              <h2>Create New Category</h2>
+            </div>
+            <div class="forge-panel-body">
+              <form id="createCategoryForm" class="forge-form">
+                <div class="forge-form-group">
+                  <label for="categoryName" class="forge-label"
+                    >Category Name *</label
+                  >
+                  <input
+                    type="text"
+                    id="categoryName"
+                    class="forge-input"
+                    placeholder="e.g., HVAC Equipment"
+                    required
+                  />
+                  <small class="forge-help-text"
+                    >The name of the new category</small
+                  >
+                </div>
+
+                <div class="forge-form-group">
+                  <label for="categoryDescription" class="forge-label"
+                    >Description</label
+                  >
+                  <input
+                    type="text"
+                    id="categoryDescription"
+                    class="forge-input"
+                    placeholder="e.g., Heating, ventilation, and air conditioning systems"
+                  />
+                  <small class="forge-help-text"
+                    >Optional description for this category</small
+                  >
+                </div>
+
+                <div class="forge-form-group">
+                  <label for="parentCategoryInput" class="forge-label"
+                    >Parent Category</label
+                  >
+                  <input
+                    type="text"
+                    id="parentCategoryInput"
+                    class="forge-input"
+                    placeholder="Parent category name (optional for root categories)"
+                  />
+                  <small class="forge-help-text"
+                    >Enter parent category name (optional for root
+                    categories)</small
+                  >
+                </div>
+
+                <div class="forge-form-group">
+                  <label for="statusSetInput" class="forge-label"
+                    >Status Set *</label
+                  >
+                  <input
+                    type="text"
+                    id="statusSetInput"
+                    class="forge-input"
+                    placeholder="Status set name"
+                    required
+                  />
+                  <small class="forge-help-text"
+                    >Enter status set name (required)</small
+                  >
+                </div>
+
+                <div class="forge-form-group">
+                  <label for="customFieldsInput" class="forge-label"
+                    >Custom Fields</label
+                  >
+                  <input
+                    type="text"
+                    id="customFieldsInput"
+                    class="forge-input"
+                    placeholder="Field names separated by commas"
+                  />
+                  <small class="forge-help-text"
+                    >Enter field names separated by commas (optional)</small
+                  >
+                </div>
+
+                <div class="forge-form-actions">
+                  <button type="submit" class="forge-btn forge-btn-primary">
+                    Create Category
+                  </button>
+                  <button
+                    type="button"
+                    id="resetCategoryForm"
                     class="forge-btn"
                   >
                     Reset Form

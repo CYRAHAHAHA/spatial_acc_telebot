@@ -20,11 +20,20 @@
     categoriesLoading: document.getElementById("categoriesLoading"),
     // Create Status Set form elements
     createStatusSetForm: document.getElementById("createStatusSetForm"),
-    statusSetName: document.getElementById("statusSetName"),
-    statusSetDescription: document.getElementById("statusSetDescription"),
-    statusValuesContainer: document.getElementById("statusValuesContainer"),
-    addStatusValueBtn: document.getElementById("addStatusValueBtn"),
+    statusSetsTableBody: document.getElementById("statusSetsTableBody"),
     resetStatusSetForm: document.getElementById("resetStatusSetForm"),
+    // Create Custom Fields form elements
+    createCustomFieldForm: document.getElementById("createCustomFieldForm"),
+    customFieldsTableBody: document.getElementById("customFieldsTableBody"),
+    resetCustomFieldForm: document.getElementById("resetCustomFieldForm"),
+    // Create Categories form elements
+    createCategoryForm: document.getElementById("createCategoryForm"),
+    categoryName: document.getElementById("categoryName"),
+    categoryDescription: document.getElementById("categoryDescription"),
+    parentCategoryInput: document.getElementById("parentCategoryInput"),
+    statusSetInput: document.getElementById("statusSetInput"),
+    customFieldsInput: document.getElementById("customFieldsInput"),
+    resetCategoryForm: document.getElementById("resetCategoryForm"),
   };
 
   // Toast notification system
@@ -96,8 +105,24 @@
   }
 
   // ========================================
-  // DYNAMIC STATUS VALUE FORM
+  // DYNAMIC STATUS SET FORM (TABLE FORMAT)
   // ========================================
+
+  // Autodesk color mapping with RGB values for visualization
+  const AUTODESK_COLOR_MAP = {
+    'adsk-charcoal-500': { rgb: '94, 94, 94', label: 'Charcoal' },
+    'adsk-blue-500': { rgb: '0, 103, 220', label: 'Blue' },
+    'adsk-purple-500': { rgb: '129, 92, 200', label: 'Purple' },
+    'adsk-yellow-500': { rgb: '255, 199, 0', label: 'Yellow' },
+    'adsk-green-500': { rgb: '97, 191, 94', label: 'Green' },
+    'adsk-red-500': { rgb: '232, 76, 61', label: 'Red' },
+    'adsk-orange-500': { rgb: '255, 143, 0', label: 'Orange' },
+    'adsk-pink-500': { rgb: '255, 105, 180', label: 'Pink' },
+    'adsk-turquoise-500': { rgb: '64, 224, 208', label: 'Turquoise' },
+    'adsk-dark-blue-500': { rgb: '29, 79, 145', label: 'Dark Blue' },
+    'adsk-salmon-500': { rgb: '250, 128, 114', label: 'Salmon' },
+    'adsk-brown-500': { rgb: '139, 90, 43', label: 'Brown' }
+  };
 
   const AUTODESK_COLORS = [
     'adsk-black', 'adsk-white', 
@@ -116,127 +141,562 @@
     'adsk-brown-700', 'adsk-brown-500', 'adsk-brown-300'
   ];
 
-  let statusValueCounter = 0;
+  let statusSetRowCounter = 0;
+  let statusValueRowCounter = 0;
 
-  function createStatusValueRow() {
-    statusValueCounter++;
-    const rowId = `status-value-${statusValueCounter}`;
+  // Create a status value row for nested table
+  function createStatusValueRow(parentSetId) {
+    statusValueRowCounter++;
+    const valueId = `status-value-${statusValueRowCounter}`;
     
-    const row = document.createElement('div');
-    row.className = 'status-value-row';
-    row.dataset.rowId = rowId;
+    const tr = document.createElement('tr');
+    tr.className = 'status-value-row';
+    tr.dataset.valueId = valueId;
     
-    row.innerHTML = `
-      <div class="status-value-field">
-        <label for="${rowId}-label">Status Label *</label>
-        <input 
-          type="text" 
-          id="${rowId}-label" 
-          class="forge-input status-label-input" 
-          placeholder="e.g., Pending"
-          required
-        />
-      </div>
-      
-      <div class="status-value-field">
-        <label for="${rowId}-description">Description *</label>
-        <input 
-          type="text" 
-          id="${rowId}-description" 
-          class="forge-input status-description-input" 
-          placeholder="e.g., Pending"
-          required
-        />
-      </div>
-      
-      <div class="status-value-field">
-        <label for="${rowId}-color">Color *</label>
-        <select 
-          id="${rowId}-color" 
-          class="forge-select status-color-select"
-          required
-        >
-          <option value="">Select a color...</option>
-          ${AUTODESK_COLORS.map(color => 
-            `<option value="${color}">${color}</option>`
-          ).join('')}
+    // Status Label cell
+    const labelCell = document.createElement('td');
+    labelCell.innerHTML = `
+      <input 
+        type="text" 
+        class="forge-input sv-label-input" 
+        placeholder="e.g., Pending"
+        required
+      />
+    `;
+    
+    // Description cell
+    const descCell = document.createElement('td');
+    descCell.innerHTML = `
+      <input 
+        type="text" 
+        class="forge-input sv-description-input" 
+        placeholder="e.g., Pending"
+        required
+      />
+    `;
+    
+    // Color cell with dropdown and preview circle
+    const colorCell = document.createElement('td');
+    const colorOptions = Object.keys(AUTODESK_COLOR_MAP).map(colorKey => {
+      const { rgb, label } = AUTODESK_COLOR_MAP[colorKey];
+      return `<option value="${colorKey}" data-rgb="${rgb}">${label}</option>`;
+    }).join('');
+    
+    colorCell.innerHTML = `
+      <div style="display: flex; align-items: center; gap: 8px;">
+        <span class="color-preview-circle" style="display: inline-block; width: 20px; height: 20px; border-radius: 50%; background-color: rgb(94, 94, 94); border: 1px solid var(--forge-border);"></span>
+        <select class="forge-select sv-color-select" required style="flex: 1;">
+          ${colorOptions}
         </select>
       </div>
-      
-      <button type="button" class="remove-status-btn" data-row-id="${rowId}">
-        <svg viewBox="0 0 16 16" fill="currentColor">
+    `;
+    
+    // Remove button cell
+    const removeCell = document.createElement('td');
+    removeCell.style.textAlign = 'center';
+    removeCell.innerHTML = `
+      <button type="button" class="remove-status-value-btn" title="Remove status value">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
           <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
           <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
         </svg>
       </button>
     `;
     
-    // Add remove button handler
-    const removeBtn = row.querySelector('.remove-status-btn');
+    tr.appendChild(labelCell);
+    tr.appendChild(descCell);
+    tr.appendChild(colorCell);
+    tr.appendChild(removeCell);
+    
+    // Color change handler - update preview circle
+    const colorSelect = colorCell.querySelector('.sv-color-select');
+    const previewCircle = colorCell.querySelector('.color-preview-circle');
+    
+    colorSelect.addEventListener('change', () => {
+      const selectedOption = colorSelect.options[colorSelect.selectedIndex];
+      const rgb = selectedOption.dataset.rgb;
+      previewCircle.style.backgroundColor = `rgb(${rgb})`;
+    });
+    
+    // Remove button handler
+    const removeBtn = removeCell.querySelector('.remove-status-value-btn');
     removeBtn.addEventListener('click', () => {
-      row.remove();
-      // If no rows left, add one
-      if (el.statusValuesContainer.children.length === 0) {
-        el.statusValuesContainer.appendChild(createStatusValueRow());
+      const statusValuesTable = tr.closest('.status-values-nested-table');
+      const tbody = statusValuesTable.querySelector('tbody');
+      
+      // Only remove if more than 1 row exists
+      if (tbody.querySelectorAll('.status-value-row').length > 1) {
+        tr.remove();
+      } else {
+        showToast('warning', 'Minimum Required', 'At least one status value is required per status set');
+      }
+    });
+    
+    return tr;
+  }
+
+  // Create "Add Status Value" button row for nested table
+  function createAddStatusValueButton(parentSetId) {
+    const tr = document.createElement('tr');
+    tr.className = 'add-status-value-tr';
+    
+    const td = document.createElement('td');
+    td.colSpan = 4;
+    td.innerHTML = `
+      <button type="button" class="add-status-value-btn">
+        <svg width="16" height="16" fill="currentColor">
+          <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Add Status Value
+      </button>
+    `;
+    
+    tr.appendChild(td);
+    
+    // Button click handler
+    const btn = td.querySelector('.add-status-value-btn');
+    btn.addEventListener('click', () => {
+      const statusValuesTable = tr.closest('.status-values-nested-table');
+      const tbody = statusValuesTable.querySelector('tbody');
+      const newRow = createStatusValueRow(parentSetId);
+      tbody.insertBefore(newRow, tr); // Insert before the add button row
+    });
+    
+    return tr;
+  }
+
+  // Create main status set row
+  function createStatusSetRow() {
+    statusSetRowCounter++;
+    const setId = `status-set-${statusSetRowCounter}`;
+    
+    const tr = document.createElement('tr');
+    tr.className = 'status-set-row';
+    tr.dataset.setId = setId;
+    
+    // Status Set Name cell
+    const nameCell = document.createElement('td');
+    nameCell.innerHTML = `
+      <input 
+        type="text" 
+        class="forge-input ss-name-input" 
+        placeholder="e.g., Fabrication"
+        required
+      />
+    `;
+    
+    // Description cell
+    const descCell = document.createElement('td');
+    descCell.innerHTML = `
+      <input 
+        type="text" 
+        class="forge-input ss-description-input" 
+        placeholder="e.g., Stages of fabrication"
+        required
+      />
+    `;
+    
+    // Status Values cell (contains nested table)
+    const valuesCell = document.createElement('td');
+    valuesCell.innerHTML = `
+      <div class="status-values-container">
+        <table class="status-values-nested-table">
+          <thead>
+            <tr>
+              <th style="width: 30%">Status Label *</th>
+              <th style="width: 35%">Description *</th>
+              <th style="width: 30%">Colour *</th>
+              <th style="width: 40px"></th>
+            </tr>
+          </thead>
+          <tbody>
+            <!-- Status value rows will be added here -->
+          </tbody>
+        </table>
+      </div>
+    `;
+    
+    // Add initial status value row and add button
+    const tbody = valuesCell.querySelector('tbody');
+    tbody.appendChild(createStatusValueRow(setId));
+    tbody.appendChild(createAddStatusValueButton(setId));
+    
+    // Remove button cell
+    const removeCell = document.createElement('td');
+    removeCell.style.textAlign = 'center';
+    removeCell.innerHTML = `
+      <button type="button" class="remove-status-set-btn" title="Remove status set">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+          <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
+          <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+        </svg>
+      </button>
+    `;
+    
+    tr.appendChild(nameCell);
+    tr.appendChild(descCell);
+    tr.appendChild(valuesCell);
+    tr.appendChild(removeCell);
+    
+    // Remove button handler
+    const removeBtn = removeCell.querySelector('.remove-status-set-btn');
+    removeBtn.addEventListener('click', () => {
+      const tbody = tr.parentElement;
+      
+      // Only remove if more than 1 row exists (excluding add button row)
+      if (tbody.querySelectorAll('.status-set-row').length > 1) {
+        tr.remove();
+      } else {
+        showToast('warning', 'Minimum Required', 'At least one status set is required');
+      }
+    });
+    
+    return tr;
+  }
+
+  // Create "Add Status Set" button row for main table
+  function createAddStatusSetButton() {
+    const tr = document.createElement('tr');
+    tr.className = 'add-row-tr';
+    
+    const td = document.createElement('td');
+    td.colSpan = 4;
+    td.innerHTML = `
+      <button type="button" class="add-row-btn">
+        <svg width="16" height="16" fill="currentColor">
+          <path d="M8 2v12M2 8h12" stroke="currentColor" stroke-width="2"/>
+        </svg>
+        Add Status Set
+      </button>
+    `;
+    
+    tr.appendChild(td);
+    
+    // Button click handler
+    const btn = td.querySelector('.add-row-btn');
+    btn.addEventListener('click', () => {
+      const newRow = createStatusSetRow();
+      el.statusSetsTableBody.insertBefore(newRow, tr); // Insert before add button row
+    });
+    
+    return tr;
+  }
+
+  // Collect all status sets data from table
+  function collectStatusSetsTableData() {
+    const statusSetRows = el.statusSetsTableBody.querySelectorAll('.status-set-row');
+    
+    if (statusSetRows.length === 0) {
+      showToast('error', 'Validation Error', 'At least one status set is required');
+      return null;
+    }
+    
+    const statusSets = [];
+    
+    for (const row of statusSetRows) {
+      const name = row.querySelector('.ss-name-input').value.trim();
+      const description = row.querySelector('.ss-description-input').value.trim();
+      
+      if (!name || !description) {
+        showToast('error', 'Validation Error', 'Status set name and description are required for all rows');
+        return null;
+      }
+      
+      // Get all status values for this set
+      const statusValueRows = row.querySelectorAll('.status-value-row');
+      
+      if (statusValueRows.length === 0) {
+        showToast('error', 'Validation Error', `At least one status value is required for "${name}"`);
+        return null;
+      }
+      
+      const statusLabels = [];
+      const descriptions = [];
+      const statusColors = [];
+      
+      for (const valueRow of statusValueRows) {
+        const label = valueRow.querySelector('.sv-label-input').value.trim();
+        const desc = valueRow.querySelector('.sv-description-input').value.trim();
+        const color = valueRow.querySelector('.sv-color-select').value;
+        
+        if (!label || !desc || !color) {
+          showToast('error', 'Validation Error', `All status value fields must be filled for "${name}"`);
+          return null;
+        }
+        
+        statusLabels.push(label);
+        descriptions.push(desc);
+        statusColors.push(color);
+      }
+      
+      statusSets.push({
+        name: name,
+        status_set_description: description,
+        status_label: statusLabels,
+        description: descriptions,
+        status_colors: statusColors
+      });
+    }
+    
+    return statusSets;
+  }
+
+  // Reset status set form
+  function resetStatusSetForm() {
+    el.statusSetsTableBody.innerHTML = '';
+    // Add one initial row
+    el.statusSetsTableBody.appendChild(createStatusSetRow());
+    // Add the "Add Status Set" button
+    el.statusSetsTableBody.appendChild(createAddStatusSetButton());
+  }
+
+  // ========================================
+  // END DYNAMIC STATUS VALUE FORM
+  // ========================================
+
+  // ========================================
+  // DYNAMIC CUSTOM FIELDS FORM (TABLE FORMAT)
+  // ========================================
+
+  let customFieldRowCounter = 0;
+
+  function createCustomFieldRow() {
+    customFieldRowCounter++;
+    const rowId = `cf-row-${customFieldRowCounter}`;
+    
+    const row = document.createElement('tr');
+    row.dataset.rowId = rowId;
+    row.innerHTML = `
+      <td>
+        <input 
+          type="text" 
+          class="cf-display-name" 
+          placeholder="Material Type"
+          required
+        />
+      </td>
+      <td>
+        <input 
+          type="text" 
+          class="cf-description" 
+          placeholder="Type of material used..."
+        />
+      </td>
+      <td>
+        <select class="cf-data-type" required>
+          <option value="text">Text</option>
+          <option value="date">Date</option>
+          <option value="boolean">Boolean</option>
+          <option value="numeric">Numeric</option>
+          <option value="select">Select</option>
+          <option value="multi_select">Multi-Select</option>
+        </select>
+      </td>
+      <td style="text-align: center;">
+        <input type="checkbox" class="cf-required" />
+      </td>
+      <td>
+        <input 
+          type="text" 
+          class="cf-enum-values" 
+          placeholder="Steel, Concrete, Wood, Plastic"
+          disabled
+        />
+      </td>
+      <td>
+        <input 
+          type="text" 
+          class="cf-default-value" 
+          placeholder="Default..."
+        />
+      </td>
+      <td>
+        <button type="button" class="remove-row-btn" title="Remove row">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d="M5.5 5.5A.5.5 0 016 6v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm2.5 0a.5.5 0 01.5.5v6a.5.5 0 01-1 0V6a.5.5 0 01.5-.5zm3 .5a.5.5 0 00-1 0v6a.5.5 0 001 0V6z"/>
+            <path fill-rule="evenodd" d="M14.5 3a1 1 0 01-1 1H13v9a2 2 0 01-2 2H5a2 2 0 01-2-2V4h-.5a1 1 0 01-1-1V2a1 1 0 011-1H6a1 1 0 011-1h2a1 1 0 011 1h3.5a1 1 0 011 1v1zM4.118 4L4 4.059V13a1 1 0 001 1h6a1 1 0 001-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z"/>
+          </svg>
+        </button>
+      </td>
+    `;
+    
+    // Add event listeners for this row
+    const dataTypeSelect = row.querySelector('.cf-data-type');
+    const enumValuesInput = row.querySelector('.cf-enum-values');
+    const defaultValueInput = row.querySelector('.cf-default-value');
+    const removeBtn = row.querySelector('.remove-row-btn');
+    
+    // Handle data type change
+    dataTypeSelect.addEventListener('change', () => {
+      const dataType = dataTypeSelect.value;
+      
+      // Reset enum values field
+      enumValuesInput.disabled = true;
+      enumValuesInput.value = '';
+      
+      // Show enum values for select/multi_select
+      if (dataType === 'select' || dataType === 'multi_select') {
+        enumValuesInput.disabled = false;
+        enumValuesInput.required = true;
+      } else {
+        enumValuesInput.required = false;
+      }
+      
+      // Update default value input type
+      if (dataType === 'date') {
+        defaultValueInput.type = 'date';
+        defaultValueInput.placeholder = '';
+      } else if (dataType === 'numeric') {
+        defaultValueInput.type = 'number';
+        defaultValueInput.placeholder = '0';
+      } else if (dataType === 'boolean') {
+        // Replace with select for boolean
+        const boolSelect = document.createElement('select');
+        boolSelect.className = 'cf-default-value';
+        boolSelect.innerHTML = `
+          <option value="">None</option>
+          <option value="true">True</option>
+          <option value="false">False</option>
+        `;
+        defaultValueInput.replaceWith(boolSelect);
+      } else {
+        if (defaultValueInput.tagName === 'SELECT') {
+          const textInput = document.createElement('input');
+          textInput.type = 'text';
+          textInput.className = 'cf-default-value';
+          textInput.placeholder = 'Default...';
+          defaultValueInput.replaceWith(textInput);
+        } else {
+          defaultValueInput.type = 'text';
+          defaultValueInput.placeholder = 'Default...';
+        }
+      }
+    });
+    
+    // Remove row handler
+    removeBtn.addEventListener('click', () => {
+      // Don't remove if it's the last row
+      const tbody = row.closest('tbody');
+      const dataRows = tbody.querySelectorAll('tr:not(.add-row-tr)');
+      if (dataRows.length > 1) {
+        row.remove();
+      } else {
+        showToast('warning', 'Cannot remove', 'At least one row must remain');
       }
     });
     
     return row;
   }
 
-  function resetStatusSetForm() {
-    el.statusSetName.value = '';
-    el.statusSetDescription.value = '';
-    el.statusValuesContainer.innerHTML = '';
-    // Add one initial row
-    el.statusValuesContainer.appendChild(createStatusValueRow());
+  function createAddRowButton() {
+    const row = document.createElement('tr');
+    row.className = 'add-row-tr';
+    row.innerHTML = `
+      <td colspan="7" style="padding: 0; border: none;">
+        <button type="button" class="add-row-btn">
+          <svg viewBox="0 0 16 16" fill="currentColor">
+            <path d="M8 4a.5.5 0 01.5.5v3h3a.5.5 0 010 1h-3v3a.5.5 0 01-1 0v-3h-3a.5.5 0 010-1h3v-3A.5.5 0 018 4z"/>
+          </svg>
+          Add Row
+        </button>
+      </td>
+    `;
+    
+    const addBtn = row.querySelector('.add-row-btn');
+    addBtn.addEventListener('click', () => {
+      const tbody = row.closest('tbody');
+      const newRow = createCustomFieldRow();
+      tbody.insertBefore(newRow, row);
+    });
+    
+    return row;
   }
 
-  function collectStatusSetFormData() {
-    const name = el.statusSetName.value.trim();
-    const description = el.statusSetDescription.value.trim();
+  function collectCustomFieldsTableData() {
+    const tbody = document.getElementById('customFieldsTableBody');
+    const rows = tbody.querySelectorAll('tr:not(.add-row-tr)');
     
-    if (!name || !description) {
-      showToast('error', 'Validation Error', 'Status set name and description are required');
-      return null;
-    }
-    
-    const rows = el.statusValuesContainer.querySelectorAll('.status-value-row');
     if (rows.length === 0) {
-      showToast('error', 'Validation Error', 'At least one status value is required');
+      showToast('error', 'No Fields', 'Please add at least one custom field row');
       return null;
     }
     
-    const statusLabels = [];
-    const descriptions = [];
-    const statusColors = [];
+    const fields = [];
     
-    for (let row of rows) {
-      const label = row.querySelector('.status-label-input').value.trim();
-      const desc = row.querySelector('.status-description-input').value.trim();
-      const color = row.querySelector('.status-color-select').value;
+    for (let i = 0; i < rows.length; i++) {
+      const row = rows[i];
+      const displayName = row.querySelector('.cf-display-name').value.trim();
+      const description = row.querySelector('.cf-description').value.trim();
+      const dataType = row.querySelector('.cf-data-type').value;
+      const requiredOnIngress = row.querySelector('.cf-required').checked;
+      const enumValuesInput = row.querySelector('.cf-enum-values').value.trim();
       
-      if (!label || !desc || !color) {
-        showToast('error', 'Validation Error', 'All status value fields must be filled');
+      if (!displayName || !dataType) {
+        showToast('error', 'Validation Error', `Row ${i + 1}: Display name and data type are required`);
         return null;
       }
       
-      statusLabels.push(label);
-      descriptions.push(desc);
-      statusColors.push(color);
+      const fieldData = {
+        displayName: displayName,
+        description: description || '',
+        dataType: dataType,
+        requiredOnIngress: requiredOnIngress,
+        enumValues: [],
+        maxLengthOnIngress: null,
+        defaultValue: null
+      };
+      
+      // Handle enum values for select/multi_select (comma-separated)
+      if (dataType === 'select' || dataType === 'multi_select') {
+        if (!enumValuesInput) {
+          showToast('error', 'Validation Error', `Row ${i + 1}: Enum values are required for select/multi_select`);
+          return null;
+        }
+        
+        const enumValues = enumValuesInput.split(',').map(v => v.trim()).filter(v => v);
+        
+        if (enumValues.length === 0) {
+          showToast('error', 'Validation Error', `Row ${i + 1}: At least one enum value is required for select/multi_select`);
+          return null;
+        }
+        
+        fieldData.enumValues = enumValues;
+      }
+      
+      // Default max length to 50 for text type
+      if (dataType === 'text') {
+        fieldData.maxLengthOnIngress = 50;
+      }
+      
+      // Handle default value
+      const defaultValueEl = row.querySelector('.cf-default-value');
+      if (defaultValueEl && defaultValueEl.value) {
+        if (dataType === 'boolean') {
+          fieldData.defaultValue = defaultValueEl.value === 'true';
+        } else if (dataType === 'numeric') {
+          fieldData.defaultValue = parseFloat(defaultValueEl.value);
+        } else {
+          fieldData.defaultValue = defaultValueEl.value;
+        }
+      }
+      
+      fields.push(fieldData);
     }
     
-    return {
-      name: name,
-      status_set_description: description,
-      status_label: statusLabels,
-      description: descriptions,
-      status_colors: statusColors
-    };
+    return fields;
+  }
+
+  function resetCustomFieldForm() {
+    const tbody = document.getElementById('customFieldsTableBody');
+    tbody.innerHTML = '';
+    // Add one initial row
+    tbody.appendChild(createCustomFieldRow());
+    // Add the "Add Row" button row
+    tbody.appendChild(createAddRowButton());
   }
 
   // ========================================
-  // END DYNAMIC STATUS VALUE FORM
+  // END DYNAMIC CUSTOM FIELDS FORM
   // ========================================
 
   function renderEnv(env) {
@@ -695,36 +1155,29 @@
   });
 
   // Handle Create Status Set form
-  el.addStatusValueBtn?.addEventListener('click', () => {
-    el.statusValuesContainer.appendChild(createStatusValueRow());
-  });
-
   el.resetStatusSetForm?.addEventListener('click', () => {
-    if (confirm('Are you sure you want to reset the form? All entered data will be lost.')) {
+    if (confirm('Are you sure you want to clear all status sets? All entered data will be lost.')) {
       resetStatusSetForm();
-      showToast('success', 'Form reset', 'The form has been cleared.');
+      showToast('success', 'Form cleared', 'All status sets have been cleared.');
     }
   });
 
   el.createStatusSetForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
-    const formData = collectStatusSetFormData();
-    if (!formData) {
+    const statusSetsData = collectStatusSetsTableData();
+    if (!statusSetsData) {
       return; // Validation error already shown
     }
     
     try {
-      // Wrap in array as the API expects an array of status sets
-      const payload = [formData];
-      
-      console.log('Creating status set with payload:', payload);
+      console.log('Creating status sets with payload:', statusSetsData);
       
       const resp = await fetch("/create_status_sets_from_json", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         credentials: "include",
-        body: JSON.stringify(payload),
+        body: JSON.stringify(statusSetsData),
       });
       
       if (resp.redirected) { 
@@ -734,7 +1187,8 @@
       
       if (resp.ok) {
         const data = await resp.json().catch(() => ({}));
-        showToast('success', 'Status set created', `Status set "${formData.name}" created successfully with ${formData.status_label.length} status values.`);
+        const totalStatusValues = statusSetsData.reduce((sum, set) => sum + set.status_label.length, 0);
+        showToast('success', 'Status sets created', `${statusSetsData.length} status set(s) created successfully with ${totalStatusValues} total status values.`);
         
         // Reset form and refresh preview
         resetStatusSetForm();
@@ -752,6 +1206,157 @@
     } catch (err) {
       console.error(err);
       showToast('error', 'Failed to create status set', err.message);
+    }
+  });
+
+  // Custom Field Form Event Listeners
+  el.resetCustomFieldForm?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (confirm('Are you sure you want to clear all rows? All data will be lost.')) {
+      resetCustomFieldForm();
+      showToast('success', 'Form reset', 'All rows have been cleared.');
+    }
+  });
+
+  el.createCustomFieldForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const fieldsData = collectCustomFieldsTableData();
+    if (!fieldsData) {
+      return; // Validation error already shown
+    }
+    
+    try {
+      console.log('Creating custom fields with payload:', fieldsData);
+      
+      const resp = await fetch("/create_custom_fields_from_json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(fieldsData),
+      });
+      
+      if (resp.redirected) { 
+        window.location.href = resp.url; 
+        return; 
+      }
+      
+      if (resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        showToast('success', 'Custom fields created', `Successfully created ${fieldsData.length} custom field(s).`);
+        
+        // Reset form and refresh preview
+        resetCustomFieldForm();
+        await renderCustomFieldsPreview();
+        
+        // Switch to Custom Fields tab to see the result
+        const customFieldsTab = document.querySelector('.forge-tab[data-tab="custom-fields"]');
+        if (customFieldsTab) {
+          customFieldsTab.click();
+        }
+      } else {
+        const text = await resp.text();
+        showToast('error', 'Failed to create custom fields', text);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('error', 'Failed to create custom fields', err.message);
+    }
+  });
+
+  // Categories Form Event Listeners
+  el.resetCategoryForm?.addEventListener('click', (e) => {
+    e.preventDefault();
+    if (confirm('Are you sure you want to reset the form? All data will be lost.')) {
+      el.categoryName.value = '';
+      el.categoryDescription.value = '';
+      if (parentCategoryAutocomplete) parentCategoryAutocomplete.reset();
+      if (statusSetAutocomplete) statusSetAutocomplete.reset();
+      if (customFieldsAutocomplete) customFieldsAutocomplete.reset();
+      showToast('success', 'Form reset', 'The form has been cleared.');
+    }
+  });
+
+  el.createCategoryForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const categoryName = el.categoryName.value.trim();
+    const categoryDescription = el.categoryDescription.value.trim();
+    const statusSetName = el.statusSetInput.value.trim();
+    const customFieldsInput = el.customFieldsInput.value.trim();
+    
+    if (!categoryName) {
+      showToast('error', 'Validation Error', 'Category name is required');
+      return;
+    }
+    
+    if (!statusSetName) {
+      showToast('error', 'Validation Error', 'Status set is required');
+      return;
+    }
+    
+    // Parse custom fields from comma-separated input
+    const customFieldNames = customFieldsInput
+      ? customFieldsInput.split(',').map(f => f.trim()).filter(f => f)
+      : [];
+    
+    const categoryData = {
+      name: categoryName,
+      description: categoryDescription || '',
+      status_set_name: statusSetName,
+      custom_fields: customFieldNames
+    };
+    
+    // Add parent category if provided
+    const parentCategoryName = el.parentCategoryInput.value.trim();
+    if (parentCategoryName) {
+      categoryData.parent_category_name = parentCategoryName;
+    }
+    
+    try {
+      // Wrap in array as the API expects an array of categories
+      const payload = [categoryData];
+      
+      console.log('Creating category with payload:', payload);
+      
+      const resp = await fetch("/create_categories_from_json", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify(payload),
+      });
+      
+      if (resp.redirected) { 
+        window.location.href = resp.url; 
+        return; 
+      }
+      
+      if (resp.ok) {
+        const data = await resp.json().catch(() => ({}));
+        const customFieldsText = customFieldNames.length > 0 ? ` with ${customFieldNames.length} custom field(s)` : '';
+        showToast('success', 'Category created', `Category "${categoryName}" created successfully${customFieldsText}.`);
+        
+        // Reset form and refresh preview
+        el.categoryName.value = '';
+        el.categoryDescription.value = '';
+        el.parentCategoryInput.value = '';
+        el.statusSetInput.value = '';
+        el.customFieldsInput.value = '';
+        
+        await loadCategories();
+        
+        // Switch to Categories tab to see the result
+        const categoriesTab = document.querySelector('.forge-tab[data-tab="categories"]');
+        if (categoriesTab) {
+          categoriesTab.click();
+        }
+      } else {
+        const text = await resp.text();
+        showToast('error', 'Failed to create category', text);
+      }
+    } catch (err) {
+      console.error(err);
+      showToast('error', 'Failed to create category', err.message);
     }
   });
 
@@ -790,8 +1395,15 @@
   await renderStatusSetsPreview();
   await renderCustomFieldsPreview();
   
-  // Initialize create status set form with one row
-  if (el.statusValuesContainer) {
-    el.statusValuesContainer.appendChild(createStatusValueRow());
+  // Initialize create status sets form with one row and Add Row button
+  if (el.statusSetsTableBody) {
+    el.statusSetsTableBody.appendChild(createStatusSetRow());
+    el.statusSetsTableBody.appendChild(createAddStatusSetButton());
+  }
+  
+  // Initialize create custom fields form with one row and Add Row button
+  if (el.customFieldsTableBody) {
+    el.customFieldsTableBody.appendChild(createCustomFieldRow());
+    el.customFieldsTableBody.appendChild(createAddRowButton());
   }
 })();
