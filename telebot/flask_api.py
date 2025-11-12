@@ -19,6 +19,7 @@ app = Flask(__name__)
 AUTH_TOKEN = os.getenv("SITE_UPDATES_TOKEN", "super-secret-token")
 ROOT_APP_BASE = os.getenv("ROOT_APP_BASE", "http://localhost:8000").rstrip("/")
 ROOT_UPDATE_URL = f"{ROOT_APP_BASE}/update_status"
+ROOT_UPDATE_ISSUE_URL = f"{ROOT_APP_BASE}/update_issue"
 
 
 # Base dir of this file so we always write to the same folder as flask_api.py
@@ -170,42 +171,32 @@ def update_guid(guid: str):
 
         append_pretty_update(clean_payload)
 
-    # --- NEW: call ACC to update the asset status ---
-    acc_result = None
-
+    # --- Forward: call root Flask app /update_issue so the canonical APS logic runs there ---
     status_value = flattened_parsed.get("status")
     if status_value:
         try:
-            # Use your existing auth class
-            auth = AutodeskAuth(
-                client_id=config.client_id,
-                client_secret=config.client_secret,
-                redirect_uri=config.redirect_uri,
-                scopes=config.scopes,
+            resp = requests.post(
+                ROOT_UPDATE_ISSUE_URL,
+                json={"issue_guid": guid, "new_status": status_value},
+                timeout=10,
             )
-            access_token = auth.get_access_token()
-        except Exception as e:
-            access_token = None
-            acc_result = {"error": f"Failed to get access token: {e}"}
+        except Exception as exc:
+            return jsonify({
+                "ok": False,
+                "error": f"Failed to reach root /update_issue: {exc}"
+            }), 502
 
-        if access_token:
-            # guid here is the IFC global id
-            acc_result, acc_status = update_assets(
-                access_token=access_token,
-                asset_guid=guid,
-                status_value=status_value,
-            )
-        else:
-            acc_status = 500
+        try:
+            body = resp.json()
+        except Exception:
+            body = resp.text
 
-        # Merge both local logging + ACC result into the response
         return jsonify({
             "ok": True,
             "guid": guid,
             "version": DB[guid]["version"],
-            "acc_update": acc_result
-        }), 200 if acc_status and 200 <= acc_status < 300 else acc_status
-
+            "acc_update": body,
+        }), resp.status_code
     # Forward status update to the canonical root Flask app endpoint
     root_status, root_body = forward_status_to_root(guid, status_value)
 
