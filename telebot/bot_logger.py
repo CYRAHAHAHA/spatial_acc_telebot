@@ -13,13 +13,16 @@ from datetime import UTC
 
 from dotenv import load_dotenv, find_dotenv
 from telegram import Update
+from telegram.constants import ChatMemberStatus
 from telegram.ext import (
     Application,
     ContextTypes,
     MessageHandler,
     CommandHandler,
+    ChatMemberHandler,
     filters,
 )
+
 
 # Load environment variables (supports running from /telebot)
 load_dotenv(find_dotenv(usecwd=True), override=True)
@@ -189,6 +192,41 @@ async def cmd_setproject(update: Update, context: ContextTypes.DEFAULT_TYPE) -> 
     await update.message.reply_text(
         f"Project ID for this group is now set to: {project_id}"
     )
+
+async def on_new_chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    chat = update.effective_chat
+    member = update.my_chat_member
+
+    # Fire only when *this* bot becomes a member of the group
+    if member and member.new_chat_member.status == ChatMemberStatus.MEMBER:
+        await context.bot.send_message(
+            chat_id=chat.id,
+            text=(
+                "👋 Hello! I'm your site update bot.\n\n"
+                "Please provide the Project ID for this group (one time):\n"
+                "Example:\n"
+                "Project ID: KotaKinabalu-A\n\n"
+                "Once set, send your [UPDATE] messages using the template."
+            )
+        )
+
+
+async def handle_project_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    chat = update.effective_chat
+    msg = update.effective_message
+    text = (msg.text or "").strip()
+
+    m = re.match(r"(?i)^project\s*id\s*:\s*(.+)", text)
+    if not m:
+        return
+
+    project_id = m.group(1).strip()
+    mapping = load_project_map()
+    mapping[str(chat.id)] = project_id
+    save_project_map(mapping)
+
+    await msg.reply_text(f"Project ID for this group is now set to: {project_id}")
+
 
 
 # Canon + typo-fix helpers -------------------------
@@ -494,11 +532,11 @@ async def one_shot_update_handler(
     # If this group has no project_id yet, ask once and stop
     if not project_id:
         await msg.reply_text(
-            "👋 I don't know the project for this group yet.\n\n"
+            "No Project ID linked to this group yet.\n\n"
             "Please set it once using:\n"
-            "/setproject <project_id>\n\n"
+            "Project ID: <project_id>\n\n"
             "Example:\n"
-            "/setproject Punggol-EC-01\n\n"
+            "Project ID: Pasir Ris-EC-01\n\n"
             "Then resend your [UPDATE] message."
         )
         return
@@ -552,10 +590,17 @@ def main() -> None:
     app = Application.builder().token(token).build()
 
     app.add_handler(CommandHandler("template", cmd_template))
-    app.add_handler(CommandHandler("setproject", cmd_setproject))
+    # when the bot is added to a group → ask for Project ID
+    app.add_handler(ChatMemberHandler(on_new_chat, ChatMemberHandler.MY_CHAT_MEMBER))
+
+    # capture messages like "Project ID: KotaKinabalu-A"
     app.add_handler(
-        MessageHandler(filters.TEXT & filters.ChatType.GROUPS, one_shot_update_handler)
+        MessageHandler(filters.Regex(r"(?i)^project\s*id\s*:\s*(.+)"), handle_project_id)
     )
+
+    # actual [UPDATE] processing
+    app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.GROUPS, one_shot_update_handler))
+
 
     print("Bot is running... listening for messages.")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
