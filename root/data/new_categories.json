@@ -1,0 +1,26 @@
+[
+    {
+        "name": "Custom asdasd",
+        "description": "This is a description for Custom Category 1",
+        "category_parent_name": "Parent Category A",
+        "category_parent_id": 1,
+        "status_set_name": "Default",
+        "custom_fields": ["IFCGlobalId", "Discipline"]
+    },
+    {
+        "name": "Custom asdasddefdef",
+        "description": "This is a description for Custom Category 2",
+        "category_parent_name": "Parent Category B",
+        "category_parent_id": 1,
+        "status_set_name": "testing 1",
+        "custom_fields": ["IFCGlobalId", "IFC_Type"]
+    },
+    {
+        "name": "Custom zzzzzz",
+        "description": "This is a description for Custom Category 3",
+        "category_parent_name": "Parent Category C",
+        "category_parent_id": 2,
+        "status_set_name": "testing 2",
+        "custom_fields": ["IFCGlobalId", "Subcontractor"]
+    }
+]

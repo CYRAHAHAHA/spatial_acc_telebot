@@ -79,46 +79,87 @@ def api_status():
         "message": request.args.get("msg", "")
     })
 
-# ---- API: categories and hierarchy (from session.aggregated_data) ----
+# ---- API: categories and hierarchy (from CSV file) ----
 @app.route("/api/categories")
 def api_categories():
-    aggregated = session.get("aggregated_data") or {}
-    cats = aggregated.get("categories", [])
+    """
+    Read categories.csv and build hierarchical tree structure.
+    """
+    data_dir = Path(__file__).resolve().parents[1] / "output"
+    p = data_dir / "categories.csv"
+    
+    if not p.exists():
+        return jsonify({
+            "count": 0,
+            "categories": [],
+            "tree": []
+        })
 
-    # Build children map if not present
-    by_id = {c.get("categoryId"): dict(c) for c in cats if c.get("categoryId")}
+    categories = []
+    try:
+        with p.open("r", encoding="utf-8", newline="") as f:
+            reader = csv.DictReader(f)
+            for row in reader:
+                category = {
+                    "projectId": row.get("project_id") or "",
+                    "categoryId": row.get("category_id") or "",
+                    "categoryName": row.get("category_name") or "",
+                    "parentId": row.get("parent_id") or "",
+                    "statusSetId": row.get("status_set_id") or "",
+                    "statusSetName": row.get("status_set_name") or "",
+                    "customAttributes": row.get("custom_attributes") or "",
+                }
+                categories.append(category)
+    except Exception as ex:
+        return jsonify({"error": f"Failed to read categories.csv: {ex}"}), 500
+
+    # Build hierarchical tree structure
+    by_id = {c["categoryId"]: dict(c) for c in categories}
+    
+    # Initialize children arrays
     for c in by_id.values():
-        c.setdefault("children", [])
-
-    # If no children arrays, derive from parentId
-    if cats and not any(c.get("children") for c in cats):
-        for c in cats:
-            pid = c.get("parentId")
-            cid = c.get("categoryId")
-            if pid and pid in by_id and cid:
-                by_id[pid].setdefault("children", []).append(cid)
-
+        c["children"] = []
+    
+    # Build parent-child relationships
+    for c in categories:
+        parent_id = c.get("parentId")
+        category_id = c.get("categoryId")
+        if parent_id and parent_id in by_id and category_id:
+            by_id[parent_id]["children"].append(category_id)
+    
+    # Find root categories (those without a parent)
     roots = [c for c in by_id.values() if not c.get("parentId")]
-
+    
+    # Recursively build tree structure
     def build_tree(node):
+        # Split custom attributes into array
+        custom_attrs = []
+        if node.get("customAttributes"):
+            custom_attrs = [attr.strip() for attr in node["customAttributes"].split(";") if attr.strip()]
+        
         out = {
             "categoryId": node.get("categoryId"),
             "categoryName": node.get("categoryName"),
             "statusSetName": node.get("statusSetName"),
+            "statusSetId": node.get("statusSetId"),
             "parentId": node.get("parentId"),
+            "customAttributes": custom_attrs,
             "children": []
         }
-        for ch_id in node.get("children", []):
-            child = by_id.get(ch_id)
+        
+        # Recursively add children
+        for child_id in node.get("children", []):
+            child = by_id.get(child_id)
             if child:
                 out["children"].append(build_tree(child))
+        
         return out
-
-    tree = [build_tree(r) for r in roots] if roots else []
-
+    
+    tree = [build_tree(r) for r in roots]
+    
     return jsonify({
-        "count": len(cats),
-        "categories": cats,
+        "count": len(categories),
+        "categories": categories,
         "tree": tree
     })
 

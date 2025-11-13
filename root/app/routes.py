@@ -9,6 +9,8 @@ from urllib.parse import quote_plus
 from pathlib import Path
 from app.functions.update_status import update_assets
 from app.functions.fetch_all_assets_info import fetch_all_assets_info 
+from app.functions.create_categories import create_categories
+import json
 
 # Auth flow
 @app.route("/authorize")
@@ -66,3 +68,25 @@ def create_custom_fields_from_json(token):
         return jsonify({"error": "Invalid payload: expected a JSON array."}), 400
     created = create_custom_fields(token, items) or []
     return jsonify({"created": len(created)}), 200
+
+@app.route("/create_categories_from_json", methods=["POST"])
+@require_access_token(pass_token=True)
+def create_categories_from_json(token):
+    items = request.get_json(silent=True)
+    if not isinstance(items, list):
+        return jsonify({"error": "Invalid payload: expected a JSON array."}), 400
+    created = create_categories(token, items) or []
+    return jsonify({"created": len(created)}), 200
+
+@app.route("/api/payload/categories")
+def api_payload_categories():
+    data_dir = Path(__file__).resolve().parents[1] / "data"
+    p = data_dir / "new_categories.json"
+    try:
+        with p.open("r", encoding="utf-8") as f:
+            items = json.load(f)
+        if not isinstance(items, list):
+            return jsonify({"error": "new_categories.json must be a JSON array."}), 400
+        return jsonify(items)
+    except Exception as ex:
+        return jsonify({"error": f"Failed to read new_categories.json: {ex}"}), 404

@@ -1,1 +1,4 @@
-name, description, category_parent_name, category_parent_id
+name, description, category_parent_name, category_parent_id, status_set_name, category_name
+Custom Category 1, This is a description for Custom Category 1, Parent Category A, 1, Default, "IFCGlobalId, Discipline"
+Custom Category 2, This is a description for Custom Category 2, Parent Category B, 1, testing 1, "IFCGlobalId, IFC_Type"
+Custom Category 3, This is a description for Custom Category 3, Parent Category C, 2, testing 2, "IFCGlobalId, Subcontractor"
