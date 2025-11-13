@@ -1,4 +1,3 @@
-# First run: pip install python-telegram-bot==21.4 requests
 # Run code: python bot_logger.py
 
 import os
@@ -23,9 +22,13 @@ from telegram.ext import (
     filters,
 )
 
+import requests
+
+API_URL = "http://localhost:8080/update_status"  # Flask main.py runs on this
 
 # Load environment variables (supports running from /telebot)
 load_dotenv(find_dotenv(usecwd=True), override=True)
+
 
 # -------------------------------------------------------------------
 # Local JSON logging for compiled/parsed updates (replaces flask_api)
@@ -165,7 +168,7 @@ TEMPLATE = (
     "Status: Completed\n"
     "Date: 17 Oct 2025\n"
     "Remarks: Ready for inspection\n"
-    "GUID: 12345678-1234-1234-1234-123456789012"
+    "GUID: 1$p8tACJ938vr1_lKOJJ9g"
 )
 
 
@@ -202,7 +205,7 @@ async def on_new_chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
         await context.bot.send_message(
             chat_id=chat.id,
             text=(
-                "👋 Hello! I'm your site update bot.\n\n"
+                "Hello! I'm your site update bot.\n\n"
                 "Please provide the Project ID for this group (one time):\n"
                 "Example:\n"
                 "Project ID: KotaKinabalu-A\n\n"
@@ -506,6 +509,27 @@ def _normalize_and_strip(s: str) -> str | None:
     s = s.strip()
     return s if s != "" else None
 
+def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> str | None: ##To change when connecting with NLP
+    """
+    Placeholder: later this will call your NLP model to pick the best GUID
+    based on project_id + parsed fields.
+
+    For now, this is just a stub that returns None.
+    You can replace this with:
+    - a lookup in a CSV/JSON
+    - or a call to a real NLP model
+    """
+    # Example of what you *might* use later:
+    # building = (parsed.get("location") or {}).get("building")
+    # level = (parsed.get("location") or {}).get("level")
+    # grid = (parsed.get("area") or {}).get("grid")
+    # task = parsed.get("task")
+    #
+    # ...do your scoring / NLP matching here...
+    #
+    # return best_guid or None if you can't decide
+    return None
+
 
 # -------------------------------------------------------------------
 # Telegram handler --------------------------------------------------
@@ -541,7 +565,7 @@ async def one_shot_update_handler(
         )
         return
 
-    # Parse the message
+    # Parse the message into a structured dict
     parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
 
     # If any required fields are missing/blank, STOP here
@@ -551,33 +575,76 @@ async def one_shot_update_handler(
         )
         return
 
-    # Extract GUID from the message
-    guid = extract_guid_block_format(text)
+    # --- 1) Try to get GUID WITHOUT requiring it in the text --------------
+    guid = resolve_guid_from_nlp(project_id, parsed)
 
-    # If GUID present, also log to site_updates.json with versioning
-    if guid:
-        raw_text = text
-        payload_for_site_updates = {
-            "timestamp": msg.date.isoformat(),
-            "chat_id": msg.chat_id,
-            "message_id": msg.message_id,
-            "sender": (
-                f"{msg.from_user.first_name or ''} {msg.from_user.last_name or ''}".strip()
-                if msg.from_user
-                else None
-            ),
-            "sender_id": (msg.from_user.id if msg.from_user else None),
-            "raw_text": raw_text,
-            "parsed": parsed,
-        }
+    # --- 2) (Optional) Fallback: still support GUID in text while testing -
+    if not guid:
+        guid = extract_guid_block_format(text)
 
-        clean = log_site_update(guid, payload_for_site_updates, project_id)
+    # Build the payload that we log in site_updates.json
+    raw_text = text
+    payload_for_site_updates = {
+        "timestamp": msg.date.isoformat(),
+        "chat_id": msg.chat_id,
+        "message_id": msg.message_id,
+        "sender": (
+            f"{msg.from_user.first_name or ''} {msg.from_user.last_name or ''}".strip()
+            if msg.from_user
+            else None
+        ),
+        "sender_id": (msg.from_user.id if msg.from_user else None),
+        "raw_text": raw_text,
+        "parsed": parsed,
+    }
+
+    # Always log the update, even if we failed to match a GUID
+    clean = log_site_update(guid or "UNKNOWN", payload_for_site_updates, project_id)
+
+    # If we still have no GUID, we can't call ACC yet
+    if not guid:
         await msg.reply_text(
-            f"Update logged for GUID {guid} Project: {project_id}."
+            "Update logged, but I could not match this to a BIM element yet "
+            f"(no GUID resolved). Project: {project_id}."
+        )
+        return
+
+    # --- 3) We have a GUID → call Autodesk to update status ---------------
+    status_value = parsed.get("status")
+    if not status_value:
+        await msg.reply_text(
+            f"Update logged for GUID {guid} (Project: {project_id}), "
+            "but no Status field was parsed."
+        )
+        return
+
+    # --- 4) Call Flask /update_status via HTTP -----------
+    payload = {
+        "asset_guid": guid,
+        "status_value": status_value,
+    }
+
+    try:
+        resp = requests.post(API_URL, json=payload, timeout=15)
+    except Exception as e:
+        print("Bot: error calling /update_status:", repr(e))
+        await msg.reply_text(
+            f"Update logged for GUID {guid} (Project: {project_id}), "
+            "but failed to contact the ACC server."
+        )
+        return
+
+    if 200 <= resp.status_code < 300:
+        await msg.reply_text(
+            f"Update logged and ACC updated for GUID {guid} "
+            f"(Project: {project_id})."
         )
     else:
+        # Optional: log body for debugging
+        print("Bot: ACC update failed:", resp.status_code, resp.text[:500])
         await msg.reply_text(
-            f"Update logged (no GUID provided). Project: {project_id}."
+            f"Update logged for GUID {guid} (Project: {project_id}), "
+            f"but ACC update FAILED (HTTP {resp.status_code})."
         )
 
 
