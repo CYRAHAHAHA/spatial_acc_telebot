@@ -11,7 +11,7 @@ dotenv_path = Path(__file__).resolve().parents[2] / ".env"
 if dotenv_path.exists():
     load_dotenv(dotenv_path=dotenv_path, override=False)
 else:
-    sys.exit(f"❌ ERROR: .env file not found at {dotenv_path}")
+    sys.exit(f"ERROR: .env file not found at {dotenv_path}")
 
 # ------------------------------------------------------------
 # Configuration class
@@ -47,7 +47,7 @@ class Config:
         missing = [var for var in self.REQUIRED_VARS if not os.getenv(var)]
         if missing:
             sys.exit(
-                f"❌ ERROR: Missing required environment variables in .env: "
+                f"ERROR: Missing required environment variables in .env: "
                 f"{', '.join(missing)}"
             )
 
