@@ -11,6 +11,7 @@ from typing import Dict, List, Any, Tuple
 from threading import Lock
 from datetime import UTC
 
+import requests
 from dotenv import load_dotenv, find_dotenv
 from telegram import Update
 from telegram.constants import ChatMemberStatus
@@ -26,6 +27,10 @@ from telegram.ext import (
 
 # Load environment variables (supports running from /telebot)
 load_dotenv(find_dotenv(usecwd=True), override=True)
+
+# Root app endpoint for updating issues in Autodesk
+ROOT_APP_BASE = os.getenv("ROOT_APP_BASE", "http://localhost:8000").rstrip("/")
+ROOT_UPDATE_ISSUE_URL = f"{ROOT_APP_BASE}/update_issue"
 
 # -------------------------------------------------------------------
 # Local JSON logging for compiled/parsed updates (replaces flask_api)
@@ -81,6 +86,39 @@ def append_pretty_update(entry: dict) -> None:
         json.dump(data, wf, ensure_ascii=False, indent=2)
         wf.write("\n")
     print("Bot: write complete, total entries:", len(data))  # debug
+
+
+def forward_to_root_app(guid: str, status: str | None) -> Tuple[bool, str]:
+    """
+    Forward the issue update to the root Flask app's /update_issue endpoint.
+    Returns: (success: bool, message: str)
+    """
+    if not status:
+        return True, "No status provided, skipping forward"
+    
+    try:
+        resp = requests.post(
+            ROOT_UPDATE_ISSUE_URL,
+            json={"issue_guid": guid, "new_status": status},
+            timeout=10,
+        )
+        if 200 <= resp.status_code < 300:
+            try:
+                body = resp.json()
+                msg = f"Forwarded to Autodesk: {body.get('message', 'OK')}"
+            except Exception:
+                msg = f"Forwarded to Autodesk (status {resp.status_code})"
+            return True, msg
+        else:
+            try:
+                body = resp.json()
+                error_detail = body.get("error", resp.text)
+            except Exception:
+                error_detail = resp.text
+            return False, f"Root app error (HTTP {resp.status_code}): {error_detail}"
+    except Exception as e:
+        return False, f"Failed to reach root app: {e}"
+
 
 def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
     print("Bot: logging payload for GUID", guid)  # still keep this
@@ -168,9 +206,21 @@ TEMPLATE = (
     "GUID: 12345678-1234-1234-1234-123456789012"
 )
 
+SIMPLE_TEMPLATE = (
+    "GUID: 12345678-1234-1234-1234-123456789012\n"
+    "Status: Completed"
+)
+
 
 async def cmd_template(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("Copy, edit, and send this format:\n\n" + TEMPLATE)
+    msg = (
+        "Choose one format:\n\n"
+        "**SIMPLE (recommended):**\n"
+        "```\n" + SIMPLE_TEMPLATE + "\n```\n\n"
+        "**DETAILED:**\n"
+        "```\n" + TEMPLATE + "\n```"
+    )
+    await update.message.reply_text(msg, parse_mode="Markdown")
 
 async def cmd_setproject(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat = update.effective_chat
@@ -309,6 +359,38 @@ def extract_guid_block_format(text: str):
     if m:
         return m.group("guid")
     return None
+
+
+def parse_simple_update(text: str) -> Tuple[str | None, str | None, List[str]]:
+    """
+    Parse a simple 2-field format: GUID and Status
+    Returns: (guid, status, errors)
+    """
+    errors = []
+    guid = None
+    status = None
+    
+    # Extract GUID: "GUID: xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
+    guid_match = re.search(r"(?i)^GUID\s*:\s*([a-f0-9\-]+)", text, re.MULTILINE)
+    if guid_match:
+        guid = guid_match.group(1).strip()
+    
+    # Extract Status: "Status: Completed" or "Status: In Progress" etc
+    status_match = re.search(r"(?i)^Status\s*:\s*(.+?)$", text, re.MULTILINE)
+    if status_match:
+        status_raw = status_match.group(1).strip()
+        # Canonicalize status
+        status = _canonicalize_status(status_raw)
+    
+    # Validate
+    if not guid:
+        errors.append("Missing 'GUID: <issue-id>'")
+    if not status:
+        errors.append("Missing 'Status: <Completed|In Progress|Delayed|Issue>'")
+    elif status not in STATUSES_CANON:
+        errors.append(f"Unrecognized Status '{status_raw}'. Allowed: {', '.join(STATUSES_CANON)}")
+    
+    return guid, status, errors
 
 
 def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], List[str]]:
@@ -521,9 +603,15 @@ async def one_shot_update_handler(
     msg = update.effective_message
     text = (msg.text or msg.caption or "").strip()
 
-    # Only react to messages that start with [UPDATE]
-    if not text.startswith("[UPDATE]"):
-        return
+    # Support two formats:
+    # 1. SIMPLE: "GUID: ...\nStatus: ..."
+    # 2. DETAILED: "[UPDATE]\nLocation: ...\nStatus: ..."
+    
+    is_detailed = text.startswith("[UPDATE]")
+    is_simple = not is_detailed and "GUID:" in text.upper() and "STATUS:" in text.upper()
+    
+    if not (is_detailed or is_simple):
+        return  # Ignore messages that aren't in either format
 
     chat_id_str = str(msg.chat_id)
     mapping = load_project_map()
@@ -537,47 +625,57 @@ async def one_shot_update_handler(
             "Project ID: <project_id>\n\n"
             "Example:\n"
             "Project ID: Pasir Ris-EC-01\n\n"
-            "Then resend your [UPDATE] message."
+            "Then resend your message."
         )
         return
 
-    # Parse the message
-    parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
-
-    # If any required fields are missing/blank, STOP here
-    if errors:
-        await msg.reply_text(
-            "Error: Update not logged.\nPlease fix:\n- " + "\n- ".join(errors)
-        )
-        return
-
-    # Extract GUID from the message
-    guid = extract_guid_block_format(text)
-
-    # If GUID present, also log to site_updates.json with versioning
-    if guid:
-        raw_text = text
-        payload_for_site_updates = {
-            "timestamp": msg.date.isoformat(),
-            "chat_id": msg.chat_id,
-            "message_id": msg.message_id,
-            "sender": (
-                f"{msg.from_user.first_name or ''} {msg.from_user.last_name or ''}".strip()
-                if msg.from_user
-                else None
-            ),
-            "sender_id": (msg.from_user.id if msg.from_user else None),
-            "raw_text": raw_text,
-            "parsed": parsed,
-        }
-
-        clean = log_site_update(guid, payload_for_site_updates, project_id)
-        await msg.reply_text(
-            f"Update logged for GUID {guid} Project: {project_id}."
-        )
+    # Parse based on format
+    if is_simple:
+        # Simple format: GUID + Status only
+        guid, status, errors = parse_simple_update(text)
+        if errors:
+            await msg.reply_text(
+                "❌ Error parsing update.\n"
+                "Please use format:\n"
+                "```\nGUID: <issue-id>\nStatus: Completed\n```\n\n"
+                "Issues:\n- " + "\n- ".join(errors),
+                parse_mode="Markdown"
+            )
+            return
+    else:
+        # Detailed format: requires Location, Task, Area, Status
+        parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
+        
+        if errors:
+            await msg.reply_text(
+                "❌ Error in detailed format.\n"
+                "Please fix:\n- " + "\n- ".join(errors)
+            )
+            return
+        
+        guid = extract_guid_block_format(text)
+        status = parsed.get("status")
+    
+    # Forward to ACC if both GUID and Status present
+    if guid and status:
+        success, forward_msg = forward_to_root_app(guid, status)
+        
+        if success:
+            await msg.reply_text(
+                f"✅ Update sent to ACC\n"
+                f"Issue GUID: {guid}\n"
+                f"Status: {status}\n"
+                f"Project: {project_id}"
+            )
+        else:
+            await msg.reply_text(
+                f"⚠️ Could not update ACC\n"
+                f"Issue GUID: {guid}\n"
+                f"❌ Error: {forward_msg}"
+            )
     else:
         await msg.reply_text(
-            f"Update logged (no GUID provided). Project: {project_id}."
+            f"❌ Could not parse GUID or Status from message."
         )
 
 
