@@ -13,6 +13,8 @@
     statusSetsHost: document.getElementById("StatusSets"),
     customFieldsHost: document.getElementById("CustomFields"),
     fetchAssetsInfo: document.getElementById("fetchAssetsInfo"),
+    fetchMetadataBtn: document.getElementById("fetchMetadataBtn"),
+    metadataOutput: document.getElementById("metadataOutput"),
   };
 
   function setMsg(text) {
@@ -290,6 +292,35 @@
       setMsg("Failed to update asset status. Check console.");
     }
   });
+
+  // Fetch IFC Metadata button
+el.fetchMetadataBtn?.addEventListener("click", async () => {
+  el.metadataOutput.textContent = "⏳ Fetching IFC metadata...";
+
+  try {
+    const res = await fetch("/fetch_metadata", {
+      method: "POST",
+      credentials: "include"
+    });
+
+    const data = await res.json();
+
+    if (!res.ok || !data.success) {
+      el.metadataOutput.textContent =
+        "❌ Error: " + (data.error || "Unknown error");
+      setMsg("Failed to fetch metadata.");
+      return;
+    }
+
+    el.metadataOutput.textContent =
+      "🎉 Success!\n\n" + JSON.stringify(data.files, null, 2);
+
+    setMsg("IFC metadata extraction complete! Check output folder.");
+  } catch (err) {
+    console.error(err);
+    el.metadataOutput.textContent = "❌ Request failed. Check console.";
+  }
+});
 
   // Initial load
   await loadStatus();

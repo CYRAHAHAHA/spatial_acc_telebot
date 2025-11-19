@@ -1,0 +1,990 @@
+[
+  {
+    "name": "IfcSpace::3 - Entrance hall",
+    "description": "",
+    "category": "IfcSpace",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3w0zWKm7n8SB1qbfwUzt0G"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Bed_1:1525x2007x355mm-Queen:295878",
+    "description": "295878",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "1RS53LK$j6KOlAGwxTiY8D"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Desk:1525x762mm:287689",
+    "description": "287689",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZVU"
+    }
+  },
+  {
+    "name": "IfcSpace::2 - Bedroom",
+    "description": "",
+    "category": "IfcSpace",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3w0zWKm7n8SB1qbfwUzt0J"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Chair_Viper:1120x940x350mm:291916",
+    "description": "291916",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyY1R"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Chair_Viper:1120x940x350mm:292127",
+    "description": "292127",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyY48"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Couch_Viper:2290x950x340mm:290852",
+    "description": "290852",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyYGp"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Piano:1370x600x1170mm:293961",
+    "description": "293961",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyYXU"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Table_Coffee_1:1200x550x450mm:293046",
+    "description": "293046",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyYoX"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Table_Dining_w-Chairs_Rectangular:2000x1000x750mm_w-6_Seats:289768",
+    "description": "289768",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$$"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:289769",
+    "description": "289769",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$_"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:289772",
+    "description": "289772",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$x"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:289771",
+    "description": "289771",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$y"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:289770",
+    "description": "289770",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$z"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:290098",
+    "description": "290098",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZab"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:290097",
+    "description": "290097",
+    "category": "IfcFurniture",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZac"
+    }
+  },
+  {
+    "name": "IfcSpace::1 - Living room",
+    "description": "",
+    "category": "IfcSpace",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3w0zWKm7n8SB1qbfwUzt0U"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294202",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomK"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294203",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomL"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294200",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomM"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294201",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomN"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294198",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomO"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294199",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomP"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294196",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomQ"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294197",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomR"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294194",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomS"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294195",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomT"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285685",
+    "description": "285685",
+    "category": "IfcPlate",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW$Y"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285690",
+    "description": "285690",
+    "category": "IfcPlate",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW$j"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285688",
+    "description": "285688",
+    "category": "IfcPlate",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW$l"
+    }
+  },
+  {
+    "name": "IfcCurtainWall::Curtain Wall:Curtain_Wall-Exterior_Glazing:285684",
+    "description": "285684",
+    "category": "IfcCurtainWall",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW$Z"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294190",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom0"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294191",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom1"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294189",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom3"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294186",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom4"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294187",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom5"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294185",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom7"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294182",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom8"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294183",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom9"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294181",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomB"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "description": "294192",
+    "category": "IfcMember",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomU"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285588",
+    "description": "285588",
+    "category": "IfcPlate",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW_3"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285586",
+    "description": "285586",
+    "category": "IfcPlate",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW_5"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285583",
+    "description": "285583",
+    "category": "IfcPlate",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW_O"
+    }
+  },
+  {
+    "name": "IfcCurtainWall::Curtain Wall:Curtain_Wall-Exterior_Glazing:285582",
+    "description": "285582",
+    "category": "IfcCurtainWall",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW_P"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Doors_IntSgl:810x2110mm:285959:1",
+    "description": "",
+    "category": "IfcOpeningElement",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWaG"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Doors_IntSgl:810x2110mm:285996:1",
+    "description": "",
+    "category": "IfcOpeningElement",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWax"
+    }
+  },
+  {
+    "name": "IfcWallStandardCase::Basic Wall:Wall-Partn_12P-70MStd-12P:285792",
+    "description": "285792",
+    "category": "IfcWallStandardCase",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWXt"
+    }
+  },
+  {
+    "name": "IfcWallStandardCase::Basic Wall:Wall-Partn_12P-70MStd-12P:285846",
+    "description": "285846",
+    "category": "IfcWallStandardCase",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWY1"
+    }
+  },
+  {
+    "name": "IfcDoor::Doors_ExtDbl_Flush:1810x2110mm:285860",
+    "description": "285860",
+    "category": "IfcDoor",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWYp"
+    }
+  },
+  {
+    "name": "IfcDoor::Doors_IntSgl:810x2110mm:285959",
+    "description": "285959",
+    "category": "IfcDoor",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWaG"
+    }
+  },
+  {
+    "name": "IfcDoor::Doors_IntSgl:810x2110mm:285996",
+    "description": "285996",
+    "category": "IfcDoor",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWax"
+    }
+  },
+  {
+    "name": "IfcWindow::Windows_Sgl_Plain:1810x1210mm:286105",
+    "description": "286105",
+    "category": "IfcWindow",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWcE"
+    }
+  },
+  {
+    "name": "IfcWindow::Windows_Sgl_Plain:1810x1210mm:286188",
+    "description": "286188",
+    "category": "IfcWindow",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWdx"
+    }
+  },
+  {
+    "name": "IfcWindow::Windows_Sgl_Plain:1810x1210mm:286238",
+    "description": "286238",
+    "category": "IfcWindow",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWe9"
+    }
+  },
+  {
+    "name": "IfcWindow::Windows_Sgl_Plain:1810x1210mm:287567",
+    "description": "287567",
+    "category": "IfcWindow",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZTO"
+    }
+  },
+  {
+    "name": "IfcCovering::Compound Ceiling:Plain:286329",
+    "description": "286329",
+    "category": "IfcCovering",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWfk"
+    }
+  },
+  {
+    "name": "IfcCovering::Compound Ceiling:Plain:286319",
+    "description": "286319",
+    "category": "IfcCovering",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWfu"
+    }
+  },
+  {
+    "name": "IfcCovering::Compound Ceiling:Plain:286337",
+    "description": "286337",
+    "category": "IfcCovering",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWgM"
+    }
+  },
+  {
+    "name": "IfcSlab::Floor:Floor-Grnd-Susp_65Scr-80Ins-100Blk-75PC:286349",
+    "description": "286349",
+    "category": "IfcSlab",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWgQ"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Windows_Sgl_Plain:1810x1210mm:286105:1",
+    "description": "",
+    "category": "IfcOpeningElement",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWcE"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Windows_Sgl_Plain:1810x1210mm:286188:1",
+    "description": "",
+    "category": "IfcOpeningElement",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWdx"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Windows_Sgl_Plain:1810x1210mm:286238:1",
+    "description": "",
+    "category": "IfcOpeningElement",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWe9"
+    }
+  },
+  {
+    "name": "IfcWall::Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285330",
+    "description": "285330",
+    "category": "IfcWall",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWw5"
+    }
+  },
+  {
+    "name": "IfcWall::Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285395",
+    "description": "285395",
+    "category": "IfcWall",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWx4"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Doors_ExtDbl_Flush:1810x2110mm:285860:1",
+    "description": "",
+    "category": "IfcOpeningElement",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWYp"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Windows_Sgl_Plain:1810x1210mm:287567:1",
+    "description": "",
+    "category": "IfcOpeningElement",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyZTO"
+    }
+  },
+  {
+    "name": "IfcWall::Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285459",
+    "description": "285459",
+    "category": "IfcWall",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWy4"
+    }
+  },
+  {
+    "name": "IfcBuildingStorey::Ground Floor",
+    "description": "",
+    "category": "IfcBuildingStorey",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "1o0c33arXF9AEePDYchjCY"
+    }
+  },
+  {
+    "name": "IfcSpace::4 - Roof",
+    "description": "",
+    "category": "IfcSpace",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMota"
+    }
+  },
+  {
+    "name": "IfcRoof::Basic Roof:Roof_Flat-4Felt-150Ins-50Scr-150Conc-12Plr:286419",
+    "description": "286419",
+    "category": "IfcRoof",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWh4"
+    }
+  },
+  {
+    "name": "IfcSlab::Floor:Simple floor:295048",
+    "description": "295048",
+    "category": "IfcSlab",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "3ntFzSulnDNeQ4nJrMgcOt"
+    }
+  },
+  {
+    "name": "IfcBuildingStorey::Roof",
+    "description": "",
+    "category": "IfcBuildingStorey",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "1o0c33arXF9AEePDYchj2Z"
+    }
+  },
+  {
+    "name": "IfcBuilding",
+    "description": "",
+    "category": "IfcBuilding",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "1o0c33arXF9AEePDXPKIta"
+    }
+  },
+  {
+    "name": "IfcSite::Default",
+    "description": "",
+    "category": "IfcSite",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "1o0c33arXF9AEePDXPKItd"
+    }
+  },
+  {
+    "name": "IfcProject::Project Number",
+    "description": "",
+    "category": "IfcProject",
+    "status": "Default",
+    "location": {
+      "latitude": null,
+      "longitude": null
+    },
+    "custom_attributes": {
+      "GlobalId": "1o0c33arXF9AEePDXPKItb"
+    }
+  }
+]

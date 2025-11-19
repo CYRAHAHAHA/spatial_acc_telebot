@@ -9,6 +9,7 @@ from urllib.parse import quote_plus
 from pathlib import Path
 from app.functions.update_status import update_assets
 from app.functions.fetch_all_assets_info import fetch_all_assets_info 
+from app.functions.fetch_metadata import fetch_ifc_metadata
 
 # Auth flow
 @app.route("/authorize")
@@ -47,6 +48,18 @@ def update_status(token):
     if not asset_guid or not status_value:
         return jsonify({"error": "Missing asset_guid or status_value"}), 400
     return update_assets(token, asset_guid, status_value)
+
+@app.route("/fetch_metadata", methods=["POST"])
+@require_access_token(pass_token=True)
+def fetch_metadata_route(token):
+    try:
+        result = fetch_ifc_metadata()
+        return jsonify({
+            "message": "Metadata extracted",
+            "files": result
+        }), 200
+    except Exception as ex:
+        return jsonify({"error": str(ex)}), 500
 
 # --- Creation APIs (accept JSON payload from client) ---
 @app.route("/create_status_sets_from_json", methods=["POST"])

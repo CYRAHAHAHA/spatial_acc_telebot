@@ -1,0 +1,1514 @@
+[
+  {
+    "name": "IfcSpace::3 - Entrance hall",
+    "externalId": "M3cweldLbTduOFNCMXFiZndVenQwRw==",
+    "decodedExternalId": "3w0zWKm7n8SB1qbfwUzt0G",
+    "ifcClass": "IfcSpace",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3w0zWKm7n8SB1qbfwUzt0G",
+      "LongName": "Entrance hall",
+      "CompositionType": "ELEMENT",
+      "PredefinedType": "SPACE",
+      "IfcClass": "IfcSpace",
+      "IfcPropertySetList": "\"Pset_SpaceCommon\";\"BaseQuantities\";\"Other\";\"Energy Analysis\";\"Constraints\";\"Phasing\";\"Identity Data\";\"Dimensions\"",
+      "IfcDecomposesGUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcDecomposes": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Bed_1:1525x2007x355mm-Queen:295878",
+    "externalId": "MVJTNTNMSyRqNktPbEFHd3hUaVk4RA==",
+    "decodedExternalId": "1RS53LK$j6KOlAGwxTiY8D",
+    "ifcClass": "IfcFurniture",
+    "objectType": "1525x2007x355mm-Queen",
+    "predefinedType": null,
+    "tag": "295878",
+    "spatialContainer": "2 - Bedroom",
+    "rawAttributes": {
+      "GlobalId": "1RS53LK$j6KOlAGwxTiY8D",
+      "ObjectType": "1525x2007x355mm-Queen",
+      "Tag": "295878",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Phasing\";\"Dimensions\";\"Constraints\";\"Other\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0J",
+      "IfcSpatialContainer": "2 - Bedroom"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Desk:1525x762mm:287689",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVpWVQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZVU",
+    "ifcClass": "IfcFurniture",
+    "objectType": "1525x762mm",
+    "predefinedType": null,
+    "tag": "287689",
+    "spatialContainer": "2 - Bedroom",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZVU",
+      "ObjectType": "1525x762mm",
+      "Tag": "287689",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0J",
+      "IfcSpatialContainer": "2 - Bedroom"
+    }
+  },
+  {
+    "name": "IfcSpace::2 - Bedroom",
+    "externalId": "M3cweldLbTduOFNCMXFiZndVenQwSg==",
+    "decodedExternalId": "3w0zWKm7n8SB1qbfwUzt0J",
+    "ifcClass": "IfcSpace",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3w0zWKm7n8SB1qbfwUzt0J",
+      "LongName": "Bedroom",
+      "CompositionType": "ELEMENT",
+      "PredefinedType": "SPACE",
+      "IfcClass": "IfcSpace",
+      "IfcPropertySetList": "\"Other\";\"Pset_SpaceCommon\";\"BaseQuantities\";\"Energy Analysis\";\"Constraints\";\"Phasing\";\"Identity Data\";\"Dimensions\"",
+      "IfcDecomposesGUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcDecomposes": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Chair_Viper:1120x940x350mm:291916",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVkxUg==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyY1R",
+    "ifcClass": "IfcFurniture",
+    "objectType": "1120x940x350mm",
+    "predefinedType": null,
+    "tag": "291916",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyY1R",
+      "ObjectType": "1120x940x350mm",
+      "Tag": "291916",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\";\"IfcClassificationReference\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Chair_Viper:1120x940x350mm:292127",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVk0OA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyY48",
+    "ifcClass": "IfcFurniture",
+    "objectType": "1120x940x350mm",
+    "predefinedType": null,
+    "tag": "292127",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyY48",
+      "ObjectType": "1120x940x350mm",
+      "Tag": "292127",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\";\"IfcClassificationReference\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Couch_Viper:2290x950x340mm:290852",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVlHcA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyYGp",
+    "ifcClass": "IfcFurniture",
+    "objectType": "2290x950x340mm",
+    "predefinedType": null,
+    "tag": "290852",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyYGp",
+      "ObjectType": "2290x950x340mm",
+      "Tag": "290852",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\";\"IfcClassificationReference\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Piano:1370x600x1170mm:293961",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVlYVQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyYXU",
+    "ifcClass": "IfcFurniture",
+    "objectType": "1370x600x1170mm",
+    "predefinedType": null,
+    "tag": "293961",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyYXU",
+      "ObjectType": "1370x600x1170mm",
+      "Tag": "293961",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Table_Coffee_1:1200x550x450mm:293046",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVlvWA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyYoX",
+    "ifcClass": "IfcFurniture",
+    "objectType": "1200x550x450mm",
+    "predefinedType": null,
+    "tag": "293046",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyYoX",
+      "ObjectType": "1200x550x450mm",
+      "Tag": "293046",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Pset_ManufacturerTypeInformation\";\"Constraints\";\"Dimensions\";\"Phasing\";\"IfcClassificationReference\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Furniture_Table_Dining_w-Chairs_Rectangular:2000x1000x750mm_w-6_Seats:289768",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVokJA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZ$$",
+    "ifcClass": "IfcFurniture",
+    "objectType": "2000x1000x750mm_w-6_Seats",
+    "predefinedType": null,
+    "tag": "289768",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$$",
+      "ObjectType": "2000x1000x750mm_w-6_Seats",
+      "Tag": "289768",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:289769",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVokXw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZ$_",
+    "ifcClass": "IfcFurniture",
+    "objectType": "Chair - Dining",
+    "predefinedType": null,
+    "tag": "289769",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$_",
+      "ObjectType": "Chair - Dining",
+      "Tag": "289769",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:289772",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVokeA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZ$x",
+    "ifcClass": "IfcFurniture",
+    "objectType": "Chair - Dining",
+    "predefinedType": null,
+    "tag": "289772",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$x",
+      "ObjectType": "Chair - Dining",
+      "Tag": "289772",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:289771",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVokeQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZ$y",
+    "ifcClass": "IfcFurniture",
+    "objectType": "Chair - Dining",
+    "predefinedType": null,
+    "tag": "289771",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$y",
+      "ObjectType": "Chair - Dining",
+      "Tag": "289771",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:289770",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVokeg==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZ$z",
+    "ifcClass": "IfcFurniture",
+    "objectType": "Chair - Dining",
+    "predefinedType": null,
+    "tag": "289770",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZ$z",
+      "ObjectType": "Chair - Dining",
+      "Tag": "289770",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:290098",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVphYg==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZab",
+    "ifcClass": "IfcFurniture",
+    "objectType": "Chair - Dining",
+    "predefinedType": null,
+    "tag": "290098",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZab",
+      "ObjectType": "Chair - Dining",
+      "Tag": "290098",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcFurniture::Chair - Dining:Chair - Dining:290097",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVphYw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZac",
+    "ifcClass": "IfcFurniture",
+    "objectType": "Chair - Dining",
+    "predefinedType": null,
+    "tag": "290097",
+    "spatialContainer": "1 - Living room",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZac",
+      "ObjectType": "Chair - Dining",
+      "Tag": "290097",
+      "IfcClass": "IfcFurniture",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "3w0zWKm7n8SB1qbfwUzt0U",
+      "IfcSpatialContainer": "1 - Living room"
+    }
+  },
+  {
+    "name": "IfcSpace::1 - Living room",
+    "externalId": "M3cweldLbTduOFNCMXFiZndVenQwVQ==",
+    "decodedExternalId": "3w0zWKm7n8SB1qbfwUzt0U",
+    "ifcClass": "IfcSpace",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3w0zWKm7n8SB1qbfwUzt0U",
+      "LongName": "Living room",
+      "CompositionType": "ELEMENT",
+      "PredefinedType": "SPACE",
+      "IfcClass": "IfcSpace",
+      "IfcPropertySetList": "\"BaseQuantities\";\"Pset_SpaceCommon\";\"Other\";\"Energy Analysis\";\"Constraints\";\"Phasing\";\"Identity Data\";\"Dimensions\"",
+      "IfcDecomposesGUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcDecomposes": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tSw==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomK",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294202",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomK",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294202",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Identity Data\";\"Dimensions\";\"Pset_MemberCommon\";\"Materials and Finishes\";\"Other\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tTA==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomL",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294203",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomL",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294203",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Pset_MemberCommon\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Other\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tTQ==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomM",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294200",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomM",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294200",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Other\";\"Construction\";\"Pset_MemberCommon\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tTg==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomN",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294201",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomN",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294201",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\";\"Pset_MemberCommon\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tTw==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomO",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294198",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomO",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294198",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\";\"Pset_MemberCommon\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tUA==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomP",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294199",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomP",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294199",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Pset_MemberCommon\";\"Construction\";\"Other\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tUQ==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomQ",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294196",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomQ",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294196",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Pset_MemberCommon\";\"Constraints\";\"Other\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tUg==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomR",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294197",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomR",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294197",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Other\";\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Pset_MemberCommon\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tUw==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomS",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294194",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomS",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294194",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Pset_MemberCommon\";\"Other\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tVA==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomT",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294195",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomT",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294195",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Other\";\"Pset_MemberCommon\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285685",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVckWQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyW$Y",
+    "ifcClass": "IfcPlate",
+    "objectType": "Glazed",
+    "predefinedType": null,
+    "tag": "285685",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW$Y",
+      "ObjectType": "Glazed",
+      "Tag": "285685",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcPlate",
+      "IfcPropertySetList": "\"Pset_PlateCommon\";\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285690",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVckag==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyW$j",
+    "ifcClass": "IfcPlate",
+    "objectType": "Glazed",
+    "predefinedType": null,
+    "tag": "285690",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW$j",
+      "ObjectType": "Glazed",
+      "Tag": "285690",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcPlate",
+      "IfcPropertySetList": "\"Other\";\"Pset_PlateCommon\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285688",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVckbA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyW$l",
+    "ifcClass": "IfcPlate",
+    "objectType": "Glazed",
+    "predefinedType": null,
+    "tag": "285688",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW$l",
+      "ObjectType": "Glazed",
+      "Tag": "285688",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcPlate",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\";\"Pset_PlateCommon\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW$Z",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285684"
+    }
+  },
+  {
+    "name": "IfcCurtainWall::Curtain Wall:Curtain_Wall-Exterior_Glazing:285684",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVckWg==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyW$Z",
+    "ifcClass": "IfcCurtainWall",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:29096",
+    "predefinedType": null,
+    "tag": "285684",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW$Z",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:29096",
+      "Tag": "285684",
+      "IfcClass": "IfcCurtainWall",
+      "IfcPropertySetList": "\"Other\";\"Horizontal Grid\";\"Vertical Grid\";\"Constraints\";\"Dimensions\";\"Structural\";\"Phasing\";\"Pset_CurtainWallCommon\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tMA==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMom0",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294190",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom0",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294190",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\";\"Pset_MemberCommon\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tMQ==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMom1",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294191",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom1",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294191",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Identity Data\";\"Dimensions\";\"Other\";\"Pset_MemberCommon\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tMw==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMom3",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294189",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom3",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294189",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Pset_MemberCommon\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Other\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tNA==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMom4",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294186",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom4",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294186",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Pset_MemberCommon\";\"Constraints\";\"Other\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tNQ==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMom5",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294187",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom5",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294187",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Pset_MemberCommon\";\"Other\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tNw==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMom7",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294185",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom7",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294185",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Pset_MemberCommon\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tOA==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMom8",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294182",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom8",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294182",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Pset_MemberCommon\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tOQ==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMom9",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294183",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMom9",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294183",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Pset_MemberCommon\";\"Other\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tQg==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomB",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294181",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomB",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294181",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Pset_MemberCommon\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Other\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcMember::Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW9tVQ==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMomU",
+    "ifcClass": "IfcMember",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+    "predefinedType": null,
+    "tag": "294192",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMomU",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:8490",
+      "Tag": "294192",
+      "PredefinedType": "MULLION",
+      "IfcClass": "IfcMember",
+      "IfcPropertySetList": "\"Dimensions\";\"Phasing\";\"Constraints\";\"Construction\";\"Other\";\"Pset_MemberCommon\";\"Other\";\"Identity Data\";\"Dimensions\";\"Materials and Finishes\";\"Constraints\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285588",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdfMw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyW_3",
+    "ifcClass": "IfcPlate",
+    "objectType": "Glazed",
+    "predefinedType": null,
+    "tag": "285588",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW_3",
+      "ObjectType": "Glazed",
+      "Tag": "285588",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcPlate",
+      "IfcPropertySetList": "\"Pset_PlateCommon\";\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285586",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdfNQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyW_5",
+    "ifcClass": "IfcPlate",
+    "objectType": "Glazed",
+    "predefinedType": null,
+    "tag": "285586",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW_5",
+      "ObjectType": "Glazed",
+      "Tag": "285586",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcPlate",
+      "IfcPropertySetList": "\"Pset_PlateCommon\";\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcPlate::System Panel:Glazed:285583",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdfTw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyW_O",
+    "ifcClass": "IfcPlate",
+    "objectType": "Glazed",
+    "predefinedType": null,
+    "tag": "285583",
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW_O",
+      "ObjectType": "Glazed",
+      "Tag": "285583",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcPlate",
+      "IfcPropertySetList": "\"Other\";\"Constraints\";\"Dimensions\";\"Phasing\";\"Pset_PlateCommon\"",
+      "IfcDecomposesGUID": "3cUkl32yn9qRSPvBJVyW_P",
+      "IfcDecomposes": "Curtain Wall:Curtain_Wall-Exterior_Glazing:285582"
+    }
+  },
+  {
+    "name": "IfcCurtainWall::Curtain Wall:Curtain_Wall-Exterior_Glazing:285582",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdfUA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyW_P",
+    "ifcClass": "IfcCurtainWall",
+    "objectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:29096",
+    "predefinedType": null,
+    "tag": "285582",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyW_P",
+      "ObjectType": "Curtain Wall:Curtain_Wall-Exterior_Glazing:29096",
+      "Tag": "285582",
+      "IfcClass": "IfcCurtainWall",
+      "IfcPropertySetList": "\"Other\";\"Pset_CurtainWallCommon\";\"Horizontal Grid\";\"Vertical Grid\";\"Constraints\";\"Dimensions\";\"Structural\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Doors_IntSgl:810x2110mm:285959:1",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QVZWeVdhRw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvAVVyWaG",
+    "ifcClass": "IfcOpeningElement",
+    "objectType": "Opening",
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWaG",
+      "ObjectType": "Opening",
+      "PredefinedType": "OPENING",
+      "IfcClass": "IfcOpeningElement",
+      "IfcPropertySetList": "\"BaseQuantities\""
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Doors_IntSgl:810x2110mm:285996:1",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QVZWeVdheA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvAVVyWax",
+    "ifcClass": "IfcOpeningElement",
+    "objectType": "Opening",
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWax",
+      "ObjectType": "Opening",
+      "PredefinedType": "OPENING",
+      "IfcClass": "IfcOpeningElement",
+      "IfcPropertySetList": "\"BaseQuantities\""
+    }
+  },
+  {
+    "name": "IfcWallStandardCase::Basic Wall:Wall-Partn_12P-70MStd-12P:285792",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdYdA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWXt",
+    "ifcClass": "IfcWallStandardCase",
+    "objectType": "Basic Wall:Wall-Partn_12P-70MStd-12P:45397",
+    "predefinedType": null,
+    "tag": "285792",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWXt",
+      "ObjectType": "Basic Wall:Wall-Partn_12P-70MStd-12P:45397",
+      "Tag": "285792",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcWallStandardCase",
+      "IfcPropertySetList": "\"Pset_WallCommon\";\"Other\";\"BaseQuantities\";\"Constraints\";\"Dimensions\";\"Structural\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcWallStandardCase::Basic Wall:Wall-Partn_12P-70MStd-12P:285846",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdZMQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWY1",
+    "ifcClass": "IfcWallStandardCase",
+    "objectType": "Basic Wall:Wall-Partn_12P-70MStd-12P:45397",
+    "predefinedType": null,
+    "tag": "285846",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWY1",
+      "ObjectType": "Basic Wall:Wall-Partn_12P-70MStd-12P:45397",
+      "Tag": "285846",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcWallStandardCase",
+      "IfcPropertySetList": "\"Pset_WallCommon\";\"BaseQuantities\";\"Other\";\"Constraints\";\"Dimensions\";\"Structural\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcDoor::Doors_ExtDbl_Flush:1810x2110mm:285860",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdZcA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWYp",
+    "ifcClass": "IfcDoor",
+    "objectType": "1810x2110mm",
+    "predefinedType": null,
+    "tag": "285860",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWYp",
+      "ObjectType": "1810x2110mm",
+      "Tag": "285860",
+      "OverallHeight": "2110.000 mm",
+      "OverallWidth": "1810.000 mm",
+      "PredefinedType": "DOOR",
+      "OperationType": "DOUBLE_DOOR_SINGLE_SWING",
+      "IfcClass": "IfcDoor",
+      "IfcPropertySetList": "\"BaseQuantities\";\"Other\";\"Constraints\";\"Identity Data\";\"Dimensions\";\"Phasing\";\"Pset_DoorCommon\"",
+      "IfcContainedInHostGUID": "3cUkl32yn9qRSPvBJVyWy4",
+      "IfcContainedInHost": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285459",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcDoor::Doors_IntSgl:810x2110mm:285959",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdhRw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWaG",
+    "ifcClass": "IfcDoor",
+    "objectType": "810x2110mm",
+    "predefinedType": null,
+    "tag": "285959",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWaG",
+      "ObjectType": "810x2110mm",
+      "Tag": "285959",
+      "OverallHeight": "2110.000 mm",
+      "OverallWidth": "810.000 mm",
+      "PredefinedType": "DOOR",
+      "OperationType": "SINGLE_SWING_RIGHT",
+      "IfcClass": "IfcDoor",
+      "IfcPropertySetList": "\"Pset_ManufacturerTypeInformation\";\"Pset_DoorCommon\";\"BaseQuantities\";\"Other\";\"Constraints\";\"Identity Data\";\"Dimensions\";\"Phasing\"",
+      "IfcContainedInHostGUID": "3cUkl32yn9qRSPvBJVyWXt",
+      "IfcContainedInHost": "Basic Wall:Wall-Partn_12P-70MStd-12P:285792",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcDoor::Doors_IntSgl:810x2110mm:285996",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdheA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWax",
+    "ifcClass": "IfcDoor",
+    "objectType": "810x2110mm",
+    "predefinedType": null,
+    "tag": "285996",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWax",
+      "ObjectType": "810x2110mm",
+      "Tag": "285996",
+      "OverallHeight": "2110.000 mm",
+      "OverallWidth": "810.000 mm",
+      "PredefinedType": "DOOR",
+      "OperationType": "SINGLE_SWING_RIGHT",
+      "IfcClass": "IfcDoor",
+      "IfcPropertySetList": "\"Other\";\"Pset_DoorCommon\";\"BaseQuantities\";\"Pset_ManufacturerTypeInformation\";\"Constraints\";\"Identity Data\";\"Dimensions\";\"Phasing\"",
+      "IfcContainedInHostGUID": "3cUkl32yn9qRSPvBJVyWXt",
+      "IfcContainedInHost": "Basic Wall:Wall-Partn_12P-70MStd-12P:285792",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcWindow::Windows_Sgl_Plain:1810x1210mm:286105",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdjRQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWcE",
+    "ifcClass": "IfcWindow",
+    "objectType": "1810x1210mm",
+    "predefinedType": null,
+    "tag": "286105",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWcE",
+      "ObjectType": "1810x1210mm",
+      "Tag": "286105",
+      "OverallHeight": "1210.000 mm",
+      "OverallWidth": "1810.000 mm",
+      "PredefinedType": "WINDOW",
+      "PartitioningType": "NOTDEFINED",
+      "IfcClass": "IfcWindow",
+      "IfcPropertySetList": "\"BaseQuantities\";\"Pset_ManufacturerTypeInformation\";\"Pset_WindowCommon\";\"Constraints\";\"Identity Data\";\"Dimensions\";\"Phasing\";\"Other\"",
+      "IfcContainedInHostGUID": "3cUkl32yn9qRSPvBJVyWw5",
+      "IfcContainedInHost": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285330",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcWindow::Windows_Sgl_Plain:1810x1210mm:286188",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdkeA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWdx",
+    "ifcClass": "IfcWindow",
+    "objectType": "1810x1210mm",
+    "predefinedType": null,
+    "tag": "286188",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWdx",
+      "ObjectType": "1810x1210mm",
+      "Tag": "286188",
+      "OverallHeight": "1210.000 mm",
+      "OverallWidth": "1810.000 mm",
+      "PredefinedType": "WINDOW",
+      "PartitioningType": "NOTDEFINED",
+      "IfcClass": "IfcWindow",
+      "IfcPropertySetList": "\"Other\";\"Pset_WindowCommon\";\"BaseQuantities\";\"Constraints\";\"Identity Data\";\"Dimensions\";\"Phasing\";\"Pset_ManufacturerTypeInformation\"",
+      "IfcContainedInHostGUID": "3cUkl32yn9qRSPvBJVyWw5",
+      "IfcContainedInHost": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285330",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcWindow::Windows_Sgl_Plain:1810x1210mm:286238",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdlOQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWe9",
+    "ifcClass": "IfcWindow",
+    "objectType": "1810x1210mm",
+    "predefinedType": null,
+    "tag": "286238",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWe9",
+      "ObjectType": "1810x1210mm",
+      "Tag": "286238",
+      "OverallHeight": "1210.000 mm",
+      "OverallWidth": "1810.000 mm",
+      "PredefinedType": "WINDOW",
+      "PartitioningType": "NOTDEFINED",
+      "IfcClass": "IfcWindow",
+      "IfcPropertySetList": "\"Other\";\"Pset_ManufacturerTypeInformation\";\"Pset_WindowCommon\";\"BaseQuantities\";\"Constraints\";\"Identity Data\";\"Dimensions\";\"Phasing\"",
+      "IfcContainedInHostGUID": "3cUkl32yn9qRSPvBJVyWw5",
+      "IfcContainedInHost": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285330",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcWindow::Windows_Sgl_Plain:1810x1210mm:287567",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVpUTw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyZTO",
+    "ifcClass": "IfcWindow",
+    "objectType": "1810x1210mm",
+    "predefinedType": null,
+    "tag": "287567",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyZTO",
+      "ObjectType": "1810x1210mm",
+      "Tag": "287567",
+      "OverallHeight": "1210.000 mm",
+      "OverallWidth": "1810.000 mm",
+      "PredefinedType": "WINDOW",
+      "PartitioningType": "NOTDEFINED",
+      "IfcClass": "IfcWindow",
+      "IfcPropertySetList": "\"Other\";\"Pset_ManufacturerTypeInformation\";\"Pset_WindowCommon\";\"Constraints\";\"Identity Data\";\"Dimensions\";\"Phasing\";\"BaseQuantities\"",
+      "IfcContainedInHostGUID": "3cUkl32yn9qRSPvBJVyWy4",
+      "IfcContainedInHost": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285459",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcCovering::Compound Ceiling:Plain:286329",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdmaw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWfk",
+    "ifcClass": "IfcCovering",
+    "objectType": "Compound Ceiling:Plain",
+    "predefinedType": null,
+    "tag": "286329",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWfk",
+      "ObjectType": "Compound Ceiling:Plain",
+      "Tag": "286329",
+      "PredefinedType": "CEILING",
+      "IfcClass": "IfcCovering",
+      "IfcPropertySetList": "\"BaseQuantities\";\"Pset_CoveringCommon\";\"Other\";\"Other\";\"Construction\";\"Graphics\";\"Identity Data\";\"Analytical Properties\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcCovering::Compound Ceiling:Plain:286319",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdmdQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWfu",
+    "ifcClass": "IfcCovering",
+    "objectType": "Compound Ceiling:Plain",
+    "predefinedType": null,
+    "tag": "286319",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWfu",
+      "ObjectType": "Compound Ceiling:Plain",
+      "Tag": "286319",
+      "PredefinedType": "CEILING",
+      "IfcClass": "IfcCovering",
+      "IfcPropertySetList": "\"Pset_CoveringCommon\";\"Other\";\"Construction\";\"BaseQuantities\";\"Graphics\";\"Other\";\"Identity Data\";\"Analytical Properties\";\"Constraints\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcCovering::Compound Ceiling:Plain:286337",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdnTQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWgM",
+    "ifcClass": "IfcCovering",
+    "objectType": "Compound Ceiling:Plain",
+    "predefinedType": null,
+    "tag": "286337",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWgM",
+      "ObjectType": "Compound Ceiling:Plain",
+      "Tag": "286337",
+      "PredefinedType": "CEILING",
+      "IfcClass": "IfcCovering",
+      "IfcPropertySetList": "\"Other\";\"Construction\";\"BaseQuantities\";\"Graphics\";\"Identity Data\";\"Other\";\"Analytical Properties\";\"Constraints\";\"Dimensions\";\"Phasing\";\"Pset_CoveringCommon\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcSlab::Floor:Floor-Grnd-Susp_65Scr-80Ins-100Blk-75PC:286349",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdnUQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWgQ",
+    "ifcClass": "IfcSlab",
+    "objectType": "Floor:Floor-Grnd-Susp_65Scr-80Ins-100Blk-75PC",
+    "predefinedType": null,
+    "tag": "286349",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWgQ",
+      "ObjectType": "Floor:Floor-Grnd-Susp_65Scr-80Ins-100Blk-75PC",
+      "Tag": "286349",
+      "PredefinedType": "FLOOR",
+      "IfcClass": "IfcSlab",
+      "IfcPropertySetList": "\"Analytical Properties\";\"Materials and Finishes\";\"Other\";\"Pset_SlabCommon\";\"Construction\";\"BaseQuantities\";\"Constraints\";\"Dimensions\";\"Structural\";\"Phasing\";\"Graphics\";\"Identity Data\";\"Other\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Windows_Sgl_Plain:1810x1210mm:286105:1",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QVZWeVdjRQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvAVVyWcE",
+    "ifcClass": "IfcOpeningElement",
+    "objectType": "Opening",
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWcE",
+      "ObjectType": "Opening",
+      "PredefinedType": "OPENING",
+      "IfcClass": "IfcOpeningElement",
+      "IfcPropertySetList": "\"BaseQuantities\""
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Windows_Sgl_Plain:1810x1210mm:286188:1",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QVZWeVdkeA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvAVVyWdx",
+    "ifcClass": "IfcOpeningElement",
+    "objectType": "Opening",
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWdx",
+      "ObjectType": "Opening",
+      "PredefinedType": "OPENING",
+      "IfcClass": "IfcOpeningElement",
+      "IfcPropertySetList": "\"BaseQuantities\""
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Windows_Sgl_Plain:1810x1210mm:286238:1",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QVZWeVdlOQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvAVVyWe9",
+    "ifcClass": "IfcOpeningElement",
+    "objectType": "Opening",
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWe9",
+      "ObjectType": "Opening",
+      "PredefinedType": "OPENING",
+      "IfcClass": "IfcOpeningElement",
+      "IfcPropertySetList": "\"BaseQuantities\""
+    }
+  },
+  {
+    "name": "IfcWall::Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285330",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVd3NQ==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWw5",
+    "ifcClass": "IfcWall",
+    "objectType": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:45419",
+    "predefinedType": null,
+    "tag": "285330",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWw5",
+      "ObjectType": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:45419",
+      "Tag": "285330",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcWall",
+      "IfcPropertySetList": "\"Pset_WallCommon\";\"Other\";\"Constraints\";\"Dimensions\";\"Structural\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcWall::Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285395",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVd4NA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWx4",
+    "ifcClass": "IfcWall",
+    "objectType": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:45419",
+    "predefinedType": null,
+    "tag": "285395",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWx4",
+      "ObjectType": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:45419",
+      "Tag": "285395",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcWall",
+      "IfcPropertySetList": "\"Other\";\"Pset_WallCommon\";\"Constraints\";\"Dimensions\";\"Structural\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Doors_ExtDbl_Flush:1810x2110mm:285860:1",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QVZWeVdZcA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvAVVyWYp",
+    "ifcClass": "IfcOpeningElement",
+    "objectType": "Opening",
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyWYp",
+      "ObjectType": "Opening",
+      "PredefinedType": "OPENING",
+      "IfcClass": "IfcOpeningElement",
+      "IfcPropertySetList": "\"BaseQuantities\""
+    }
+  },
+  {
+    "name": "IfcOpeningElement::Windows_Sgl_Plain:1810x1210mm:287567:1",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QVZWeVpUTw==",
+    "decodedExternalId": "3cUkl32yn9qRSPvAVVyZTO",
+    "ifcClass": "IfcOpeningElement",
+    "objectType": "Opening",
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvAVVyZTO",
+      "ObjectType": "Opening",
+      "PredefinedType": "OPENING",
+      "IfcClass": "IfcOpeningElement",
+      "IfcPropertySetList": "\"BaseQuantities\""
+    }
+  },
+  {
+    "name": "IfcWall::Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:285459",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVd5NA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWy4",
+    "ifcClass": "IfcWall",
+    "objectType": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:45419",
+    "predefinedType": null,
+    "tag": "285459",
+    "spatialContainer": "Ground Floor",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWy4",
+      "ObjectType": "Basic Wall:Wall-Ext_102Bwk-75Ins-100LBlk-12P:45419",
+      "Tag": "285459",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcWall",
+      "IfcPropertySetList": "\"Other\";\"Pset_WallCommon\";\"Constraints\";\"Dimensions\";\"Structural\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchjCY",
+      "IfcSpatialContainer": "Ground Floor"
+    }
+  },
+  {
+    "name": "IfcBuildingStorey::Ground Floor",
+    "externalId": "MW8wYzMzYXJYRjlBRWVQRFljaGpDWQ==",
+    "decodedExternalId": "1o0c33arXF9AEePDYchjCY",
+    "ifcClass": "IfcBuildingStorey",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "1o0c33arXF9AEePDYchjCY",
+      "LongName": "Ground Floor",
+      "CompositionType": "ELEMENT",
+      "Elevation": "0.000 mm",
+      "IfcClass": "IfcBuildingStorey",
+      "IfcPropertySetList": "\"Other\";\"Graphics\";\"Other\";\"Identity Data\";\"Pset_BuildingStoreyCommon\";\"Constraints\";\"Identity Data\";\"Dimensions\";\"Constraints\"",
+      "IfcDecomposesGUID": "1o0c33arXF9AEePDXPKIta"
+    }
+  },
+  {
+    "name": "IfcSpace::4 - Roof",
+    "externalId": "MDlKNU43eE1IQmZRWmVRR0FFTW90YQ==",
+    "decodedExternalId": "09J5N7xMHBfQZeQGAEMota",
+    "ifcClass": "IfcSpace",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "09J5N7xMHBfQZeQGAEMota",
+      "LongName": "Roof",
+      "CompositionType": "ELEMENT",
+      "PredefinedType": "SPACE",
+      "IfcClass": "IfcSpace",
+      "IfcPropertySetList": "\"Dimensions\";\"Identity Data\";\"Phasing\";\"Constraints\";\"Energy Analysis\";\"BaseQuantities\";\"Pset_SpaceCommon\";\"Other\"",
+      "IfcDecomposesGUID": "1o0c33arXF9AEePDYchj2Z",
+      "IfcDecomposes": "Roof"
+    }
+  },
+  {
+    "name": "IfcRoof::Basic Roof:Roof_Flat-4Felt-150Ins-50Scr-150Conc-12Plr:286419",
+    "externalId": "M2NVa2wzMnluOXFSU1B2QkpWeVdoNA==",
+    "decodedExternalId": "3cUkl32yn9qRSPvBJVyWh4",
+    "ifcClass": "IfcRoof",
+    "objectType": "Basic Roof:Roof_Flat-4Felt-150Ins-50Scr-150Conc-12Plr:45441",
+    "predefinedType": null,
+    "tag": "286419",
+    "spatialContainer": "Roof",
+    "rawAttributes": {
+      "GlobalId": "3cUkl32yn9qRSPvBJVyWh4",
+      "ObjectType": "Basic Roof:Roof_Flat-4Felt-150Ins-50Scr-150Conc-12Plr:45441",
+      "Tag": "286419",
+      "PredefinedType": "NOTDEFINED",
+      "IfcClass": "IfcRoof",
+      "IfcPropertySetList": "\"Other\";\"Graphics\";\"Pset_RoofCommon\";\"Construction\";\"Analytical Properties\";\"Identity Data\";\"Other\";\"Constraints\";\"Construction\";\"Dimensions\";\"Phasing\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchj2Z",
+      "IfcSpatialContainer": "Roof"
+    }
+  },
+  {
+    "name": "IfcSlab::Floor:Simple floor:295048",
+    "externalId": "M250RnpTdWxuRE5lUTRuSnJNZ2NPdA==",
+    "decodedExternalId": "3ntFzSulnDNeQ4nJrMgcOt",
+    "ifcClass": "IfcSlab",
+    "objectType": "Floor:Simple floor",
+    "predefinedType": null,
+    "tag": "295048",
+    "spatialContainer": "Roof",
+    "rawAttributes": {
+      "GlobalId": "3ntFzSulnDNeQ4nJrMgcOt",
+      "ObjectType": "Floor:Simple floor",
+      "Tag": "295048",
+      "PredefinedType": "FLOOR",
+      "IfcClass": "IfcSlab",
+      "IfcPropertySetList": "\"Materials and Finishes\";\"Pset_SlabCommon\";\"Graphics\";\"Other\";\"Identity Data\";\"Construction\";\"BaseQuantities\";\"Analytical Properties\";\"Constraints\";\"Structural\";\"Phasing\";\"Dimensions\";\"Other\"",
+      "IfcSpatialContainer GUID": "1o0c33arXF9AEePDYchj2Z",
+      "IfcSpatialContainer": "Roof"
+    }
+  },
+  {
+    "name": "IfcBuildingStorey::Roof",
+    "externalId": "MW8wYzMzYXJYRjlBRWVQRFljaGoyWg==",
+    "decodedExternalId": "1o0c33arXF9AEePDYchj2Z",
+    "ifcClass": "IfcBuildingStorey",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "1o0c33arXF9AEePDYchj2Z",
+      "LongName": "Roof",
+      "CompositionType": "ELEMENT",
+      "Elevation": "2500.000 mm",
+      "IfcClass": "IfcBuildingStorey",
+      "IfcPropertySetList": "\"Other\";\"Identity Data\";\"Dimensions\";\"Constraints\";\"Graphics\";\"Pset_BuildingStoreyCommon\";\"Identity Data\";\"Constraints\";\"Other\"",
+      "IfcDecomposesGUID": "1o0c33arXF9AEePDXPKIta"
+    }
+  },
+  {
+    "name": "IfcBuilding",
+    "externalId": "MW8wYzMzYXJYRjlBRWVQRFhQS0l0YQ==",
+    "decodedExternalId": "1o0c33arXF9AEePDXPKIta",
+    "ifcClass": "IfcBuilding",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "1o0c33arXF9AEePDXPKIta",
+      "CompositionType": "ELEMENT",
+      "IfcPostalAddress": "Ref_ID: Ifc4_SampleHouse-114",
+      "IfcClass": "IfcBuilding",
+      "IfcPropertySetList": "\"Pset_BuildingCommon\";\"Other\";\"Identity Data\"",
+      "IfcDecomposesGUID": "1o0c33arXF9AEePDXPKItd",
+      "IfcDecomposes": "Default"
+    }
+  },
+  {
+    "name": "IfcSite::Default",
+    "externalId": "MW8wYzMzYXJYRjlBRWVQRFhQS0l0ZA==",
+    "decodedExternalId": "1o0c33arXF9AEePDXPKItd",
+    "ifcClass": "IfcSite",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "1o0c33arXF9AEePDXPKItd",
+      "CompositionType": "ELEMENT",
+      "RefLatitude": "51,30,0,549316",
+      "RefLongitude": "0,-7,-34,-450321",
+      "RefElevation": "0.000 mm",
+      "IfcClass": "IfcSite",
+      "IfcPropertySetList": "\"Other\";\"Identity Data\"",
+      "IfcDecomposesGUID": "1o0c33arXF9AEePDXPKItb",
+      "IfcDecomposes": "Project Number"
+    }
+  },
+  {
+    "name": "IfcProject::Project Number",
+    "externalId": "MW8wYzMzYXJYRjlBRWVQRFhQS0l0Yg==",
+    "decodedExternalId": "1o0c33arXF9AEePDXPKItb",
+    "ifcClass": "IfcProject",
+    "objectType": null,
+    "predefinedType": null,
+    "tag": null,
+    "spatialContainer": null,
+    "rawAttributes": {
+      "GlobalId": "1o0c33arXF9AEePDXPKItb",
+      "LongName": "Project Name",
+      "Phase": "Project Status",
+      "IfcClass": "IfcProject"
+    }
+  }
+]

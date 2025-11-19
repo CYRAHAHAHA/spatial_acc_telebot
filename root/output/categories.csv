@@ -1,6 +1,22 @@
 ﻿project_id,category_id,category_name,parent_id,status_set_id,status_set_name,custom_attributes
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,1,ROOT,,,No Status Set (system),IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,2,Custom Category,1,efa61e18-0f5a-4add-bafa-ae6b192e8e9e,testing 2,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,3,Doors,1,87d0f805-d837-407f-a6c6-b8a4dd0df2cf,testing 1,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,4,API testing,1,87d0f805-d837-407f-a6c6-b8a4dd0df2cf,testing 1,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,5,Windows,1,,No Status Set (system),IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material
+7447815e-c746-4ab0-97ed-a6aea165a459,1,ROOT,,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,2,x,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,3,test,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,4,default,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,5,IfcBuilding,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,6,IfcBuildingStorey,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,7,IfcCovering,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,8,IfcCurtainWall,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,9,IfcDoor,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,10,IfcFurniture,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,11,IfcMember,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,12,IfcOpeningElement,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,13,IfcPlate,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,14,IfcProject,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,15,IfcRoof,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,16,IfcSite,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,17,IfcSlab,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,18,IfcSpace,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,19,IfcWall,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,20,IfcWallStandardCase,1,,No Status Set (system),GlobalId
+7447815e-c746-4ab0-97ed-a6aea165a459,21,IfcWindow,1,,No Status Set (system),GlobalId

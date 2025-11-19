@@ -2,756 +2,236 @@
   "customAttributesRaw": [
     {
       "name": "ca1",
-      "displayName": "IFCGlobalId",
-      "description": "Unique IFC identifier",
-      "dataType": "text",
-      "requiredOnIngress": true,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "8151d4ab-5df3-4e47-b0ef-5361cb159d81",
-      "version": 3094738,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:32.948Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:32.948Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
-      "name": "ca2",
-      "displayName": "IFC_Type",
-      "description": "Component type",
-      "dataType": "text",
-      "requiredOnIngress": true,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "5ae8d86e-e46e-46fb-94cc-43aa47977953",
-      "version": 3094739,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:33.379Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:33.379Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
-      "name": "ca3",
-      "displayName": "Discipline",
-      "description": "Trade category",
-      "dataType": "multi_select",
-      "requiredOnIngress": false,
-      "values": [
-        {
-          "id": "ff49a95f-e2da-45bb-b7dd-06d2217f1d3a",
-          "version": 13861180,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Architecture",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "f1dc2833-8297-4b6c-9393-ab4d8259c1e1",
-          "version": 13861181,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Structural",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "23f089ec-e9ac-493b-be62-8ad2822760da",
-          "version": 13861182,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Mechanical",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "367ae5cc-7b58-45f6-8d31-d3b1318bd614",
-          "version": 13861183,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Electrical",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "6592a0d5-8488-452d-b800-fad09e9aeace",
-          "version": 13861184,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Plumbing",
-          "customAttributeId": "521fc486-3576-4db5-9d3d-808f988a89a2",
-          "createdAt": "2025-10-16T15:33:33.795Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-16T15:33:33.795Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        }
-      ],
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "521fc486-3576-4db5-9d3d-808f988a89a2",
-      "version": 3094740,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:33.790Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:33.790Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "enumValues": [
-        "Architecture",
-        "Structural",
-        "Mechanical",
-        "Electrical",
-        "Plumbing"
-      ]
-    },
-    {
-      "name": "ca4",
-      "displayName": "Subcontractor",
-      "description": "Responsible party",
+      "displayName": "GlobalId",
       "dataType": "text",
       "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "a359e86e-5fa5-4028-b141-f52133fca4b6",
-      "version": 3094741,
+      "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+      "id": "c9990b31-eaec-47a9-847d-157b208f8dcc",
+      "version": 3275245,
       "isActive": true,
-      "createdAt": "2025-10-16T15:33:35.121Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:35.121Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
-      "name": "ca5",
-      "displayName": "Planned Date",
-      "description": "Construction plan",
-      "dataType": "date",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "ccb6025b-a539-4fe0-98cb-32aea26d1111",
-      "version": 3094742,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:35.533Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:35.533Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
-      "name": "ca12",
-      "displayName": "Asset Value",
-      "description": "Cost data",
-      "dataType": "numeric",
-      "requiredOnIngress": false,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "b05bca3c-11c4-4c91-bfab-75544e9249a6",
-      "version": 3094749,
-      "isActive": true,
-      "createdAt": "2025-10-16T15:33:39.284Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:33:39.284Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
-      "name": "ca22",
-      "displayName": "Notes",
-      "description": "Additional remarks or special handling instructions",
-      "dataType": "text",
-      "requiredOnIngress": false,
-      "maxLengthOnIngress": 200,
-      "defaultValue": "Handle with care.",
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "28dbd448-1388-43d7-a7fd-c31c5c8f96b5",
-      "version": 3166789,
-      "isActive": true,
-      "createdAt": "2025-10-30T15:23:13.482Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-30T15:23:13.482Z",
-      "updatedBy": "26T24R4NKFREYN6X"
-    },
-    {
-      "name": "ca27",
-      "displayName": "Size of Material",
-      "description": "Sizes",
-      "dataType": "select",
-      "requiredOnIngress": false,
-      "values": [
-        {
-          "id": "903ada8d-1e86-4759-b54a-1ddc4f38d2f9",
-          "version": 14353814,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Large",
-          "customAttributeId": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
-          "createdAt": "2025-11-04T17:01:19.056Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-11-04T17:01:19.056Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "e5171040-89c6-4cf3-823b-6fe5dd6c3f13",
-          "version": 14353815,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Big",
-          "customAttributeId": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
-          "createdAt": "2025-11-04T17:01:19.056Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-11-04T17:01:19.056Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "5edcc036-4400-4249-a733-495e4afc353c",
-          "version": 14353816,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Medium",
-          "customAttributeId": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
-          "createdAt": "2025-11-04T17:01:19.056Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-11-04T17:01:19.056Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        },
-        {
-          "id": "e42ffe32-db6b-4139-b026-86ed94a3b99e",
-          "version": 14353817,
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "displayName": "Small",
-          "customAttributeId": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
-          "createdAt": "2025-11-04T17:01:19.056Z",
-          "createdBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-11-04T17:01:19.056Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "isActive": true
-        }
-      ],
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "id": "e273fac5-ebb2-49d3-8b73-1033f4e0d9e5",
-      "version": 3207523,
-      "isActive": true,
-      "createdAt": "2025-11-04T17:01:19.048Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-11-04T17:01:19.048Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "enumValues": [
-        "Large",
-        "Big",
-        "Medium",
-        "Small"
-      ]
+      "createdAt": "2025-11-13T17:11:42.289Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T17:11:42.289Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK"
     }
   ],
   "statusSetsRaw": [
     {
-      "id": "9fb88510-9264-4e7c-a516-3b3577016161",
-      "version": 4949194,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
+      "id": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
+      "version": 4974661,
+      "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
       "name": "Default",
       "isDefault": true,
       "values": [
         {
-          "id": "9606b15d-1209-4007-9912-0a8564cd5f04",
-          "version": 70841157,
+          "id": "0f25c967-714b-4281-a360-6eb86c3ad7f1",
+          "version": 71331843,
           "description": "Specified",
           "bucket": "specified",
           "label": "Specified",
           "color": "adsk-charcoal-900",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 1,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "01f9c8ad-75fd-41d9-89d5-532bcf385db2",
-          "version": 70841158,
+          "id": "b20504a8-ca79-47bb-ac8e-a6d1b6845b5c",
+          "version": 71331844,
           "description": "Ordered",
           "bucket": "ordered",
           "label": "Ordered",
           "color": "adsk-yellow-orange-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 2,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "bd4f4e0a-e550-4cb8-8467-deb7f0a4fae2",
-          "version": 70841159,
+          "id": "91af5788-66b2-4a4b-97c9-ffb2de1699db",
+          "version": 71331845,
           "description": "Delivered",
           "bucket": "delivered",
           "label": "Delivered",
           "color": "adsk-purple-700",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 3,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "95b5f032-f860-4b74-b6b0-6b01b3c8f10b",
-          "version": 70841160,
+          "id": "c493113c-5045-447d-b3c6-697e399805dc",
+          "version": 71331846,
           "description": "Installed",
           "bucket": "installed",
           "label": "Installed",
           "color": "adsk-blue-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 4,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "9bf99f49-9404-4aa3-8a4c-bdab4c570cb8",
-          "version": 70841161,
+          "id": "b32a079f-4982-4fd2-a14c-a4343b87fd71",
+          "version": 71331847,
           "description": "Pre-Start-Up",
           "bucket": "pre_start_up",
           "label": "Pre-Start-Up",
           "color": "adsk-blue-100",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 5,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "459eea50-b845-4d34-b0f7-8f2e886e6831",
-          "version": 70841162,
+          "id": "5e3fa1f4-70dd-4356-93e5-ddaf9aeb2e20",
+          "version": 71331848,
           "description": "Start-Up",
           "bucket": "start_up",
           "label": "Start-Up",
           "color": "adsk-blue-700",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 6,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "fc032ff5-9142-4dc7-8581-39d1c1b9389a",
-          "version": 70841163,
+          "id": "a31d9b8d-e406-41ff-b6dd-2ffb05709ea1",
+          "version": 71331849,
           "description": "Pre-Functional Performance Tests",
           "bucket": "pre_functional_performance_tests",
           "label": "Pre-Functional Performance Tests",
           "color": "adsk-turquoise-300",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 7,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "f82d5f2e-c2bc-44a3-b27b-cb1e285566d1",
-          "version": 70841164,
+          "id": "759c7b81-eecc-4da2-ad91-9104cd41608b",
+          "version": 71331850,
           "description": "Functional Performance Tests",
           "bucket": "functional_performance_tests",
           "label": "Functional Performance Tests",
           "color": "adsk-turquoise-700",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 8,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "df3a989a-ee5c-4828-b076-badfd3d3356d",
-          "version": 70841165,
+          "id": "fbe49884-969d-4575-9e6c-be27ea59761f",
+          "version": 71331851,
           "description": "Acceptance",
           "bucket": "acceptance",
           "label": "Acceptance",
           "color": "adsk-green-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 9,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         },
         {
-          "id": "8de29f68-fab7-4aac-aa8c-464bfbc6f1a5",
-          "version": 70841166,
+          "id": "35e6b81d-740d-4a0c-b662-529e5282ea0c",
+          "version": 71331852,
           "description": "Post-Acceptance",
           "bucket": "post_acceptance",
           "label": "Post-Acceptance",
           "color": "adsk-charcoal-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "9fb88510-9264-4e7c-a516-3b3577016161",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "61dcfc41-8962-469c-b2e4-bebeacd3c6bf",
           "sortOrder": 10,
           "createdBy": "7G5ALB7C2DNA",
-          "createdAt": "2025-10-16T15:31:29.368Z",
+          "createdAt": "2025-10-23T03:57:44.243Z",
           "updatedBy": "7G5ALB7C2DNA",
-          "updatedAt": "2025-10-16T15:31:29.368Z",
+          "updatedAt": "2025-10-23T03:57:44.243Z",
           "isActive": true
         }
       ],
-      "createdAt": "2025-10-16T15:31:29.361Z",
+      "createdAt": "2025-10-23T03:57:44.236Z",
       "createdBy": "7G5ALB7C2DNA",
-      "updatedAt": "2025-10-16T15:31:29.361Z",
+      "updatedAt": "2025-10-23T03:57:44.236Z",
       "updatedBy": "7G5ALB7C2DNA",
       "isActive": true
     },
     {
-      "id": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-      "version": 5003869,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "name": "testing 1",
-      "description": "for api testing",
+      "id": "3178b97a-db4e-45aa-b2aa-7a66f5d5b6dd",
+      "version": 5081903,
+      "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+      "name": "yes",
       "isDefault": false,
       "values": [
         {
-          "id": "4ee2681f-2f16-4aae-be5e-c1e220ca0685",
-          "version": 71708381,
-          "description": "haha",
-          "bucket": "1_1761557821201",
-          "label": "1",
+          "id": "6c4eba82-88fe-49f2-ac42-ea8e0be829d9",
+          "version": 73060500,
+          "bucket": "help_1763053751778",
+          "label": "help",
           "color": "adsk-charcoal-900",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "3178b97a-db4e-45aa-b2aa-7a66f5d5b6dd",
           "sortOrder": 1,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
+          "createdBy": "3JA2LQGFJX8JKDDK",
+          "createdAt": "2025-11-13T17:09:11.778Z",
+          "updatedBy": "3JA2LQGFJX8JKDDK",
+          "updatedAt": "2025-11-13T17:09:11.778Z",
           "isActive": true
         },
         {
-          "id": "8b8486f9-b23d-4d5e-92d2-5a29707a3c94",
-          "version": 71708382,
-          "description": "lol",
-          "bucket": "2_1761557821201",
-          "label": "2",
+          "id": "d7cafecd-6057-4f42-9a1c-4e88668aa9a3",
+          "version": 73060501,
+          "bucket": "aaa_1763053751778",
+          "label": "AAA",
           "color": "adsk-yellow-orange-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
+          "projectId": "7447815e-c746-4ab0-97ed-a6aea165a459",
+          "statusStepSetId": "3178b97a-db4e-45aa-b2aa-7a66f5d5b6dd",
           "sortOrder": 2,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
-          "isActive": true
-        },
-        {
-          "id": "b9ce2627-81e8-4720-8924-ed65029a470b",
-          "version": 71708383,
-          "description": "uh huh",
-          "bucket": "3_1761557821201",
-          "label": "3",
-          "color": "adsk-blue-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-          "sortOrder": 3,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
+          "createdBy": "3JA2LQGFJX8JKDDK",
+          "createdAt": "2025-11-13T17:09:11.778Z",
+          "updatedBy": "3JA2LQGFJX8JKDDK",
+          "updatedAt": "2025-11-13T17:09:11.778Z",
           "isActive": true
         }
       ],
-      "createdAt": "2025-10-27T09:37:01.197Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-27T09:37:01.197Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "isActive": true
-    },
-    {
-      "id": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-      "version": 5003872,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "name": "testing 2",
-      "description": "API testing",
-      "isDefault": false,
-      "values": [
-        {
-          "id": "7cad71c6-a84a-46e1-9ce1-e52de64b6a43",
-          "version": 71708424,
-          "description": "first",
-          "bucket": "abc_1761557843330",
-          "label": "abc",
-          "color": "adsk-charcoal-900",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-          "sortOrder": 1,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:23.331Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:23.331Z",
-          "isActive": true
-        },
-        {
-          "id": "856aadf1-0186-44b3-85bd-ff8a244f8054",
-          "version": 71708425,
-          "description": "second",
-          "bucket": "def_1761557843330",
-          "label": "def",
-          "color": "adsk-yellow-orange-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-          "sortOrder": 2,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:23.331Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:23.331Z",
-          "isActive": true
-        },
-        {
-          "id": "2f64402e-ec64-4747-b0d6-6034a3b8dd8c",
-          "version": 71708426,
-          "description": "third",
-          "bucket": "ghi_1761557843330",
-          "label": "ghi",
-          "color": "adsk-blue-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-          "sortOrder": 3,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:23.331Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:23.331Z",
-          "isActive": true
-        },
-        {
-          "id": "7617ace9-c6a5-48ff-913f-f539497661e4",
-          "version": 71708427,
-          "description": "fourth",
-          "bucket": "jkl_1761557843330",
-          "label": "jkl",
-          "color": "adsk-purple-700",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-          "sortOrder": 4,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:23.331Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:23.331Z",
-          "isActive": true
-        }
-      ],
-      "createdAt": "2025-10-27T09:37:23.327Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-27T09:37:23.327Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "isActive": true
-    },
-    {
-      "id": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
-      "version": 5022496,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "name": "Installation",
-      "description": "Installation phases",
-      "isDefault": false,
-      "values": [
-        {
-          "id": "2ab2816d-388b-4f16-8b52-b3c465029c2c",
-          "version": 72037295,
-          "description": "Not Started",
-          "bucket": "not_started_1761833475323",
-          "label": "Not Started",
-          "color": "adsk-purple-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
-          "sortOrder": 1,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-30T14:11:15.323Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-30T14:11:15.323Z",
-          "isActive": true
-        },
-        {
-          "id": "e8293d39-637d-4711-96ee-b7b582b5bcfd",
-          "version": 72037296,
-          "description": "In Progress",
-          "bucket": "in_progress_1761833475323",
-          "label": "In Progress",
-          "color": "adsk-purple-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
-          "sortOrder": 2,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-30T14:11:15.323Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-30T14:11:15.323Z",
-          "isActive": true
-        },
-        {
-          "id": "9c32de1b-fe7c-4a08-ba7d-f7f039e0d19c",
-          "version": 72037297,
-          "description": "Finalized",
-          "bucket": "finalized_1761833475323",
-          "label": "Finalized",
-          "color": "adsk-purple-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "2feb9695-88e0-4cb8-85b6-4bbb04b7671a",
-          "sortOrder": 3,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-30T14:11:15.323Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-30T14:11:15.323Z",
-          "isActive": true
-        }
-      ],
-      "createdAt": "2025-10-30T14:11:15.321Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-30T14:11:15.321Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "isActive": true
-    },
-    {
-      "id": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
-      "version": 5022497,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "name": "Inspection",
-      "description": "Inspection status",
-      "isDefault": false,
-      "values": [
-        {
-          "id": "68cb2635-ade2-4115-9c66-2ea94cda0c8c",
-          "version": 72037298,
-          "description": "Scheduled",
-          "bucket": "scheduled_1761833476094",
-          "label": "Scheduled",
-          "color": "adsk-yellow-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
-          "sortOrder": 1,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-30T14:11:16.094Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-30T14:11:16.094Z",
-          "isActive": true
-        },
-        {
-          "id": "72eda371-3c93-492d-a886-7c03f12c0fdc",
-          "version": 72037299,
-          "description": "In Progress",
-          "bucket": "in_progress_1761833476094",
-          "label": "In Progress",
-          "color": "adsk-yellow-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
-          "sortOrder": 2,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-30T14:11:16.094Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-30T14:11:16.094Z",
-          "isActive": true
-        },
-        {
-          "id": "55c17ea5-9a7b-417a-b110-866531434669",
-          "version": 72037300,
-          "description": "Completed",
-          "bucket": "completed_1761833476094",
-          "label": "Completed",
-          "color": "adsk-yellow-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "7a6f9b8c-f443-4aa5-83ad-547d80086758",
-          "sortOrder": 3,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-30T14:11:16.094Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-30T14:11:16.094Z",
-          "isActive": true
-        }
-      ],
-      "createdAt": "2025-10-30T14:11:16.091Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-30T14:11:16.091Z",
-      "updatedBy": "26T24R4NKFREYN6X",
-      "isActive": true
-    },
-    {
-      "id": "776683ae-f7d1-48dc-99c1-0ea55be14880",
-      "version": 5040696,
-      "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-      "name": "Sample Status Set",
-      "description": "For testing",
-      "isDefault": false,
-      "values": [
-        {
-          "id": "6d4862fc-b2de-4753-b91b-63b88d57445e",
-          "version": 72350560,
-          "description": "Yo",
-          "bucket": "status_1_1762276508499",
-          "label": "Status 1",
-          "color": "adsk-charcoal-900",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "776683ae-f7d1-48dc-99c1-0ea55be14880",
-          "sortOrder": 1,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-11-04T17:15:08.499Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-11-04T17:15:08.499Z",
-          "isActive": true
-        },
-        {
-          "id": "2d40c591-c5d3-46fe-82ce-3225b4e2d9f8",
-          "version": 72350561,
-          "description": "Hi",
-          "bucket": "status_2_1762276508499",
-          "label": "Status 2",
-          "color": "adsk-yellow-orange-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "776683ae-f7d1-48dc-99c1-0ea55be14880",
-          "sortOrder": 2,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-11-04T17:15:08.499Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-11-04T17:15:08.499Z",
-          "isActive": true
-        },
-        {
-          "id": "18021158-63ad-40fd-904e-1edc4e80110c",
-          "version": 72350562,
-          "description": "Hey",
-          "bucket": "status_3_1762276508499",
-          "label": "Status 3",
-          "color": "adsk-blue-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "776683ae-f7d1-48dc-99c1-0ea55be14880",
-          "sortOrder": 3,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-11-04T17:15:08.499Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-11-04T17:15:08.499Z",
-          "isActive": true
-        }
-      ],
-      "createdAt": "2025-11-04T17:15:08.496Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-11-04T17:15:08.496Z",
-      "updatedBy": "26T24R4NKFREYN6X",
+      "createdAt": "2025-11-13T17:09:11.776Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T17:09:11.776Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
       "isActive": true
     }
   ],
@@ -760,15 +240,31 @@
       "id": "1",
       "name": "ROOT",
       "description": "Auto-generated ROOT category for Assets Category Hierarchy",
-      "createdAt": "2025-10-16T15:33:25.901Z",
+      "createdAt": "2025-10-23T04:14:12.958Z",
       "createdBy": "7G5ALB7C2DNA",
-      "updatedAt": "2025-10-16T15:33:25.901Z",
+      "updatedAt": "2025-10-23T04:14:12.958Z",
       "updatedBy": "7G5ALB7C2DNA",
       "subcategoryIds": [
         "2",
         "3",
         "4",
-        "5"
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21"
       ],
       "isActive": true,
       "isRoot": true,
@@ -776,12 +272,12 @@
     },
     {
       "id": "2",
-      "name": "Custom Category",
+      "name": "x",
       "parentId": "1",
-      "createdAt": "2025-10-16T15:34:24.137Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T15:34:24.137Z",
-      "updatedBy": "26T24R4NKFREYN6X",
+      "createdAt": "2025-10-27T15:38:36.885Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-10-27T15:38:36.885Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
       "subcategoryIds": [],
       "isActive": true,
       "isRoot": false,
@@ -789,12 +285,12 @@
     },
     {
       "id": "3",
-      "name": "Doors",
+      "name": "test",
       "parentId": "1",
-      "createdAt": "2025-10-16T16:22:12.599Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-16T16:22:12.599Z",
-      "updatedBy": "26T24R4NKFREYN6X",
+      "createdAt": "2025-10-27T16:05:15.827Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-10-27T16:05:15.827Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
       "subcategoryIds": [],
       "isActive": true,
       "isRoot": false,
@@ -802,12 +298,12 @@
     },
     {
       "id": "4",
-      "name": "API testing",
+      "name": "default",
       "parentId": "1",
-      "createdAt": "2025-10-27T09:37:54.770Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-10-27T09:37:54.770Z",
-      "updatedBy": "26T24R4NKFREYN6X",
+      "createdAt": "2025-10-27T16:15:11.107Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-10-27T16:15:11.107Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
       "subcategoryIds": [],
       "isActive": true,
       "isRoot": false,
@@ -815,32 +311,227 @@
     },
     {
       "id": "5",
-      "name": "Windows",
+      "name": "IfcBuilding",
       "parentId": "1",
-      "createdAt": "2025-11-04T17:04:57.078Z",
-      "createdBy": "26T24R4NKFREYN6X",
-      "updatedAt": "2025-11-04T17:04:57.078Z",
-      "updatedBy": "26T24R4NKFREYN6X",
+      "createdAt": "2025-11-13T18:37:20.548Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:20.548Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "6",
+      "name": "IfcBuildingStorey",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:21.137Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:21.137Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "7",
+      "name": "IfcCovering",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:21.633Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:21.633Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "8",
+      "name": "IfcCurtainWall",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:22.112Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:22.112Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "9",
+      "name": "IfcDoor",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:22.568Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:22.568Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "10",
+      "name": "IfcFurniture",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:23.070Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:23.070Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "11",
+      "name": "IfcMember",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:23.551Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:23.551Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "12",
+      "name": "IfcOpeningElement",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:24.082Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:24.082Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "13",
+      "name": "IfcPlate",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:24.679Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:24.679Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "14",
+      "name": "IfcProject",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:25.219Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:25.219Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "15",
+      "name": "IfcRoof",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:25.748Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:25.748Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "16",
+      "name": "IfcSite",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:26.257Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:26.257Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "17",
+      "name": "IfcSlab",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:26.732Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:26.732Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "18",
+      "name": "IfcSpace",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:27.262Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:27.262Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "19",
+      "name": "IfcWall",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:27.787Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:27.787Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "20",
+      "name": "IfcWallStandardCase",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:28.275Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:28.275Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
+      "subcategoryIds": [],
+      "isActive": true,
+      "isRoot": false,
+      "isLeaf": true
+    },
+    {
+      "id": "21",
+      "name": "IfcWindow",
+      "parentId": "1",
+      "createdAt": "2025-11-13T18:37:28.805Z",
+      "createdBy": "3JA2LQGFJX8JKDDK",
+      "updatedAt": "2025-11-13T18:37:28.805Z",
+      "updatedBy": "3JA2LQGFJX8JKDDK",
       "subcategoryIds": [],
       "isActive": true,
       "isRoot": false,
       "isLeaf": true
     }
   ],
-  "categoryStatusMappingRaw": [
-    {
-      "categoryId": "2",
-      "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e"
-    },
-    {
-      "categoryId": "3",
-      "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf"
-    },
-    {
-      "categoryId": "4",
-      "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf"
-    }
-  ],
+  "categoryStatusMappingRaw": [],
   "categoriesWithStatus": [
     {
       "categoryName": "ROOT",
@@ -851,447 +542,88 @@
       "statuses": [],
       "customAttributes": [
         {
-          "displayName": "IFCGlobalId",
-          "description": "Unique IFC identifier",
+          "displayName": "GlobalId",
+          "description": null,
           "dataType": "text",
           "enumValues": []
-        },
-        {
-          "displayName": "IFC_Type",
-          "description": "Component type",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Discipline",
-          "description": "Trade category",
-          "dataType": "multi_select",
-          "enumValues": [
-            "Architecture",
-            "Structural",
-            "Mechanical",
-            "Electrical",
-            "Plumbing"
-          ]
-        },
-        {
-          "displayName": "Subcontractor",
-          "description": "Responsible party",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Planned Date",
-          "description": "Construction plan",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
-          "enumValues": []
-        },
-        {
-          "displayName": "Notes",
-          "description": "Additional remarks or special handling instructions",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Size of Material",
-          "description": "Sizes",
-          "dataType": "select",
-          "enumValues": [
-            "Large",
-            "Big",
-            "Medium",
-            "Small"
-          ]
         }
       ],
       "children": [
         "2",
         "3",
         "4",
-        "5"
+        "5",
+        "6",
+        "7",
+        "8",
+        "9",
+        "10",
+        "11",
+        "12",
+        "13",
+        "14",
+        "15",
+        "16",
+        "17",
+        "18",
+        "19",
+        "20",
+        "21"
       ]
     },
     {
-      "categoryName": "Custom Category",
+      "categoryName": "x",
       "categoryId": "2",
       "parentId": "1",
-      "statusSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-      "statusSetName": "testing 2",
-      "statuses": [
-        {
-          "id": "7cad71c6-a84a-46e1-9ce1-e52de64b6a43",
-          "version": 71708424,
-          "description": "first",
-          "bucket": "abc_1761557843330",
-          "label": "abc",
-          "color": "adsk-charcoal-900",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-          "sortOrder": 1,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:23.331Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:23.331Z",
-          "isActive": true
-        },
-        {
-          "id": "856aadf1-0186-44b3-85bd-ff8a244f8054",
-          "version": 71708425,
-          "description": "second",
-          "bucket": "def_1761557843330",
-          "label": "def",
-          "color": "adsk-yellow-orange-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-          "sortOrder": 2,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:23.331Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:23.331Z",
-          "isActive": true
-        },
-        {
-          "id": "2f64402e-ec64-4747-b0d6-6034a3b8dd8c",
-          "version": 71708426,
-          "description": "third",
-          "bucket": "ghi_1761557843330",
-          "label": "ghi",
-          "color": "adsk-blue-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-          "sortOrder": 3,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:23.331Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:23.331Z",
-          "isActive": true
-        },
-        {
-          "id": "7617ace9-c6a5-48ff-913f-f539497661e4",
-          "version": 71708427,
-          "description": "fourth",
-          "bucket": "jkl_1761557843330",
-          "label": "jkl",
-          "color": "adsk-purple-700",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "efa61e18-0f5a-4add-bafa-ae6b192e8e9e",
-          "sortOrder": 4,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:23.331Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:23.331Z",
-          "isActive": true
-        }
-      ],
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
       "customAttributes": [
         {
-          "displayName": "IFCGlobalId",
-          "description": "Unique IFC identifier",
+          "displayName": "GlobalId",
+          "description": null,
           "dataType": "text",
           "enumValues": []
-        },
-        {
-          "displayName": "IFC_Type",
-          "description": "Component type",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Discipline",
-          "description": "Trade category",
-          "dataType": "multi_select",
-          "enumValues": [
-            "Architecture",
-            "Structural",
-            "Mechanical",
-            "Electrical",
-            "Plumbing"
-          ]
-        },
-        {
-          "displayName": "Subcontractor",
-          "description": "Responsible party",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Planned Date",
-          "description": "Construction plan",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
-          "enumValues": []
-        },
-        {
-          "displayName": "Notes",
-          "description": "Additional remarks or special handling instructions",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Size of Material",
-          "description": "Sizes",
-          "dataType": "select",
-          "enumValues": [
-            "Large",
-            "Big",
-            "Medium",
-            "Small"
-          ]
         }
       ],
       "children": []
     },
     {
-      "categoryName": "Doors",
+      "categoryName": "test",
       "categoryId": "3",
       "parentId": "1",
-      "statusSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-      "statusSetName": "testing 1",
-      "statuses": [
-        {
-          "id": "4ee2681f-2f16-4aae-be5e-c1e220ca0685",
-          "version": 71708381,
-          "description": "haha",
-          "bucket": "1_1761557821201",
-          "label": "1",
-          "color": "adsk-charcoal-900",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-          "sortOrder": 1,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
-          "isActive": true
-        },
-        {
-          "id": "8b8486f9-b23d-4d5e-92d2-5a29707a3c94",
-          "version": 71708382,
-          "description": "lol",
-          "bucket": "2_1761557821201",
-          "label": "2",
-          "color": "adsk-yellow-orange-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-          "sortOrder": 2,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
-          "isActive": true
-        },
-        {
-          "id": "b9ce2627-81e8-4720-8924-ed65029a470b",
-          "version": 71708383,
-          "description": "uh huh",
-          "bucket": "3_1761557821201",
-          "label": "3",
-          "color": "adsk-blue-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-          "sortOrder": 3,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
-          "isActive": true
-        }
-      ],
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
       "customAttributes": [
         {
-          "displayName": "IFCGlobalId",
-          "description": "Unique IFC identifier",
+          "displayName": "GlobalId",
+          "description": null,
           "dataType": "text",
           "enumValues": []
-        },
-        {
-          "displayName": "IFC_Type",
-          "description": "Component type",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Discipline",
-          "description": "Trade category",
-          "dataType": "multi_select",
-          "enumValues": [
-            "Architecture",
-            "Structural",
-            "Mechanical",
-            "Electrical",
-            "Plumbing"
-          ]
-        },
-        {
-          "displayName": "Subcontractor",
-          "description": "Responsible party",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Planned Date",
-          "description": "Construction plan",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
-          "enumValues": []
-        },
-        {
-          "displayName": "Notes",
-          "description": "Additional remarks or special handling instructions",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Size of Material",
-          "description": "Sizes",
-          "dataType": "select",
-          "enumValues": [
-            "Large",
-            "Big",
-            "Medium",
-            "Small"
-          ]
         }
       ],
       "children": []
     },
     {
-      "categoryName": "API testing",
+      "categoryName": "default",
       "categoryId": "4",
       "parentId": "1",
-      "statusSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-      "statusSetName": "testing 1",
-      "statuses": [
-        {
-          "id": "4ee2681f-2f16-4aae-be5e-c1e220ca0685",
-          "version": 71708381,
-          "description": "haha",
-          "bucket": "1_1761557821201",
-          "label": "1",
-          "color": "adsk-charcoal-900",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-          "sortOrder": 1,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
-          "isActive": true
-        },
-        {
-          "id": "8b8486f9-b23d-4d5e-92d2-5a29707a3c94",
-          "version": 71708382,
-          "description": "lol",
-          "bucket": "2_1761557821201",
-          "label": "2",
-          "color": "adsk-yellow-orange-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-          "sortOrder": 2,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
-          "isActive": true
-        },
-        {
-          "id": "b9ce2627-81e8-4720-8924-ed65029a470b",
-          "version": 71708383,
-          "description": "uh huh",
-          "bucket": "3_1761557821201",
-          "label": "3",
-          "color": "adsk-blue-500",
-          "projectId": "a824e4c7-7bdb-42e0-a874-6ab45fb74d84",
-          "statusStepSetId": "87d0f805-d837-407f-a6c6-b8a4dd0df2cf",
-          "sortOrder": 3,
-          "createdBy": "26T24R4NKFREYN6X",
-          "createdAt": "2025-10-27T09:37:01.201Z",
-          "updatedBy": "26T24R4NKFREYN6X",
-          "updatedAt": "2025-10-27T09:37:01.201Z",
-          "isActive": true
-        }
-      ],
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
       "customAttributes": [
         {
-          "displayName": "IFCGlobalId",
-          "description": "Unique IFC identifier",
+          "displayName": "GlobalId",
+          "description": null,
           "dataType": "text",
           "enumValues": []
-        },
-        {
-          "displayName": "IFC_Type",
-          "description": "Component type",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Discipline",
-          "description": "Trade category",
-          "dataType": "multi_select",
-          "enumValues": [
-            "Architecture",
-            "Structural",
-            "Mechanical",
-            "Electrical",
-            "Plumbing"
-          ]
-        },
-        {
-          "displayName": "Subcontractor",
-          "description": "Responsible party",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Planned Date",
-          "description": "Construction plan",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
-          "enumValues": []
-        },
-        {
-          "displayName": "Notes",
-          "description": "Additional remarks or special handling instructions",
-          "dataType": "text",
-          "enumValues": []
-        },
-        {
-          "displayName": "Size of Material",
-          "description": "Sizes",
-          "dataType": "select",
-          "enumValues": [
-            "Large",
-            "Big",
-            "Medium",
-            "Small"
-          ]
         }
       ],
       "children": []
     },
     {
-      "categoryName": "Windows",
+      "categoryName": "IfcBuilding",
       "categoryId": "5",
       "parentId": "1",
       "statusSetId": null,
@@ -1299,63 +631,282 @@
       "statuses": [],
       "customAttributes": [
         {
-          "displayName": "IFCGlobalId",
-          "description": "Unique IFC identifier",
+          "displayName": "GlobalId",
+          "description": null,
           "dataType": "text",
           "enumValues": []
-        },
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcBuildingStorey",
+      "categoryId": "6",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
         {
-          "displayName": "IFC_Type",
-          "description": "Component type",
+          "displayName": "GlobalId",
+          "description": null,
           "dataType": "text",
           "enumValues": []
-        },
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcCovering",
+      "categoryId": "7",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
         {
-          "displayName": "Discipline",
-          "description": "Trade category",
-          "dataType": "multi_select",
-          "enumValues": [
-            "Architecture",
-            "Structural",
-            "Mechanical",
-            "Electrical",
-            "Plumbing"
-          ]
-        },
-        {
-          "displayName": "Subcontractor",
-          "description": "Responsible party",
+          "displayName": "GlobalId",
+          "description": null,
           "dataType": "text",
           "enumValues": []
-        },
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcCurtainWall",
+      "categoryId": "8",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
         {
-          "displayName": "Planned Date",
-          "description": "Construction plan",
-          "dataType": "date",
-          "enumValues": []
-        },
-        {
-          "displayName": "Asset Value",
-          "description": "Cost data",
-          "dataType": "numeric",
-          "enumValues": []
-        },
-        {
-          "displayName": "Notes",
-          "description": "Additional remarks or special handling instructions",
+          "displayName": "GlobalId",
+          "description": null,
           "dataType": "text",
           "enumValues": []
-        },
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcDoor",
+      "categoryId": "9",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
         {
-          "displayName": "Size of Material",
-          "description": "Sizes",
-          "dataType": "select",
-          "enumValues": [
-            "Large",
-            "Big",
-            "Medium",
-            "Small"
-          ]
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcFurniture",
+      "categoryId": "10",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcMember",
+      "categoryId": "11",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcOpeningElement",
+      "categoryId": "12",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcPlate",
+      "categoryId": "13",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcProject",
+      "categoryId": "14",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcRoof",
+      "categoryId": "15",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcSite",
+      "categoryId": "16",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcSlab",
+      "categoryId": "17",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcSpace",
+      "categoryId": "18",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcWall",
+      "categoryId": "19",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcWallStandardCase",
+      "categoryId": "20",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "IfcWindow",
+      "categoryId": "21",
+      "parentId": "1",
+      "statusSetId": null,
+      "statusSetName": "No Status Set (system)",
+      "statuses": [],
+      "customAttributes": [
+        {
+          "displayName": "GlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
         }
       ],
       "children": []

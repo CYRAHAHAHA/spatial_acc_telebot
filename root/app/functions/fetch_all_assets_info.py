@@ -107,7 +107,9 @@ def fetch_all_assets_info(token: str):
                 asset.get("clientAssetId") or "",
                 asset.get("categoryId") or "",
                 asset.get("statusId") or "",
-                asset.get("customAttributes")[retrieve_GUID_ca_name()] or ""
+                # asset.get("customAttributes")[retrieve_GUID_ca_name()] or ""
+                (asset.get("customAttributes") or {}).get(retrieve_GUID_ca_name(), "")
+
             ]
             writer.writerow(row)
 
