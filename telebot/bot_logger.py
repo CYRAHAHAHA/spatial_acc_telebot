@@ -409,8 +409,14 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
     # Enforce canon values
     if found.get("task") and found["task"] not in TASKS_CANON:
         errors.append("Unrecognized 'Task'. Allowed: " + ", ".join(TASKS_CANON))
-    if found.get("status") and found["status"] not in STATUSES_CANON:
-        errors.append("Unrecognized 'Status'. Allowed: " + ", ".join(STATUSES_CANON))
+    if found.get("status"):
+        s = str(found["status"])
+        if not s.isdigit() and s not in STATUSES_CANON:
+            errors.append(
+                "Unrecognized 'Status'. Allowed: "
+                + ", ".join(STATUSES_CANON)
+                + " or numeric codes like 1, 2, 3."
+            )
 
     # If any errors, return tuple with {} + errors
     if errors:
@@ -459,6 +465,14 @@ def _prefix_or_fuzzy(value: str, choices: List[str]) -> str | None:
 def _canonicalize_status(s: str | None) -> str | None:
     if not s:
         return None
+
+    s = s.strip()
+
+    # If it's a pure number like "1", "2", "3", keep as-is
+    if s.isdigit():
+        return s
+
+    # Otherwise, try to map to one of the textual statuses
     return _prefix_or_fuzzy(s, STATUSES_CANON)
 
 
