@@ -3,6 +3,7 @@ import requests
 from typing import List, Dict, Any, Optional
 from pathlib import Path
 from app.config import config
+from app.utils import read_status_sets_csv, read_custom_fields_csv, read_categories_csv, get_csv_path
 import re
 
 # filepath: c:\Users\User\Documents\GitHub\spatial_acc_telebot\root\app\functions\create_categories.py
@@ -21,89 +22,6 @@ def _normalize_items(data: Any) -> List[Dict[str, Any]]:
 def _project_root() -> Path:
     # file is at root/app/functions/..., go up 2 levels to reach root
     return Path(__file__).resolve().parents[2]
-
-
-def _load_status_sets(csv_path: Path, project_id: str) -> Dict[str, str]:
-    mapping: Dict[str, str] = {}
-    if not csv_path.exists():
-        print(f"Status sets CSV not found at {csv_path}")
-        return mapping
-    try:
-        with csv_path.open(newline="", encoding="utf-8") as fh:
-            reader = csv.DictReader(fh)
-            for row in reader:
-                # prefer rows that match project_id, but accept others too
-                name = (row.get("status_set_name") or "").strip()
-                sid = (row.get("status_set_id") or "").strip()
-                proj = (row.get("project_id") or "").strip()
-                if not name or not sid:
-                    continue
-                # keep first match for a given name
-                if name not in mapping:
-                    mapping[name] = sid
-                # if a row matches current project override to ensure correct one
-                if proj == project_id:
-                    mapping[name] = sid
-    except Exception as ex:
-        print(f"Failed to read status sets CSV: {ex}")
-    return mapping
-
-
-def _load_custom_attributes(csv_path: Path, project_id: str) -> Dict[str, str]:
-    mapping: Dict[str, str] = {}
-    if not csv_path.exists():
-        print(f"Custom fields CSV not found at {csv_path}")
-        return mapping
-    try:
-        with csv_path.open(newline="", encoding="utf-8") as fh:
-            reader = csv.DictReader(fh)
-            for row in reader:
-                proj = (row.get("project_id") or "").strip()
-                attr_id = (row.get("custom_attribute_id") or "").strip()
-                name = (row.get("name") or "").strip()
-                display = (row.get("display_name") or "").strip()
-                if not attr_id:
-                    continue
-                # map both name and display name to id (display names are used in user's JSON)
-                if display and display not in mapping:
-                    mapping[display] = attr_id
-                if name and name not in mapping:
-                    mapping[name] = attr_id
-                # prefer entries matching project_id
-                if proj == project_id:
-                    if display:
-                        mapping[display] = attr_id
-                    if name:
-                        mapping[name] = attr_id
-    except Exception as ex:
-        print(f"Failed to read custom fields CSV: {ex}")
-    return mapping
-
-
-def _load_categories_map(csv_path: Path, project_id: str) -> Dict[str, str]:
-    """Load mapping of category_name -> category_id from categories.csv"""
-    mapping: Dict[str, str] = {}
-    if not csv_path.exists():
-        print(f"Categories CSV not found at {csv_path}")
-        return mapping
-    try:
-        with csv_path.open(newline="", encoding="utf-8") as fh:
-            reader = csv.DictReader(fh)
-            for row in reader:
-                proj = (row.get("project_id") or "").strip()
-                cat_id = (row.get("category_id") or "").strip()
-                cat_name = (row.get("category_name") or "").strip()
-                if not cat_id or not cat_name:
-                    continue
-                # keep first match for a given name
-                if cat_name not in mapping:
-                    mapping[cat_name] = cat_id
-                # prefer entries matching project_id
-                if proj == project_id:
-                    mapping[cat_name] = cat_id
-    except Exception as ex:
-        print(f"Failed to read categories CSV: {ex}")
-    return mapping
 
 
 def _extract_category_id(resp_json: Any) -> Optional[str]:
@@ -163,8 +81,8 @@ def create_categories(access_token: str, data: List[Dict[str, Any]]):
     custom_csv = output_dir / "custom_fields.csv"
     categories_csv = output_dir / "categories.csv"
 
-    status_map = _load_status_sets(status_csv, project_id)
-    custom_map = _load_custom_attributes(custom_csv, project_id)
+    status_map = read_status_sets_csv(project_id)
+    custom_map = read_custom_fields_csv(project_id)
 
     headers = {
         "Authorization": f"Bearer {access_token}",
@@ -182,7 +100,7 @@ def create_categories(access_token: str, data: List[Dict[str, Any]]):
         print(f"\n=== Iteration {iteration}: Processing {len(remaining_items)} remaining categories ===")
         
         # Load current category mappings from CSV
-        categories_map = _load_categories_map(categories_csv, project_id)
+        categories_map = read_categories_csv(project_id)
         
         skipped_items = []
         created_in_iteration = 0

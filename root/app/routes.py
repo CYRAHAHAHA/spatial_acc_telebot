@@ -132,16 +132,3 @@ def create_categories_from_json(token):
         return jsonify({"error": "Invalid payload: expected a JSON array."}), 400
     created = create_categories(token, items) or []
     return jsonify({"created": len(created)}), 200
-
-@app.route("/api/payload/categories")
-def api_payload_categories():
-    data_dir = Path(__file__).resolve().parents[1] / "data"
-    p = data_dir / "new_categories.json"
-    try:
-        with p.open("r", encoding="utf-8") as f:
-            items = json.load(f)
-        if not isinstance(items, list):
-            return jsonify({"error": "new_categories.json must be a JSON array."}), 400
-        return jsonify(items)
-    except Exception as ex:
-        return jsonify({"error": f"Failed to read new_categories.json: {ex}"}), 404

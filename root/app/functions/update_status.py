@@ -5,6 +5,7 @@ import csv
 import requests
 from flask import jsonify
 from app.config import config
+from app.utils import get_csv_path, get_output_dir
 
 API_BASE_V2 = "https://developer.api.autodesk.com/construction/assets/v2/projects"
 
@@ -14,10 +15,10 @@ DATA_DIR = BASE_DIR / "data"
 
 def _lookup_status_id_by_label(label: str) -> Optional[str]:
     """
-    Look up a statusId in output/status_sets.csv by matching status_label (case-insensitive).
+    Look up a statusId in data/status_sets.csv by matching status_label (case-insensitive).
     Returns the first match.
     """
-    csv_path = Path("./output/status_sets.csv")
+    csv_path = get_csv_path("status_sets.csv")
     if not csv_path.exists():
         return None
     needle = (label or "").strip().lower()
@@ -33,7 +34,7 @@ def _lookup_status_id_by_label(label: str) -> Optional[str]:
 
 def _resolve_asset_id_from_guid(asset_guid: str) -> Optional[str]:
     # with the asset_guid, search root\output\assets_total.csv to find the header ifc_global_id and then get the corresponding b3f_id
-    csv_path = Path("./output/assets_total.csv")
+    csv_path = get_output_dir() / "assets_total.csv"
     if not csv_path.exists():
         print("no assets_total.csv found")
         return None
@@ -46,7 +47,7 @@ def _resolve_asset_id_from_guid(asset_guid: str) -> Optional[str]:
                     return row.get("B3F_id") or None
     except Exception:
         return None
-    
+
 
 def update_assets(access_token: str, asset_guid: str, status_value: str):
     """

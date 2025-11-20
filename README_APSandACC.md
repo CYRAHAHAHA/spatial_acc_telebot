@@ -2,7 +2,7 @@
 - Autodesk account with access to ACC project
 - Python 3.7+ installed
 
-### **STEP 1: Create APS App & Set Scopes**
+### **STEP 1: Create APS App & Set API Access**
 
 1. Sign in at https://aps.autodesk.com/
 2. Navigate to **My Apps** > **Create Application**
@@ -12,6 +12,8 @@
    - **Callback URL (default):** `http://localhost:8080/callback`
 
 **✓ Validation Check:** After clicking Create, you should see a page displaying your Client ID and Client Secret.
+
+4. Then, scroll down to API Access, and select Autodesk Construction Cloud API, BIM360 API, Data Management API. (Can select all as well)
 
 ---
 
@@ -27,18 +29,13 @@ APS_CLIENT_ID=your_client_id_here
 APS_CLIENT_SECRET=your_client_secret_here
 CALLBACK_URL=http://localhost:8080/callback
 ```
-
-**⚠️ Important:** Never commit `.env` to version control (add to `.gitignore`)
-
-**✓ Validation Check:** Your `.env` file should have three lines with no quotes around values.
-
 ---
 
 ### **STEP 3: Note Your APS Account Email**
 
 The email you used to log into APS (visible in top-right corner) will need access to your ACC project.
 
-**✓ Validation Check:** Write down this email - you'll add it to ACC in the next step.
+**✓ Validation Check:** Copy down this email - you'll add it to ACC in the next step.
 
 ---
 
