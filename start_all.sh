@@ -12,7 +12,7 @@ cd "$SCRIPT_DIR"
 mkdir -p logs
 
 
-# Load repo-level .env
+# Load repo-level .env  
 ENV_FILE=".env"
 if [ ! -f "$ENV_FILE" ]; then
     echo "ERROR: $ENV_FILE file not found!"

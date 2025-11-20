@@ -8,7 +8,7 @@ import difflib
 from datetime import datetime as dt
 from typing import Dict, List, Any, Tuple
 from threading import Lock
-from datetime import UTC
+from datetime import timezone
 
 import requests
 from dotenv import load_dotenv, find_dotenv
@@ -173,7 +173,7 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
         rec = DB.get(guid) or {"guid": guid, "version": 0, "history": []}
         rec["version"] += 1
         # you can keep this or later switch to timezone-aware:
-        rec["updated_at"] = dt.now(UTC).isoformat()
+        rec["updated_at"] = dt.now(timezone.utc).isoformat()
         rec["last"] = payload
         rec["history"].append(payload)
         DB[guid] = rec
@@ -732,6 +732,287 @@ async def one_shot_update_handler(
         )
 
 
+async def cmd_issueinfo(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Fetch and display issue subtypes and issues from ACC.
+    """
+    msg = update.message
+    
+    # Show "typing..." indicator
+    await context.bot.send_chat_action(chat_id=msg.chat_id, action="typing")
+    
+    try:
+        # Call Flask endpoint
+        resp = requests.get("http://localhost:8080/fetch_issue_info_from_bot", timeout=30)
+        
+        if resp.status_code != 200:
+            await msg.reply_text("❌ Failed to fetch issue info from ACC.")
+            return
+        
+        data = resp.json()
+        
+        # Build response message
+        lines = []
+        lines.append("📊 **ISSUE INFORMATION**")
+        lines.append("=" * 40)
+        lines.append(f"**Total Issue Types/Subtypes:** {data['subtypes_count']}")
+        lines.append(f"**Total Issues:** {data['issues_count']}")
+        lines.append("")
+        
+        # Group subtypes by type
+        subtypes_by_type = {}
+        for subtype_id, info in data['subtypes'].items():
+            type_name = info['type']
+            if type_name not in subtypes_by_type:
+                subtypes_by_type[type_name] = []
+            subtypes_by_type[type_name].append({
+                'subtype': info['subtype'],
+                'id': subtype_id
+            })
+        
+        # Display subtypes
+        lines.append("**📁 Issue Types & Subtypes:**")
+        for type_name, subtypes in sorted(subtypes_by_type.items()):
+            lines.append(f"\n**{type_name}:**")
+            for sub in sorted(subtypes, key=lambda x: x['subtype']):
+                lines.append(f"  • {sub['subtype']}")
+                lines.append(f"    `{sub['id']}`")
+        
+        # Display recent issues (limit to 10)
+        if data['issues']:
+            lines.append("\n" + "=" * 40)
+            lines.append(f"**📋 Recent Issues (showing {min(10, len(data['issues']))}):**")
+            for issue in data['issues'][:10]:
+                lines.append(f"\n**{issue['title']}**")
+                lines.append(f"  Status: {issue['status']}")
+                lines.append(f"  Type: {issue['type']} → {issue['subtype']}")
+                lines.append(f"  ID: `{issue['id']}`")
+        
+        # Send response (split if too long)
+        full_text = "\n".join(lines)
+        
+        # Telegram message limit is ~4096 characters
+        if len(full_text) > 4000:
+            # Split into chunks
+            chunks = []
+            current_chunk = ""
+            for line in lines:
+                if len(current_chunk) + len(line) + 1 > 4000:
+                    chunks.append(current_chunk)
+                    current_chunk = line + "\n"
+                else:
+                    current_chunk += line + "\n"
+            if current_chunk:
+                chunks.append(current_chunk)
+            
+            # Send each chunk
+            for i, chunk in enumerate(chunks):
+                await msg.reply_text(chunk, parse_mode="Markdown")
+        else:
+            await msg.reply_text(full_text, parse_mode="Markdown")
+    
+    except Exception as e:
+        print(f"Bot: error in /issueinfo: {repr(e)}")
+        await msg.reply_text(f"❌ Error fetching issue info: {e}")
+
+async def handle_issue_update(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handle simple issue status updates: GUID + Status (no [UPDATE] tag)
+    """
+    msg = update.effective_message
+    text = (msg.text or "").strip()
+    
+    # Skip if this is an [UPDATE] message (asset update)
+    if text.startswith("[UPDATE]"):
+        return
+    
+    # Check if message has GUID and Status
+    if not ("GUID:" in text.upper() and "STATUS:" in text.upper()):
+        return
+    
+    print(f"DEBUG: Processing issue update: {text[:100]}")
+    
+    # Extract GUID
+    guid_match = re.search(r"(?i)^GUID\s*:\s*([a-zA-Z0-9\-]+)", text, re.MULTILINE)
+    if not guid_match:
+        await msg.reply_text("❌ Could not find GUID in message")
+        return
+    
+    guid = guid_match.group(1).strip()
+    
+    # Extract Status
+    status_match = re.search(r"(?i)^Status\s*:\s*(.+?)$", text, re.MULTILINE)
+    if not status_match:
+        await msg.reply_text("❌ Could not find Status in message")
+        return
+    
+    status = status_match.group(1).strip().lower()
+    
+    # Valid issue statuses
+    valid_statuses = ["draft", "open", "pending", "in review", "closed"]
+    
+    if status not in valid_statuses:
+        await msg.reply_text(
+            f"❌ Invalid status: '{status}'\n\n"
+            f"Valid statuses:\n" + "\n".join([f"• {s}" for s in valid_statuses])
+        )
+        return
+    
+    print(f"DEBUG: GUID={guid}, Status={status}")
+    
+    # Show typing indicator
+    await context.bot.send_chat_action(chat_id=msg.chat_id, action="typing")
+    
+    # Call Flask endpoint
+    payload = {
+        "issue_guid": guid,
+        "status_value": status
+    }
+    
+    try:
+        resp = requests.post(
+            "http://localhost:8080/update_issue_from_bot",
+            json=payload,
+            timeout=15
+        )
+        
+        print(f"DEBUG: Flask response: {resp.status_code}")
+        
+        if 200 <= resp.status_code < 300:
+            await msg.reply_text(
+                f"✅ **Issue updated successfully!**\n"
+                f"GUID: `{guid}`\n"
+                f"New Status: **{status}**",
+                parse_mode="Markdown"
+            )
+        else:
+            try:
+                error_data = resp.json()
+                error_msg = error_data.get("error", "Unknown error")
+                await msg.reply_text(
+                    f"❌ **Failed to update issue**\n"
+                    f"Error: {error_msg}",
+                    parse_mode="Markdown"
+                )
+            except:
+                await msg.reply_text(f"❌ Failed to update issue (HTTP {resp.status_code})")
+    
+    except Exception as e:
+        print(f"ERROR: {repr(e)}")
+        await msg.reply_text(f"❌ Error: {e}")
+
+
+
+async def handle_create_issue(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Handle issue creation: [CREATE ISSUE] format
+    """
+    msg = update.effective_message
+    text = (msg.text or "").strip()
+    
+    # Check if this is a create issue message
+    if not text.startswith("[CREATE ISSUE]"):
+        return
+    
+    print(f"DEBUG: Processing create issue: {text[:100]}")
+    
+    # Parse the message
+    lines = text.split("\n")
+    fields = {}
+    
+    for line in lines[1:]:  # Skip first line ([CREATE ISSUE])
+        if ":" in line:
+            key, value = line.split(":", 1)
+            fields[key.strip().lower()] = value.strip()
+    
+    # Extract required fields
+    title = fields.get("title")
+    status = fields.get("status", "open").lower()
+    subtype_id = fields.get("subtype id") or fields.get("subtype")
+    description = fields.get("description")
+    location = fields.get("location")
+    
+    # Validate required fields
+    if not title:
+        await msg.reply_text("❌ Missing required field: Title")
+        return
+    
+    if not subtype_id:
+        await msg.reply_text(
+            "❌ Missing required field: Subtype ID\n\n"
+            "Use /issueinfo to see available subtype IDs"
+        )
+        return
+    
+    # Valid statuses
+    valid_statuses = ["draft", "open", "pending", "in review", "closed"]
+    if status not in valid_statuses:
+        await msg.reply_text(
+            f"❌ Invalid status: '{status}'\n\n"
+            f"Valid statuses:\n" + "\n".join([f"• {s}" for s in valid_statuses])
+        )
+        return
+    
+    print(f"DEBUG: Title={title}, Status={status}, Subtype={subtype_id}")
+    
+    # Show typing indicator
+    await context.bot.send_chat_action(chat_id=msg.chat_id, action="typing")
+    
+    # Call Flask endpoint
+    payload = {
+        "title": title,
+        "status": status,
+        "issue_subtype_id": subtype_id,
+        "description": description,
+        "location_description": location
+    }
+    
+    try:
+        resp = requests.post(
+            "http://localhost:8080/create_issue_from_bot",
+            json=payload,
+            timeout=15
+        )
+        
+        print(f"DEBUG: Flask response: {resp.status_code}")
+        
+        if 200 <= resp.status_code < 300:
+            result = resp.json()
+            issue_id = result.get("id", "Unknown")
+            await msg.reply_text(
+                f"✅ Issue created successfully!\n"
+                f"Title: {title}\n"
+                f"Status: {status}\n"
+                f"ID: {issue_id}",
+                parse_mode=None
+            )
+        else:
+            try:
+                error_data = resp.json()
+                error_msg = error_data.get("error", "Unknown error")
+                
+                # Check if it's missing subtype ID with available subtypes
+                if "available_subtypes" in error_data:
+                    subtypes = error_data["available_subtypes"]
+                    subtype_list = "\n".join([
+                        f"• {info['type']} > {info['subtype']}: {sid}"
+                        for sid, info in list(subtypes.items())[:5]
+                    ])
+                    await msg.reply_text(
+                        f"❌ {error_msg}\n\n"
+                        f"Available subtypes:\n{subtype_list}\n\n"
+                        f"Use /issueinfo to see all"
+                    )
+                else:
+                    await msg.reply_text(f"❌ Failed to create issue\nError: {error_msg}")
+            except:
+                await msg.reply_text(f"❌ Failed to create issue (HTTP {resp.status_code})")
+    
+    except Exception as e:
+        print(f"ERROR: {repr(e)}")
+        await msg.reply_text(f"❌ Error: {e}")
+
+
 # Main bootstrap -------------
 def main() -> None:
     token = os.environ.get("TELEGRAM_TOKEN")
@@ -741,17 +1022,29 @@ def main() -> None:
     app = Application.builder().token(token).build()
 
     app.add_handler(CommandHandler("template", cmd_template))
-    # when the bot is added to a group → ask for Project ID
+    app.add_handler(CommandHandler("issueinfo", cmd_issueinfo))
+    app.add_handler(CommandHandler("setproject", cmd_setproject))
+    
     app.add_handler(ChatMemberHandler(on_new_chat, ChatMemberHandler.MY_CHAT_MEMBER))
 
-    # capture messages like "Project ID: KotaKinabalu-A"
     app.add_handler(
         MessageHandler(filters.Regex(r"(?i)^project\s*id\s*:\s*(.+)"), handle_project_id)
     )
 
-    # actual [UPDATE] processing
-    app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.GROUPS, one_shot_update_handler))
+    # ← ADD THIS: Create issue handler
+    app.add_handler(MessageHandler(
+        filters.TEXT & filters.ChatType.GROUPS,
+        handle_create_issue
+    ))
 
+    # Issue update handler
+    app.add_handler(MessageHandler(
+        filters.TEXT & filters.ChatType.GROUPS,
+        handle_issue_update
+    ))
+
+    # Asset update handler
+    app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.GROUPS, one_shot_update_handler))
 
     print("Bot is running... listening for messages.")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
@@ -759,3 +1052,4 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
+
