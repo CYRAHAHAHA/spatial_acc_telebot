@@ -1,30 +1,9 @@
 ﻿category_name,category_id,default_status_id,IFCGlobalID_cat_name
-ROOT,1,4e2a94bb-6de0-49a4-80b5-da33f2c8a51b,ca1
-Structural Elements,2,0074ddb3-6d35-4126-8077-06801eb11b3e,ca1
-Walls,3,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Doors & Windows,4,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Floors,5,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Ceilings,6,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Roof,7,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Facade & Cladding,8,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Furniture & Fittings,9,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Mechanical Systems,10,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Electrical Systems,11,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Plumbing & Sanitary,12,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Fire Protection,13,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Lifts & Escalators,14,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Landscape & External Works,15,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Foundations,16,0074ddb3-6d35-4126-8077-06801eb11b3e,ca1
-Columns,17,0074ddb3-6d35-4126-8077-06801eb11b3e,ca1
-Beams,18,0074ddb3-6d35-4126-8077-06801eb11b3e,ca1
-Slabs,19,0074ddb3-6d35-4126-8077-06801eb11b3e,ca1
-External Walls,20,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Internal Walls,21,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Doors,22,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-Windows,23,5def003a-5fa5-46e2-a8e2-8b6ddf431dff,ca1
-ACMV Equipment,24,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Pumps & Motors,25,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Lighting Fixtures,26,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Switchboards & Panels,27,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Fire Sprinklers,28,c9633127-9b7e-453d-b721-45c822754afe,ca1
-Fire Alarms & Detectors,29,c9633127-9b7e-453d-b721-45c822754afe,ca1
+ROOT,1,9606b15d-1209-4007-9912-0a8564cd5f04,ca1
+Custom Category,2,7cad71c6-a84a-46e1-9ce1-e52de64b6a43,ca1
+Doors,3,4ee2681f-2f16-4aae-be5e-c1e220ca0685,ca1
+API testing,4,4ee2681f-2f16-4aae-be5e-c1e220ca0685,ca1
+Windows,5,9606b15d-1209-4007-9912-0a8564cd5f04,ca1
+Custom SubCategory,12,7cad71c6-a84a-46e1-9ce1-e52de64b6a43,ca1
+Testing from web page,13,9606b15d-1209-4007-9912-0a8564cd5f04,ca1
+Doorsubcategory,14,4ee2681f-2f16-4aae-be5e-c1e220ca0685,ca1

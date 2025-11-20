@@ -26,12 +26,14 @@ def authorize():
 def callback():
     code = request.args.get("code")
     if not code:
-        return redirect("/?msg=" + quote_plus("No authorization code received."))
+        return redirect("/?msg=No+authorization+code+received.")
+    
     token = app.autodesk_auth.exchange_code_for_tokens(code)
     if not token:
-        return redirect("/?msg=" + quote_plus("Token exchange failed."))
+        return redirect("/?msg=Token+exchange+failed.")
+    
     session["access_token"] = token
-    return redirect("/?msg=" + quote_plus("Authenticated successfully."))
+    return redirect("/?msg=Authenticated+successfully.")
 
 # ---- API: assets config and status updates ---- #
 @app.route("/fetch_assets_config")
