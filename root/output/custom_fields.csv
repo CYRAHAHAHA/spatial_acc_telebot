@@ -1,13 +1,21 @@
 ﻿project_id,custom_attribute_id,name,display_name,description,data_type,required,values,values_and_ids
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,8151d4ab-5df3-4e47-b0ef-5361cb159d81,ca1,IFCGlobalId,Unique IFC identifier,text,True,,
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,5ae8d86e-e46e-46fb-94cc-43aa47977953,ca2,IFC_Type,Component type,text,True,,
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,521fc486-3576-4db5-9d3d-808f988a89a2,ca3,Discipline,Trade category,multi_select,False,,Architecture(ff49a95f-e2da-45bb-b7dd-06d2217f1d3a);Structural(f1dc2833-8297-4b6c-9393-ab4d8259c1e1);Mechanical(23f089ec-e9ac-493b-be62-8ad2822760da);Electrical(367ae5cc-7b58-45f6-8d31-d3b1318bd614);Plumbing(6592a0d5-8488-452d-b800-fad09e9aeace)
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,a359e86e-5fa5-4028-b141-f52133fca4b6,ca4,Subcontractor,Responsible party,text,False,,
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,ccb6025b-a539-4fe0-98cb-32aea26d1111,ca5,Planned Date,Construction plan,date,False,,
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,b05bca3c-11c4-4c91-bfab-75544e9249a6,ca12,Asset Value,Cost data,numeric,False,,
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,28dbd448-1388-43d7-a7fd-c31c5c8f96b5,ca22,Notes,Additional remarks or special handling instructions,text,False,,
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,e273fac5-ebb2-49d3-8b73-1033f4e0d9e5,ca27,Size of Material,Sizes,select,False,,Large(903ada8d-1e86-4759-b54a-1ddc4f38d2f9);Big(e5171040-89c6-4cf3-823b-6fe5dd6c3f13);Medium(5edcc036-4400-4249-a733-495e4afc353c);Small(e42ffe32-db6b-4139-b026-86ed94a3b99e)
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,7caa7eb3-d2ad-48d6-8689-7a3f1f0b76ea,ca28,webpage,1212313123,multi_select,True,,efe(97913f5a-e08b-4453-bb78-9103f1f4a53a);wfewfew(8324e6cb-dd9c-44a9-95db-9618735bc416);wefewf(54354c2c-6ee8-4064-a53a-3dd45656aeaf)
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,8a3e0d97-1a27-409e-aa20-66e99a4a0dd8,ca29,webpage1,multirow1,select,False,,123(5181353e-1ff8-4d12-9d3c-a6534fa7dd95);454(b8aafa06-48e1-4be4-bfb4-6a2f9f718b0e)
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,7c68a17f-19d4-4b96-954d-e163d84a8483,ca30,webpage2,multirow2,date,False,,
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,67dcbffb-2e18-4cff-a05e-549b39c74916,ca31,Count,numbers counting,multi_select,True,,1(0d7896e4-1050-473c-86f5-46c87ac64540);2(4704e5a7-a64e-4d1c-a1e8-4feea5491c6c);3(73094a76-e6a5-4741-97b6-d0542307b738);4(ac163fff-ca6e-4476-a8d9-09bf7f24b290);5(d919e5d1-85a7-440f-9d2c-48cc77cf8cd3);6(4fcb5506-eddc-4fb5-a7e2-3b8503fcf656)
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,d70bd079-b449-4072-a227-a7de89d83b0b,ca1,IFCGlobalId,Unique IFC identifier for BIM coordination,text,True,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,6ef4386f-a1c1-4a2f-b2f3-c5c65713432c,ca2,Trade,Construction trade responsible,select,True,,Architectural(aee888a2-1fbb-4064-b255-eb9011a3041b);Structural(6ca6e568-2106-49fc-add7-12e15bb31881);Mechanical(234ba6e7-c9ea-42c7-afee-edba81eda8e1);Electrical(b55f3c46-8955-4454-b68e-35a9709d98a3);Plumbing(9ba8962d-a4ad-4c09-a6fc-b7a4afdc8b6f);Fire Protection(c52f3ce1-7cf8-4bdd-82fa-c60cab84bc44);ACMV(aed6eaa4-6e65-4318-a51c-dc6c0f662654);Facade(d0a3d629-88dd-4c0f-8af2-a1eef2c869e6);Landscape(4124cf10-a0ff-4bb3-88b2-dd604d4ba0ec)
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,722a72ce-63d2-4e06-95ac-ff478eabbb1f,ca3,Subcontractor,Specialist subcontractor name,text,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,7bb51aa8-bcb1-4320-88fe-608e262cb81f,ca4,Supplier,Material or equipment supplier,text,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,deec1403-1918-438c-b798-bd59451490a2,ca5,Drawing Reference,Construction drawing number,text,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,b2ba5845-e7f5-431c-b5ba-870fc886194c,ca6,Location/Zone,Building location or zone,text,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,d12a68d6-9502-4c5c-abb9-918dfa06d1b9,ca7,Level,"Building level (e.g., B2, L1, L15, RF)",text,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,719ef16a-3cbe-4cda-ba42-995a11637a88,ca8,Grid Reference,"Structural grid (e.g., A1-B2)",text,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,d112468d-c155-4a14-8ab3-2441bfdb0d59,ca9,Material Type,Primary material,select,False,,Concrete(cb9cc859-04ff-4c91-99be-d33c540438c8);Steel(b3fefb89-2a1e-46ba-90b1-a55dc8b84c44);Aluminum(89cd09c5-eab3-4708-8d76-3f0c7e84361c);Timber(41b19f7e-7601-4113-83a2-0b45dbcdeea9);Glass(b1098032-ff7a-440f-a00d-a6541622ffa1);Brickwork(7b0e103e-4079-46c8-a87e-55539c95e23b);Precast(bb82c958-f443-4f3a-822d-a08440220731)
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,e4c68d96-d5ab-407c-b3f4-55b5cb95fb73,ca10,Fire Rating,Fire resistance rating,select,False,,0.5hr(125684f9-d8cf-4f50-92e5-3253d374590a);1hr(0f4c9038-edee-4b2a-81e2-0fdb9cbd71fe);2hr(cc0841db-0b9a-4c9a-a8a2-0d40f7045f18);3hr(b1a68d39-01b1-434c-abb4-ca6346ff66b9);4hr(0af9eb10-3eab-4817-b279-011f6c657180);Not Applicable(c409c559-e82f-4d14-968e-9609a6ac1bc8)
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,c437169b-3151-4032-96f2-ae55affa7159,ca11,Planned Installation Date,Target installation date,date,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,b9010742-6bd5-42d1-bd77-d91621088623,ca12,Actual Installation Date,Actual installation date,date,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,492ce2a8-4725-4e05-a748-0c6454236680,ca13,Inspector,Inspector or authority,select,False,,BCA(c080ffa2-2029-4d51-8270-ceeb39166da2);SCDF(2b5c0012-75d0-4b56-b4aa-3a9bc3b794b5);Internal QA/QC(b729164d-743c-482f-94d9-fda46dbefbac);Third Party(8197f850-3693-49ab-85a8-9b3f29801ee5);Consultant(41741ce6-144c-4fe6-9f7a-acd2f00e09d4)
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,12032495-6a02-4053-beba-fa3f22cb9e5a,ca14,Inspection Date,Date of inspection,date,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,e5b1da59-d503-4c98-a879-86b974582657,ca15,Quantity,Number of units,numeric,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,e7c03bc5-ddf9-4758-8af8-b5479b66ad4e,ca16,Unit,Unit of measurement,select,False,,No.(b7cf7acb-7713-4d1a-9618-a48cf06b063c);m(2f808001-95a8-4398-8bdb-0643f995b85a);m²(9308e46d-35d5-436e-9bc2-3970ba14a9ba);m³(f233bef7-ecf9-4ec9-a58e-ccf9e9ca7de9);kg(43db3f70-5cfb-41dc-95cd-9157e03acd38);tons(91913055-09d1-40f3-a9b4-baf5ada932c9)
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,67c6de80-0155-4f7f-b839-e0728451a67a,ca17,Manufacturer,Equipment manufacturer,text,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,6e0a1eaf-43cf-4e1c-aa03-1fc8276b090d,ca18,Model Number,Product model number,text,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,9f783417-d027-4a54-a6ab-af079bf5572b,ca19,Warranty Period (Months),Warranty duration,numeric,False,,
+6a70e8a2-6bb3-4b52-9697-d47861d5e6c3,5d8594bc-ca33-40ae-adcd-aba955c60b0f,ca20,Remarks,Additional notes,text,False,,

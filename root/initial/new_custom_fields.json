@@ -1,0 +1,206 @@
+[
+  {
+    "displayName": "IFCGlobalId",
+    "description": "Unique IFC identifier for BIM coordination",
+    "enumValues": [],
+    "requiredOnIngress": true,
+    "maxLengthOnIngress": 100,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Trade",
+    "description": "Construction trade responsible",
+    "enumValues": [
+      "Architectural",
+      "Structural",
+      "Mechanical",
+      "Electrical",
+      "Plumbing",
+      "Fire Protection",
+      "ACMV",
+      "Facade",
+      "Landscape"
+    ],
+    "requiredOnIngress": true,
+    "maxLengthOnIngress": null,
+    "defaultValue": null,
+    "dataType": "select"
+  },
+  {
+    "displayName": "Subcontractor",
+    "description": "Specialist subcontractor name",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 100,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Supplier",
+    "description": "Material or equipment supplier",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 100,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Drawing Reference",
+    "description": "Construction drawing number",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 50,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Location/Zone",
+    "description": "Building location or zone",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 50,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Level",
+    "description": "Building level (e.g., B2, L1, L15, RF)",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 20,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Grid Reference",
+    "description": "Structural grid (e.g., A1-B2)",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 30,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Material Type",
+    "description": "Primary material",
+    "enumValues": [
+      "Concrete",
+      "Steel",
+      "Aluminum",
+      "Timber",
+      "Glass",
+      "Brickwork",
+      "Precast"
+    ],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": null,
+    "dataType": "select"
+  },
+  {
+    "displayName": "Fire Rating",
+    "description": "Fire resistance rating",
+    "enumValues": ["0.5hr", "1hr", "2hr", "3hr", "4hr", "Not Applicable"],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "Not Applicable",
+    "dataType": "select"
+  },
+  {
+    "displayName": "Planned Installation Date",
+    "description": "Target installation date",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": null,
+    "dataType": "date"
+  },
+  {
+    "displayName": "Actual Installation Date",
+    "description": "Actual installation date",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": null,
+    "dataType": "date"
+  },
+  {
+    "displayName": "Inspector",
+    "description": "Inspector or authority",
+    "enumValues": [
+      "BCA",
+      "SCDF",
+      "Internal QA/QC",
+      "Third Party",
+      "Consultant"
+    ],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": null,
+    "dataType": "select"
+  },
+  {
+    "displayName": "Inspection Date",
+    "description": "Date of inspection",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": null,
+    "dataType": "date"
+  },
+  {
+    "displayName": "Quantity",
+    "description": "Number of units",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": 1,
+    "dataType": "numeric"
+  },
+  {
+    "displayName": "Unit",
+    "description": "Unit of measurement",
+    "enumValues": ["No.", "m", "m²", "m³", "kg", "tons"],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": "No.",
+    "dataType": "select"
+  },
+  {
+    "displayName": "Manufacturer",
+    "description": "Equipment manufacturer",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 100,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Model Number",
+    "description": "Product model number",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 100,
+    "defaultValue": null,
+    "dataType": "text"
+  },
+  {
+    "displayName": "Warranty Period (Months)",
+    "description": "Warranty duration",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": null,
+    "defaultValue": 12,
+    "dataType": "numeric"
+  },
+  {
+    "displayName": "Remarks",
+    "description": "Additional notes",
+    "enumValues": [],
+    "requiredOnIngress": false,
+    "maxLengthOnIngress": 500,
+    "defaultValue": null,
+    "dataType": "text"
+  }
+]

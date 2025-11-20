@@ -9,6 +9,7 @@
     createStatusBtn: document.getElementById("createStatusBtn"),
     createFieldsBtn: document.getElementById("createFieldsBtn"),
     createCategoriesBtn: document.getElementById("createCategoriesBtn"),
+    setupDefaultConfigBtn: document.getElementById("setupDefaultConfigBtn"),
     categorySummary: document.getElementById("categorySummary"),
     categoryTree: document.getElementById("categoryTree"),
     statusSetsHost: document.getElementById("StatusSets"),
@@ -1434,6 +1435,39 @@
     setTimeout(() => {
       window.location.href = "/fetch_all_assets_info";
     }, 500);
+  });
+
+  el.setupDefaultConfigBtn?.addEventListener("click", async () => {
+    if (!confirm("This will create all default status sets, custom fields, and categories from the initial setup files. Continue?")) {
+      return;
+    }
+    
+    try {
+      showToast("warning", "Setting up default configuration...", "This may take a moment");
+      
+      const response = await fetch("/setup_initial_configs", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include"
+      });
+      
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || `HTTP ${response.status}`);
+      }
+      
+      showToast("success", "Default configuration created", "Refreshing data...");
+      
+      // Refresh all the data
+      await loadCategories();
+      await renderStatusSetsPreview();
+      await renderCustomFieldsPreview();
+      
+      showToast("success", "Configuration complete", "All default configs have been set up");
+    } catch (err) {
+      console.error("Setup default config error:", err);
+      showToast("error", "Setup failed", err.message);
+    }
   });
 
   el.createCategoriesBtn?.addEventListener("click", async () => {
