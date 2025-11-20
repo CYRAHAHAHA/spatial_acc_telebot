@@ -1,0 +1,104 @@
+[
+  {
+    "name": "General Construction Lifecycle",
+    "status_set_description": "Complete lifecycle from specification to handover for all construction elements",
+    "status_label": [
+      "Specified",
+      "Ordered",
+      "Delivered",
+      "Installed",
+      "Inspected",
+      "Rectified",
+      "Approved",
+      "Handed Over"
+    ],
+    "description": [
+      "Item specified in drawings/specs",
+      "Purchase order placed with supplier",
+      "Material delivered to site",
+      "Item installed in final position",
+      "Quality inspection completed",
+      "Any defects rectified",
+      "Final approval received",
+      "Handed over to client"
+    ],
+    "status_colors": [
+      "adsk-charcoal-500",
+      "adsk-blue-300",
+      "adsk-purple-300",
+      "adsk-blue-500",
+      "adsk-yellow-500",
+      "adsk-yellow-orange-500",
+      "adsk-green-500",
+      "adsk-green-700"
+    ]
+  },
+  {
+    "name": "MEP Systems Lifecycle",
+    "status_set_description": "Complete lifecycle for MEP equipment from procurement to operation",
+    "status_label": [
+      "Specified",
+      "Ordered",
+      "Delivered",
+      "Positioned",
+      "Connected",
+      "Tested",
+      "Commissioned",
+      "Operational"
+    ],
+    "description": [
+      "Equipment specified in design",
+      "Equipment ordered from supplier",
+      "Equipment delivered to site",
+      "Equipment positioned in location",
+      "Services and utilities connected",
+      "Equipment testing in progress",
+      "Successfully commissioned",
+      "In full operation"
+    ],
+    "status_colors": [
+      "adsk-charcoal-500",
+      "adsk-blue-300",
+      "adsk-purple-300",
+      "adsk-turquoise-300",
+      "adsk-blue-500",
+      "adsk-yellow-500",
+      "adsk-green-500",
+      "adsk-green-700"
+    ]
+  },
+  {
+    "name": "Structural Elements Lifecycle",
+    "status_set_description": "Lifecycle for structural elements from design approval to completion",
+    "status_label": [
+      "Design Approved",
+      "Material Delivered",
+      "Formwork Setup",
+      "Reinforcement Fixed",
+      "Concrete Poured",
+      "Curing",
+      "Formwork Stripped",
+      "Inspected & Approved"
+    ],
+    "description": [
+      "Structural design approved",
+      "Construction materials on site",
+      "Formwork installed and checked",
+      "Steel reinforcement in place",
+      "Concrete poured and compacted",
+      "Concrete curing in progress",
+      "Formwork removed",
+      "Final inspection passed"
+    ],
+    "status_colors": [
+      "adsk-charcoal-500",
+      "adsk-blue-300",
+      "adsk-brown-500",
+      "adsk-salmon-500",
+      "adsk-blue-500",
+      "adsk-purple-500",
+      "adsk-turquoise-500",
+      "adsk-green-500"
+    ]
+  }
+]

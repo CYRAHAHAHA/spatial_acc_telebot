@@ -36,9 +36,17 @@ fi
 # Activate virtual environment if it exists
 if [ -d ".venv" ]; then
     echo "Activating virtual environment..."
-    source .venv/Scripts/activate
-    # print the python version
-    echo "Using Python version: $(python --version)"
+    # Detect the OS and use appropriate activation script
+    if [[ "$OSTYPE" == "msys" ]] || [[ "$OSTYPE" == "win32" ]]; then
+        # Git Bash on Windows - use Scripts/activate
+        source .venv/Scripts/activate
+    else
+        # Linux/Mac - use bin/activate
+        source .venv/bin/activate
+    fi
+    # Print the python version
+    echo "Using Python version: $(python --version 2>&1)"
+    echo "Python location: $(which python)"
 else
     echo "WARNING: No virtual environment found at ./.venv"
     echo "It's recommended to create one with: python -m venv .venv"

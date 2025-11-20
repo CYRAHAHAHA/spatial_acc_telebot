@@ -4,6 +4,7 @@ from app.config import config
 from app.authentication import AutodeskAuth
 from datetime import datetime, timezone
 from flask_cors import CORS
+from app.utils import get_csv_path, get_data_dir
 import csv
 import json
 import re
@@ -85,10 +86,9 @@ def api_categories():
     """
     Read categories.csv and build hierarchical tree structure.
     """
-    data_dir = Path(__file__).resolve().parents[1] / "output"
-    p = data_dir / "categories.csv"
+    csv_path = get_csv_path("categories.csv")
     
-    if not p.exists():
+    if not csv_path.exists():
         return jsonify({
             "count": 0,
             "categories": [],
@@ -97,7 +97,7 @@ def api_categories():
 
     categories = []
     try:
-        with p.open("r", encoding="utf-8", newline="") as f:
+        with csv_path.open("r", encoding="utf-8", newline="") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 category = {
@@ -163,47 +163,19 @@ def api_categories():
         "tree": tree
     })
 
-# --- Payload APIs (read hardcoded JSON files for creation) ---
-@app.route("/api/payload/status_sets")
-def api_payload_status_sets():
-    data_dir = Path(__file__).resolve().parents[1] / "output"
-    p = data_dir / "new_status_sets.json"
-    try:
-        with p.open("r", encoding="utf-8") as f:
-            items = json.load(f)
-        if not isinstance(items, list):
-            return jsonify({"error": "new_status_sets.json must be a JSON array."}), 400
-        return jsonify(items)
-    except Exception as ex:
-        return jsonify({"error": f"Failed to read new_status_sets.json: {ex}"}), 404
-
-@app.route("/api/payload/custom_fields")
-def api_payload_custom_fields():
-    data_dir = Path(__file__).resolve().parents[1] / "output"
-    p = data_dir / "new_custom_fields.json"
-    try:
-        with p.open("r", encoding="utf-8") as f:
-            items = json.load(f)
-        if not isinstance(items, list):
-            return jsonify({"error": "new_custom_fields.json must be a JSON array."}), 400
-        return jsonify(items)
-    except Exception as ex:
-        return jsonify({"error": f"Failed to read new_custom_fields.json: {ex}"}), 404
-
 # --- CSV preview APIs (no auth required) ---
 @app.route("/api/preview/status_sets")
 def api_preview_status_sets():
     """
     Read data/status_sets.csv and return grouped JSON by status_set_id.
     """
-    data_dir = Path(__file__).resolve().parents[1] / "output"
-    p = data_dir / "status_sets.csv"
-    if not p.exists():
+    csv_path = get_csv_path("status_sets.csv")
+    if not csv_path.exists():
         return jsonify({"error": "status_sets.csv not found"}), 404
 
     sets = {}
     try:
-        with p.open("r", encoding="utf-8", newline="") as f:
+        with csv_path.open("r", encoding="utf-8", newline="") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 ss_id = row.get("status_set_id") or ""
@@ -230,15 +202,14 @@ def api_preview_custom_fields():
     """
     Read data/custom_fields.csv and return normalized JSON list.
     """
-    data_dir = Path(__file__).resolve().parents[1] / "output"
-    p = data_dir / "custom_fields.csv"
-    if not p.exists():
+    csv_path = get_csv_path("custom_fields.csv")
+    if not csv_path.exists():
         return jsonify({"error": "custom_fields.csv not found"}), 404
 
     out = []
     pat = re.compile(r"^(.*)\(([^)]+)\)$")  # Label(id)
     try:
-        with p.open("r", encoding="utf-8", newline="") as f:
+        with csv_path.open("r", encoding="utf-8", newline="") as f:
             reader = csv.DictReader(f)
             for row in reader:
                 enum_pairs = []
@@ -269,3 +240,14 @@ def api_preview_custom_fields():
     except Exception as ex:
         return jsonify({"error": f"Failed to read custom_fields.csv: {ex}"}), 500
 
+# view the category_status_default CSV as JSON
+@app.route("/api/category_status_default")
+def api_category_status_default():
+    csv_path = get_csv_path("category_status_default.csv")
+    try:
+        with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+            reader = csv.DictReader(f)
+            items = [dict(row) for row in reader]
+        return jsonify(items)
+    except Exception as ex:
+        return jsonify({"error": f"Failed to read category_status_default.csv: {ex}"}), 500

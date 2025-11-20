@@ -1,6 +1,7 @@
 import requests, json, urllib.parse
 from flask import redirect, session
 from app.config import config
+from app.utils import get_data_dir, get_output_dir, write_csv
 from pathlib import Path
 import csv
 
@@ -99,7 +100,7 @@ def fetch_assets_config(access_token: str):
         session["aggregated_data"] = aggregated_data
 
         # === 7️⃣ Save all raw and mapped data to log.json ===
-        log_path = Path("./output/log.json")
+        log_path = get_output_dir() / "log.json"
         with log_path.open("w", encoding="utf-8") as f:
             json.dump({
                 "customAttributesRaw": custom_attributes,
@@ -113,7 +114,7 @@ def fetch_assets_config(access_token: str):
         print(log_path.resolve())
 
         # === 8️⃣ Save aggregated data to log_aggregated.json ===
-        log_aggregated_path = Path("./output/log_aggregated.json")
+        log_aggregated_path = get_output_dir() / "log_aggregated.json"
         with log_aggregated_path.open("w", encoding="utf-8") as f:
             json.dump(aggregated_data, f, indent=2)
         print("\n=== Saved log_aggregated.json with aggregated data ===")
@@ -137,19 +138,12 @@ def fetch_assets_config(access_token: str):
                     "status_label": status.get("label"),
                     "status_description": status.get("description", "")
                 })
-        status_sets_csv_path = Path("./output/status_sets.csv")
-        with status_sets_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
-            writer = csv.writer(f, delimiter=",", lineterminator="\n")
-            writer.writerow(["project_id","status_set_id","status_set_name","status_id","status_label","status_description"])
-            for row in status_sets_csv:
-                writer.writerow([
-                    row.get("project_id") or "",
-                    row.get("status_set_id") or "",
-                    row.get("status_set_name") or "",
-                    row.get("status_id") or "",
-                    row.get("status_label") or "",
-                    row.get("status_description") or "",
-                ])
+        
+        write_csv(
+            "status_sets.csv",
+            status_sets_csv,
+            ["project_id", "status_set_id", "status_set_name", "status_id", "status_label", "status_description"]
+        )
         print("\n=== Saved status_sets.csv with status sets data ===")
 
         # Custom Fields CSV
@@ -181,22 +175,11 @@ def fetch_assets_config(access_token: str):
                 "values_and_ids": values_and_ids_raw
             })
 
-        custom_fields_csv_path = Path("./output/custom_fields.csv")
-        with custom_fields_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
-            writer = csv.writer(f, delimiter=",", lineterminator="\n")
-            writer.writerow(["project_id","custom_attribute_id","name","display_name","description","data_type","required","values","values_and_ids"])
-            for row in custom_fields_csv:
-                writer.writerow([
-                    row.get("project_id") or "",
-                    row.get("custom_attribute_id") or "",
-                    row.get("name") or "",
-                    row.get("display_name") or "",
-                    row.get("description") or "",
-                    row.get("data_type") or "",
-                    "True" if row.get("required") else "False",
-                    row.get("values") or "",
-                    row.get("values_and_ids") or "",
-                ])
+        write_csv(
+            "custom_fields.csv",
+            custom_fields_csv,
+            ["project_id", "custom_attribute_id", "name", "display_name", "description", "data_type", "required", "values", "values_and_ids"]
+        )
         print("\n=== Saved custom_fields.csv with custom attributes data ===")
 
         # Categories CSV
@@ -211,20 +194,55 @@ def fetch_assets_config(access_token: str):
                 "status_set_name": cat.get("statusSetName"),
                 "custom_attributes": ";".join([ca.get("displayName") for ca in cat.get("customAttributes", []) if ca.get("displayName")])
             })
-        categories_csv_path = Path("./output/categories.csv")
-        with categories_csv_path.open("w", encoding="utf-8-sig", newline="") as f:
-            writer = csv.writer(f, delimiter=",", lineterminator="\n")
-            writer.writerow(["project_id","category_id","category_name","parent_id","status_set_id","status_set_name","custom_attributes"])
-            for row in categories_csv:
-                writer.writerow([
-                    row.get("project_id") or "",
-                    row.get("category_id") or "",
-                    row.get("category_name") or "",
-                    row.get("parent_id") or "",
-                    row.get("status_set_id") or "",
-                    row.get("status_set_name") or "",
-                    row.get("custom_attributes") or "",
-                ])
+        
+        write_csv(
+            "categories.csv",
+            categories_csv,
+            ["project_id", "category_id", "category_name", "parent_id", "status_set_id", "status_set_name", "custom_attributes"]
+        )
+        print("\n=== Saved categories.csv with categories data ===")
+
+        # === 9️⃣ Create category_status_default.csv ===
+        # Find IFCGlobalId custom attribute name
+        ifc_global_id_name = None
+        for ca in custom_attributes:
+            if (ca.get("displayName") or "").strip() == "IFCGlobalId":
+                ifc_global_id_name = ca.get("name")
+                break
+        
+        # Build a mapping of status_set_name -> first status_id
+        status_set_name_to_first_status = {}
+        for row in status_sets_csv:
+            status_set_name = row.get("status_set_name")
+            status_id = row.get("status_id")
+            
+            # Keep the first status_id for each status_set_name
+            if status_set_name and status_id and status_set_name not in status_set_name_to_first_status:
+                status_set_name_to_first_status[status_set_name] = status_id
+        
+        # Build category_status_default.csv
+        category_status_default_csv = []
+        for cat in categories_csv:
+            category_name = cat.get("category_name")
+            category_id = cat.get("category_id")
+            status_set_name = cat.get("status_set_name")
+            
+            # Get the first status_id for this category's status_set_name
+            default_status_id = status_set_name_to_first_status.get(status_set_name, "")
+            
+            category_status_default_csv.append({
+                "category_name": category_name,
+                "category_id": category_id,
+                "default_status_id": default_status_id,
+                "IFCGlobalID_cat_name": ifc_global_id_name or ""
+            })
+        
+        write_csv(
+            "category_status_default.csv",
+            category_status_default_csv,
+            ["category_name", "category_id", "default_status_id", "IFCGlobalID_cat_name"]
+        )
+        print("\n=== Saved category_status_default.csv with default status mappings ===")
 
         print(msg)
         return redirect(f"/?msg={msg}")

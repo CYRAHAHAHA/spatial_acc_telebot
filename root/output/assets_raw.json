@@ -1,1 +1,756 @@
-{"pagination":{"cursorState":"eyJsaW1pdCI6MjUsIm9mZnNldCI6MjV9","limit":25,"nextUrl":"https://developer.api.autodesk.com/construction/assets/v2/projects/a824e4c7-7bdb-42e0-a874-6ab45fb74d84/assets?includeCustomAttributes=true&cursorState=eyJsaW1pdCI6MjUsIm9mZnNldCI6MjV9","offset":0},"results":[{"categoryId":"3","clientAssetId":"Single-Flush:800 x 2100:425292","createdAt":"2025-10-16T16:39:32.963Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"1$p8tACJ938vr1_lKOJJ9g","ca2":"Single-Flush:800 x 2100"},"id":"1cfc3a14-f661-43b7-b2e2-5ccf54999d22","isActive":true,"statusId":"4ee2681f-2f16-4aae-be5e-c1e220ca0685","updatedAt":"2025-11-07T06:17:30.76Z","updatedBy":"26T24R4NKFREYN6X","version":105},{"categoryId":"3","clientAssetId":"Single-Flush:800 x 2100:422466","createdAt":"2025-10-16T16:39:32.963Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"1PDnLIM013wvkZO9Lb4$s7","ca2":"Single-Flush:800 x 2100"},"id":"69708830-daa6-418b-86a2-4bcc1f1ce53f","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-16T18:09:07.719Z","updatedBy":"26T24R4NKFREYN6X","version":34},{"categoryId":"3","clientAssetId":"M_Double-Flush:1730 x 2134mm:906937","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"2pfAHb2EL46hq_sMVbImEN","ca2":"M_Double-Flush:1730 x 2134mm"},"id":"c670a1c5-71f4-4d54-9992-21443e0836b1","isActive":true,"statusId":"df3a989a-ee5c-4828-b076-badfd3d3356d","updatedAt":"2025-10-17T04:10:26.56Z","updatedBy":"26T24R4NKFREYN6X","version":48},{"categoryId":"3","clientAssetId":"Single-Flush:800 x 2100:485679","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"0ELdlxJuP1AwzgUXpRT7eB","ca2":"Single-Flush:800 x 2100"},"id":"b5f6e33b-fca3-4ece-b257-85362f1e4109","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-16T18:09:07.719Z","updatedBy":"26T24R4NKFREYN6X","version":36},{"categoryId":"3","clientAssetId":"Single-Flush:800 x 2100:431144","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"0lntrd6l1AGwfcnKJK5qii","ca2":"Single-Flush:800 x 2100"},"id":"bbded766-f8cc-4497-a2b9-74b1a5eed633","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-16T18:09:07.719Z","updatedBy":"26T24R4NKFREYN6X","version":37},{"categoryId":"3","clientAssetId":"Single-Flush:800 x 2100:431198","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"0lntrd6l1AGwfcnKJK5qjQ","ca2":"Single-Flush:800 x 2100"},"id":"717297c6-dcdd-45ea-881f-160bf12c8824","isActive":true,"statusId":"df3a989a-ee5c-4828-b076-badfd3d3356d","updatedAt":"2025-10-16T18:20:22.763Z","updatedBy":"26T24R4NKFREYN6X","version":45},{"categoryId":"3","clientAssetId":"Single-Flush:800 x 2100:430997","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"0lntrd6l1AGwfcnKJK5qoH","ca2":"Single-Flush:800 x 2100"},"id":"2f6a1199-bbcd-4374-8a72-f31d7e81e082","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-16T18:09:07.719Z","updatedBy":"26T24R4NKFREYN6X","version":39},{"categoryId":"3","clientAssetId":"Single-Flush:800 x 2100:431064","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"0lntrd6l1AGwfcnKJK5qpS","ca2":"Single-Flush:800 x 2100"},"id":"20f90242-b2d1-4e38-8f4b-f200af96e92a","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-16T18:09:07.719Z","updatedBy":"26T24R4NKFREYN6X","version":40},{"categoryId":"3","clientAssetId":"Pocket_Slider_Door_5851:2.027 x 0.945:505974","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"2MWqvKy9535viQk_YsG9Xh","ca2":"Pocket_Slider_Door_5851:2.027 x 0.945"},"id":"3383603f-79d6-4dfc-8144-fcfac814d985","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-16T18:09:07.719Z","updatedBy":"26T24R4NKFREYN6X","version":41},{"categoryId":"3","clientAssetId":"Pocket_Slider_Door_5851:2.027 x 0.945:940221","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"2wm6PO6TX9IxXwLP21HySo","ca2":"Pocket_Slider_Door_5851:2.027 x 0.945"},"id":"b2ece6d0-ad9a-4cff-ac68-375fa9a959f6","isActive":true,"statusId":"df3a989a-ee5c-4828-b076-badfd3d3356d","updatedAt":"2025-10-16T18:18:42.816Z","updatedBy":"26T24R4NKFREYN6X","version":44},{"categoryId":"3","clientAssetId":"Pocket_Slider_Door_5851:2.027 x 0.945:939962","createdAt":"2025-10-16T16:39:32.964Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"2wm6PO6TX9IxXwLP21HyWr","ca2":"Pocket_Slider_Door_5851:2.027 x 0.945"},"id":"459c2769-349d-4c3e-bd91-5cc5b14f6800","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-16T18:09:07.719Z","updatedBy":"26T24R4NKFREYN6X","version":43},{"categoryId":"3","clientAssetId":"Single Window:Standard:744522","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"20nhVaBTTAJguMI9o6oBQ8","ca2":"Single Window:Standard"},"description":"dcdc","id":"3ff43b79-5339-4e9a-b61d-85d3eb2c1c51","isActive":true,"statusId":"b9ce2627-81e8-4720-8924-ed65029a470b","updatedAt":"2025-11-10T12:56:30.284Z","updatedBy":"26T24R4NKFREYN6X","version":133},{"categoryId":"3","clientAssetId":"Single Window:Standard:744523","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"20nhVaBTTAJguMI9o6oBQ9","ca2":"Single Window:Standard"},"id":"64a4732e-9003-47c5-90eb-96d084317982","isActive":true,"statusId":"8b8486f9-b23d-4d5e-92d2-5a29707a3c94","updatedAt":"2025-11-10T18:28:26.127Z","updatedBy":"26T24R4NKFREYN6X","version":136},{"categoryId":"3","clientAssetId":"Single Window:Standard:744524","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"20nhVaBTTAJguMI9o6oBQE","ca2":"Single Window:Standard"},"description":"sdsd","id":"16eca416-4585-4e79-ba96-8266afe2dc4f","isActive":true,"statusId":"b9ce2627-81e8-4720-8924-ed65029a470b","updatedAt":"2025-11-07T04:37:26.473Z","updatedBy":"26T24R4NKFREYN6X","version":99},{"categoryId":"3","clientAssetId":"Single Window:Standard:744525","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"20nhVaBTTAJguMI9o6oBQF","ca2":"Single Window:Standard"},"description":"asdadasd","id":"3f012277-2aea-43ea-9bab-d25581a6ced2","isActive":true,"statusId":"8b8486f9-b23d-4d5e-92d2-5a29707a3c94","updatedAt":"2025-11-07T04:19:05.04Z","updatedBy":"26T24R4NKFREYN6X","version":98},{"categoryId":"3","clientAssetId":"Single Window:Standard:735853","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"20nhVaBTTAJguMI9o6oD2l","ca2":"Single Window:Standard"},"id":"8fc4ec97-aec3-46ad-8220-dc35376c16e4","isActive":true,"statusId":"4ee2681f-2f16-4aae-be5e-c1e220ca0685","updatedAt":"2025-11-03T07:29:51.727Z","updatedBy":"26T24R4NKFREYN6X","version":84},{"categoryId":"3","clientAssetId":"Single Window:Standard:736223","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"20nhVaBTTAJguMI9o6oD4T","ca2":"Single Window:Standard"},"id":"2f41c4ef-6a40-4354-be73-02cefdf38053","isActive":true,"statusId":"b9ce2627-81e8-4720-8924-ed65029a470b","updatedAt":"2025-11-03T07:29:48.775Z","updatedBy":"26T24R4NKFREYN6X","version":83},{"categoryId":"3","clientAssetId":"Single Window:Standard:736152","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"20nhVaBTTAJguMI9o6oD5Q","ca2":"Single Window:Standard"},"id":"b4ff3237-b232-4aee-9fb7-598683927b99","isActive":true,"statusId":"4ee2681f-2f16-4aae-be5e-c1e220ca0685","updatedAt":"2025-11-03T07:29:53.66Z","updatedBy":"26T24R4NKFREYN6X","version":85},{"categoryId":"3","clientAssetId":"Single Window:Standard:736330","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"20nhVaBTTAJguMI9o6oDQ8","ca2":"Single Window:Standard"},"id":"33d39e9c-8fbc-4056-a399-e687c4a892e6","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-17T04:14:20.384Z","updatedBy":"26T24R4NKFREYN6X","version":56},{"categoryId":"3","clientAssetId":"Single Window:Standard:485432","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"0ELdlxJuP1AwzgUXpRT7iS","ca2":"Single Window:Standard"},"id":"66dc0098-60c2-4b45-a0b6-f66dd7e50f14","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-17T04:14:20.384Z","updatedBy":"26T24R4NKFREYN6X","version":57},{"categoryId":"3","clientAssetId":"Single Window:Standard:554383","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"0c0us5oRfBJgddHOG86fE2","ca2":"Single Window:Standard"},"id":"97037fe4-e396-41c9-9b8b-cdc0c5aa31b9","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-17T04:14:20.384Z","updatedBy":"26T24R4NKFREYN6X","version":58},{"categoryId":"3","clientAssetId":"Single Window:Standard:457534","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"1ikhyTwD17yAnDcdaZ57O9","ca2":"Single Window:Standard"},"id":"9ff03ffe-035b-48e0-bcee-893d3d7dd5cf","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-17T04:14:20.384Z","updatedBy":"26T24R4NKFREYN6X","version":59},{"categoryId":"3","clientAssetId":"Single Window:Standard:457479","createdAt":"2025-10-17T04:14:20.384Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"1ikhyTwD17yAnDcdaZ57Om","ca2":"Single Window:Standard"},"id":"a7c1be52-7cd9-4d76-90ac-bd84d031a7da","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-17T04:14:20.384Z","updatedBy":"26T24R4NKFREYN6X","version":60},{"categoryId":"3","clientAssetId":"Single Window:Standard:457542","createdAt":"2025-10-17T04:14:20.385Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"1ikhyTwD17yAnDcdaZ57Pn","ca2":"Single Window:Standard"},"id":"b6a1b5e4-290d-4f2e-9ea4-dbf99f48e797","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-17T04:14:20.385Z","updatedBy":"26T24R4NKFREYN6X","version":61},{"categoryId":"3","clientAssetId":"Single Window:Standard:498006","createdAt":"2025-10-17T04:14:20.385Z","createdBy":"26T24R4NKFREYN6X","customAttributes":{"ca1":"1jq3WIaE92UPTHNxmrWmzx","ca2":"Single Window:Standard"},"id":"3297310c-7922-483d-bee8-edaad954f7d7","isActive":true,"statusId":"9606b15d-1209-4007-9912-0a8564cd5f04","updatedAt":"2025-10-17T04:14:20.385Z","updatedBy":"26T24R4NKFREYN6X","version":62}]}
+{
+  "results": [
+    {
+      "id": "1cfc3a14-f661-43b7-b2e2-5ccf54999d22",
+      "version": 141,
+      "createdAt": "2025-10-16T16:39:32.963Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-13T15:35:23.99Z",
+      "updatedBy": "V822ZPU8K7FEMMYV",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single-Flush:800 x 2100:425292",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685",
+      "customAttributes": {
+        "ca1": "1$p8tACJ938vr1_lKOJJ9g",
+        "ca2": "Single-Flush:800 x 2100"
+      }
+    },
+    {
+      "id": "69708830-daa6-418b-86a2-4bcc1f1ce53f",
+      "version": 34,
+      "createdAt": "2025-10-16T16:39:32.963Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:09:07.719Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single-Flush:800 x 2100:422466",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "1PDnLIM013wvkZO9Lb4$s7",
+        "ca2": "Single-Flush:800 x 2100"
+      }
+    },
+    {
+      "id": "c670a1c5-71f4-4d54-9992-21443e0836b1",
+      "version": 48,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:10:26.56Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "M_Double-Flush:1730 x 2134mm:906937",
+      "statusId": "df3a989a-ee5c-4828-b076-badfd3d3356d",
+      "customAttributes": {
+        "ca1": "2pfAHb2EL46hq_sMVbImEN",
+        "ca2": "M_Double-Flush:1730 x 2134mm"
+      }
+    },
+    {
+      "id": "b5f6e33b-fca3-4ece-b257-85362f1e4109",
+      "version": 36,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:09:07.719Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single-Flush:800 x 2100:485679",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0ELdlxJuP1AwzgUXpRT7eB",
+        "ca2": "Single-Flush:800 x 2100"
+      }
+    },
+    {
+      "id": "bbded766-f8cc-4497-a2b9-74b1a5eed633",
+      "version": 37,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:09:07.719Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single-Flush:800 x 2100:431144",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0lntrd6l1AGwfcnKJK5qii",
+        "ca2": "Single-Flush:800 x 2100"
+      }
+    },
+    {
+      "id": "717297c6-dcdd-45ea-881f-160bf12c8824",
+      "version": 45,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:20:22.763Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single-Flush:800 x 2100:431198",
+      "statusId": "df3a989a-ee5c-4828-b076-badfd3d3356d",
+      "customAttributes": {
+        "ca1": "0lntrd6l1AGwfcnKJK5qjQ",
+        "ca2": "Single-Flush:800 x 2100"
+      }
+    },
+    {
+      "id": "2f6a1199-bbcd-4374-8a72-f31d7e81e082",
+      "version": 39,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:09:07.719Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single-Flush:800 x 2100:430997",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0lntrd6l1AGwfcnKJK5qoH",
+        "ca2": "Single-Flush:800 x 2100"
+      }
+    },
+    {
+      "id": "20f90242-b2d1-4e38-8f4b-f200af96e92a",
+      "version": 40,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:09:07.719Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single-Flush:800 x 2100:431064",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0lntrd6l1AGwfcnKJK5qpS",
+        "ca2": "Single-Flush:800 x 2100"
+      }
+    },
+    {
+      "id": "3383603f-79d6-4dfc-8144-fcfac814d985",
+      "version": 41,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:09:07.719Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Pocket_Slider_Door_5851:2.027 x 0.945:505974",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "2MWqvKy9535viQk_YsG9Xh",
+        "ca2": "Pocket_Slider_Door_5851:2.027 x 0.945"
+      }
+    },
+    {
+      "id": "b2ece6d0-ad9a-4cff-ac68-375fa9a959f6",
+      "version": 44,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:18:42.816Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Pocket_Slider_Door_5851:2.027 x 0.945:940221",
+      "statusId": "df3a989a-ee5c-4828-b076-badfd3d3356d",
+      "customAttributes": {
+        "ca1": "2wm6PO6TX9IxXwLP21HySo",
+        "ca2": "Pocket_Slider_Door_5851:2.027 x 0.945"
+      }
+    },
+    {
+      "id": "459c2769-349d-4c3e-bd91-5cc5b14f6800",
+      "version": 43,
+      "createdAt": "2025-10-16T16:39:32.964Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-16T18:09:07.719Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Pocket_Slider_Door_5851:2.027 x 0.945:939962",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "2wm6PO6TX9IxXwLP21HyWr",
+        "ca2": "Pocket_Slider_Door_5851:2.027 x 0.945"
+      }
+    },
+    {
+      "id": "3ff43b79-5339-4e9a-b61d-85d3eb2c1c51",
+      "version": 133,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-10T12:56:30.284Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:744522",
+      "statusId": "b9ce2627-81e8-4720-8924-ed65029a470b",
+      "description": "dcdc",
+      "customAttributes": {
+        "ca1": "20nhVaBTTAJguMI9o6oBQ8",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "64a4732e-9003-47c5-90eb-96d084317982",
+      "version": 136,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-10T18:28:26.127Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:744523",
+      "statusId": "8b8486f9-b23d-4d5e-92d2-5a29707a3c94",
+      "customAttributes": {
+        "ca1": "20nhVaBTTAJguMI9o6oBQ9",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "16eca416-4585-4e79-ba96-8266afe2dc4f",
+      "version": 99,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-07T04:37:26.473Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:744524",
+      "statusId": "b9ce2627-81e8-4720-8924-ed65029a470b",
+      "description": "sdsd",
+      "customAttributes": {
+        "ca1": "20nhVaBTTAJguMI9o6oBQE",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "3f012277-2aea-43ea-9bab-d25581a6ced2",
+      "version": 98,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-07T04:19:05.04Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:744525",
+      "statusId": "8b8486f9-b23d-4d5e-92d2-5a29707a3c94",
+      "description": "asdadasd",
+      "customAttributes": {
+        "ca1": "20nhVaBTTAJguMI9o6oBQF",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "8fc4ec97-aec3-46ad-8220-dc35376c16e4",
+      "version": 84,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-03T07:29:51.727Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:735853",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685",
+      "customAttributes": {
+        "ca1": "20nhVaBTTAJguMI9o6oD2l",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "2f41c4ef-6a40-4354-be73-02cefdf38053",
+      "version": 83,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-03T07:29:48.775Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:736223",
+      "statusId": "b9ce2627-81e8-4720-8924-ed65029a470b",
+      "customAttributes": {
+        "ca1": "20nhVaBTTAJguMI9o6oD4T",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "b4ff3237-b232-4aee-9fb7-598683927b99",
+      "version": 85,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-03T07:29:53.66Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:736152",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685",
+      "customAttributes": {
+        "ca1": "20nhVaBTTAJguMI9o6oD5Q",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "33d39e9c-8fbc-4056-a399-e687c4a892e6",
+      "version": 56,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.384Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:736330",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "20nhVaBTTAJguMI9o6oDQ8",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "66dc0098-60c2-4b45-a0b6-f66dd7e50f14",
+      "version": 57,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.384Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:485432",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0ELdlxJuP1AwzgUXpRT7iS",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "97037fe4-e396-41c9-9b8b-cdc0c5aa31b9",
+      "version": 58,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.384Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:554383",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0c0us5oRfBJgddHOG86fE2",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "9ff03ffe-035b-48e0-bcee-893d3d7dd5cf",
+      "version": 59,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.384Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:457534",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "1ikhyTwD17yAnDcdaZ57O9",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "a7c1be52-7cd9-4d76-90ac-bd84d031a7da",
+      "version": 60,
+      "createdAt": "2025-10-17T04:14:20.384Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.384Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:457479",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "1ikhyTwD17yAnDcdaZ57Om",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "b6a1b5e4-290d-4f2e-9ea4-dbf99f48e797",
+      "version": 61,
+      "createdAt": "2025-10-17T04:14:20.385Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.385Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:457542",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "1ikhyTwD17yAnDcdaZ57Pn",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "3297310c-7922-483d-bee8-edaad954f7d7",
+      "version": 62,
+      "createdAt": "2025-10-17T04:14:20.385Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.385Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:498006",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "1jq3WIaE92UPTHNxmrWmzx",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "f578e8c0-4d41-4f81-b7d8-d5337f1d9e41",
+      "version": 63,
+      "createdAt": "2025-10-17T04:14:20.385Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.385Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "Single Window:Standard:706288",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "2Lyq8QMkH4ges0Q77HE131",
+        "ca2": "Single Window:Standard"
+      }
+    },
+    {
+      "id": "7c4214c7-b531-4904-b5ae-abb2455143e9",
+      "version": 64,
+      "createdAt": "2025-10-17T04:14:20.385Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.385Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "M_Skylight:1180 x 1170mm:488881",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "12QTT5rufCoeOFfLiN060S",
+        "ca2": "M_Skylight:1180 x 1170mm"
+      }
+    },
+    {
+      "id": "9f0466f1-38a1-41c1-be6b-01527b80a7aa",
+      "version": 65,
+      "createdAt": "2025-10-17T04:14:20.385Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-17T04:14:20.385Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "3",
+      "clientAssetId": "M_Skylight:1180 x 1170mm:489062",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "12QTT5rufCoeOFfLiN06FB",
+        "ca2": "M_Skylight:1180 x 1170mm"
+      }
+    },
+    {
+      "id": "adf9a980-8267-452b-95b5-8e99f6077a46",
+      "version": 66,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:425292",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "1$p8tACJ938vr1_lKOJJ9g"
+      }
+    },
+    {
+      "id": "4daf7ee3-3acb-44a1-a099-a72dbb54cb47",
+      "version": 67,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:422466",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "1PDnLIM013wvkZO9Lb4$s7"
+      }
+    },
+    {
+      "id": "e3d74ad8-8878-4b1e-a93e-83be913b269d",
+      "version": 68,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::M_Double-Flush:1730 x 2134mm:906937",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "2pfAHb2EL46hq_sMVbImEN"
+      }
+    },
+    {
+      "id": "74a62525-ee9a-4183-bf17-65060bda3a9b",
+      "version": 69,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:485679",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0ELdlxJuP1AwzgUXpRT7eB"
+      }
+    },
+    {
+      "id": "667485fb-e579-4108-bea4-cec3e5384f08",
+      "version": 70,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:431144",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0lntrd6l1AGwfcnKJK5qii"
+      }
+    },
+    {
+      "id": "0cce0893-0890-4087-938e-646ad1f2de76",
+      "version": 71,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:431198",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0lntrd6l1AGwfcnKJK5qjQ"
+      }
+    },
+    {
+      "id": "418802a3-3bf1-4136-be47-2dfc13c68c4a",
+      "version": 72,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:430997",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0lntrd6l1AGwfcnKJK5qoH"
+      }
+    },
+    {
+      "id": "f58bac9d-14ce-4b76-9840-4558ef48f53f",
+      "version": 73,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:431064",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "0lntrd6l1AGwfcnKJK5qpS"
+      }
+    },
+    {
+      "id": "16c857cd-ae97-41b8-a568-c70aed33ecfe",
+      "version": 74,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Pocket_Slider_Door_5851:2.027 x 0.945:505974",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "2MWqvKy9535viQk_YsG9Xh"
+      }
+    },
+    {
+      "id": "abde602b-ec95-460e-add0-f2761c2e7a21",
+      "version": 75,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Pocket_Slider_Door_5851:2.027 x 0.945:940221",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "2wm6PO6TX9IxXwLP21HySo"
+      }
+    },
+    {
+      "id": "c36760ed-78b1-43a5-9b08-35d6a8a78629",
+      "version": 76,
+      "createdAt": "2025-10-23T04:24:08.051Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-10-23T04:24:08.051Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "2",
+      "clientAssetId": "IfcDoor::Pocket_Slider_Door_5851:2.027 x 0.945:939962",
+      "statusId": "9606b15d-1209-4007-9912-0a8564cd5f04",
+      "customAttributes": {
+        "ca1": "2wm6PO6TX9IxXwLP21HyWr"
+      }
+    },
+    {
+      "id": "5413c4cd-e3e1-4339-859e-7296c20be11d",
+      "version": 86,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:425292",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "ca824a82-a609-489d-b9b0-b66ef7582e3a",
+      "version": 87,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:422466",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "fe96fb0b-f34f-480f-a847-15a3f953f541",
+      "version": 88,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::M_Double-Flush:1730 x 2134mm:906937",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "8acdef7e-5089-4574-bd8a-5e761ff0041f",
+      "version": 89,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:485679",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "1022d8ec-b9e4-4e89-8d64-2fe0fce63bfa",
+      "version": 90,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:431144",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "733113a0-3f4a-4967-be29-9d79dc260ea4",
+      "version": 91,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:431198",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "338a99f2-612b-49b9-a39d-ca8fec1de832",
+      "version": 92,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:430997",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "e4eff71d-a6aa-4471-a17b-6e7a310be64b",
+      "version": 93,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Single-Flush:800 x 2100:431064",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "6db9e716-ded5-4b7d-a626-d0f62373b427",
+      "version": 94,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Pocket_Slider_Door_5851:2.027 x 0.945:505974",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "5c27efb5-86ec-4217-b1ca-c34e3414cebf",
+      "version": 95,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Pocket_Slider_Door_5851:2.027 x 0.945:940221",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    },
+    {
+      "id": "9ae0890f-87ab-48dc-864b-1a9db49966e2",
+      "version": 96,
+      "createdAt": "2025-11-04T16:53:09.881Z",
+      "createdBy": "26T24R4NKFREYN6X",
+      "updatedAt": "2025-11-04T16:53:09.881Z",
+      "updatedBy": "26T24R4NKFREYN6X",
+      "isActive": true,
+      "categoryId": "4",
+      "clientAssetId": "IfcDoor::Pocket_Slider_Door_5851:2.027 x 0.945:939962",
+      "statusId": "4ee2681f-2f16-4aae-be5e-c1e220ca0685"
+    }
+  ],
+  "pagination": {
+    "limit": 200,
+    "offset": 0
+  }
+}
