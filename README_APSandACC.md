@@ -9,12 +9,13 @@
 3. Fill in the form:
    - **App Name:** [Your app name]
    - **Application Type:** Tradtional Web App
-   - **Callback URL (default):** `http://localhost:8080/callback`
+   
 
 **✓ Validation Check:** After clicking Create, you should see a page displaying your Client ID and Client Secret.
 
 4. Then, scroll down to API Access, and select Autodesk Construction Cloud API, BIM360 API, Data Management API. (Can select all as well)
 
+5. Add URL: **Callback URL:** `http://localhost:8080/callback`
 ---
 
 ### **STEP 2: Save Your Credentials**
@@ -170,9 +171,9 @@ def test_api():
     '''
 
 if __name__ == '__main__':
-    print("Starting server at http://localhost:3000")
-    print("Visit http://localhost:3000 to begin")
-    app.run(port=3000, debug=True)
+    print("Starting server at http://localhost:8080")
+    print("Visit http://localhost:8080 to begin")
+    app.run(port=8080, debug=True)
 ```
 
 **Run the app:**
