@@ -15,7 +15,7 @@ def create_status_sets(access_token: str, data: List[Dict[str, Any]]):
     """
     items = _normalize_items(data)
     if not items:
-        print("⚠️ Empty or invalid payload for status sets.")
+        print("WARNING: Empty or invalid payload for status sets.")
         return []
 
     project_id = config.project_id
@@ -38,7 +38,7 @@ def create_status_sets(access_token: str, data: List[Dict[str, Any]]):
             colors = item.get("status_colors") or []
 
             if not name or not labels:
-                print(f"⚠️ Row {idx}: missing name or status_label list. Skipping.")
+                print(f"WARNING: Row {idx}: missing name or status_label list. Skipping.")
                 continue
 
             n = len(labels)
@@ -59,7 +59,7 @@ def create_status_sets(access_token: str, data: List[Dict[str, Any]]):
                 values.append(entry)
 
             if not values:
-                print(f"⚠️ Row {idx} ('{name}'): no valid status values. Skipping.")
+                print(f"WARNING: Row {idx} ('{name}'): no valid status values. Skipping.")
                 continue
 
             payload = {"name": name, "description": status_set_desc, "values": values}
@@ -73,11 +73,11 @@ def create_status_sets(access_token: str, data: List[Dict[str, Any]]):
             )
             if 200 <= resp.status_code < 300:
                 data_resp = resp.json() if resp.content else {"name": name}
-                print(f"✅ Created '{name}'")
+                print(f"SUCCESS: Created '{name}'")
                 created.append(data_resp)
             else:
-                print(f"❌ Failed to create '{name}': {resp.status_code} {resp.text}")
+                print(f"ERROR: Failed to create '{name}': {resp.status_code} {resp.text}")
         except Exception as ex:
-            print(f"❌ Exception on item {idx}: {ex}")
+            print(f"ERROR: Exception on item {idx}: {ex}")
 
     return created

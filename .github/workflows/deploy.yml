@@ -26,11 +26,11 @@ jobs:
         run: |
           cat > .env << EOF
           # Autodesk Configuration
-          YR_CLIENT_ID=${{ secrets.AUTODESK_CLIENT_ID }}
-          YR_CLIENT_SECRET=${{ secrets.AUTODESK_CLIENT_SECRET }}
-          YR_REDIRECT_URI=${{ secrets.AUTODESK_REDIRECT_URI }}
-          YR_SCOPES=${{ secrets.AUTODESK_SCOPES }}
-          YR_PROJECT_ID=${{ secrets.AUTODESK_PROJECT_ID }}
+          YR_CLIENT_ID=${{ secrets.CLIENT_ID }}
+          YR_CLIENT_SECRET=${{ secrets.CLIENT_SECRET }}
+          YR_REDIRECT_URI=${{ secrets.REDIRECT_URI }}
+          YR_SCOPES=${{ secrets.SCOPES }}
+          YR_PROJECT_ID=${{ secrets.PROJECT_ID }}
 
           # Telegram Configuration
           TELEGRAM_TOKEN=${{ secrets.TELEGRAM_TOKEN }}

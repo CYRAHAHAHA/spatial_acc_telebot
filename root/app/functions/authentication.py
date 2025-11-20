@@ -33,12 +33,12 @@ class AutodeskAuth:
         with open(self.token_file, "w") as f:
             json.dump(token_data, f)
         
-        print("✅ Tokens saved to file")
+        print("SUCCESS: Tokens saved to file")
     
     def load_tokens(self):
         """Load tokens from file"""
         if not os.path.exists(self.token_file):
-            print("⚠️ No saved tokens found")
+            print("WARNING: No saved tokens found")
             return False
         
         try:
@@ -49,10 +49,10 @@ class AutodeskAuth:
             self.refresh_token = token_data.get("refresh_token")
             self.expires_at = token_data.get("expires_at")
             
-            print("✅ Tokens loaded from file")
+            print("SUCCESS: Tokens loaded from file")
             return True
         except Exception as e:
-            print(f"❌ Error loading tokens: {e}")
+            print(f"ERROR: Error loading tokens: {e}")
             return False
     
     def is_token_valid(self):
@@ -66,14 +66,14 @@ class AutodeskAuth:
     def get_access_token(self):
         """Get a valid access token (refresh if needed)"""
         if self.is_token_valid():
-            print("✅ Using existing valid token")
+            print("SUCCESS: Using existing valid token")
             return self.access_token
         
         if self.refresh_token:
-            print("🔄 Refreshing access token...")
+            print("INFO: Refreshing access token...")
             return self.refresh_access_token()
         
-        print("⚠️ No valid tokens available. Please authenticate.")
+        print("WARNING: No valid tokens available. Please authenticate.")
         return None
     
     def exchange_code_for_tokens(self, code):
@@ -91,7 +91,7 @@ class AutodeskAuth:
         response = requests.post(token_url, data=data)
         
         if response.status_code != 200:
-            print(f"❌ Token exchange failed: {response.text}")
+            print(f"ERROR: Token exchange failed: {response.text}")
             return None
         
         token_data = response.json()
@@ -106,7 +106,7 @@ class AutodeskAuth:
     def refresh_access_token(self):
         """Use refresh token to get a new access token"""
         if not self.refresh_token:
-            print("❌ No refresh token available")
+            print("ERROR: No refresh token available")
             return None
         
         token_url = "https://developer.api.autodesk.com/authentication/v2/token"
@@ -121,7 +121,7 @@ class AutodeskAuth:
         response = requests.post(token_url, data=data)
         
         if response.status_code != 200:
-            print(f"❌ Token refresh failed: {response.text}")
+            print(f"ERROR: Token refresh failed: {response.text}")
             # Clear invalid tokens
             if os.path.exists(self.token_file):
                 os.remove(self.token_file)
@@ -136,7 +136,7 @@ class AutodeskAuth:
             token_data["expires_in"]
         )
         
-        print("✅ Token refreshed successfully")
+        print("SUCCESS: Token refreshed successfully")
         return self.access_token
     
     def get_auth_url(self):
