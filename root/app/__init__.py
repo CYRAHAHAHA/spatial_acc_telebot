@@ -269,3 +269,16 @@ def api_preview_custom_fields():
     except Exception as ex:
         return jsonify({"error": f"Failed to read custom_fields.csv: {ex}"}), 500
 
+# view the JSON structure of configs
+@app.route("/api/config_structure")
+def api_config_structure():
+    data_dir = Path(__file__).resolve().parents[1] / "output"
+    p = data_dir / "config_structure.json"
+    try:
+        with p.open("r", encoding="utf-8") as f:
+            items = json.load(f)
+        if not isinstance(items, dict):
+            return jsonify({"error": "config_structure.json must be a JSON object."}), 400
+        return jsonify(items)
+    except Exception as ex:
+        return jsonify({"error": f"Failed to read config_structure.json: {ex}"}), 500

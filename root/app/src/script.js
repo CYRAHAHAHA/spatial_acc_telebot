@@ -30,6 +30,16 @@
     createCategoryForm: document.getElementById("createCategoryForm"),
     categoryCardsContainer: document.getElementById("categoryCardsContainer"),
     resetCategoryForm: document.getElementById("resetCategoryForm"),
+    // Config Structure elements
+    loadConfigStructureBtn: document.getElementById("loadConfigStructureBtn"),
+    downloadConfigJsonBtn: document.getElementById("downloadConfigJsonBtn"),
+    copyConfigJsonBtn: document.getElementById("copyConfigJsonBtn"),
+    configStructureLoading: document.getElementById("configStructureLoading"),
+    configStructureContent: document.getElementById("configStructureContent"),
+    configStructureError: document.getElementById("configStructureError"),
+    configSummary: document.getElementById("configSummary"),
+    configJsonViewer: document.getElementById("configJsonViewer"),
+    configErrorMessage: document.getElementById("configErrorMessage"),
   };
 
   // Toast notification system
@@ -1740,6 +1750,145 @@
       resetCategoryForm();
     }
   });
+
+  // ========================================
+  // CONFIG STRUCTURE TAB
+  // ========================================
+
+  let configStructureData = null;
+
+  async function loadConfigStructure() {
+    try {
+      // Show loading state
+      if (el.configStructureLoading) el.configStructureLoading.hidden = false;
+      if (el.configStructureContent) el.configStructureContent.style.display = 'none';
+      if (el.configStructureError) el.configStructureError.style.display = 'none';
+
+      const resp = await fetch('/api/config_structure');
+      if (!resp.ok) {
+        const errData = await resp.json();
+        throw new Error(errData.error || `HTTP ${resp.status}`);
+      }
+
+      configStructureData = await resp.json();
+
+      // Hide loading, show content
+      if (el.configStructureLoading) el.configStructureLoading.hidden = true;
+      if (el.configStructureContent) el.configStructureContent.style.display = 'block';
+
+      // Render summary
+      renderConfigSummary(configStructureData);
+
+      // Render JSON viewer
+      if (el.configJsonViewer) {
+        el.configJsonViewer.textContent = JSON.stringify(configStructureData, null, 2);
+      }
+
+      // Enable download button
+      if (el.downloadConfigJsonBtn) el.downloadConfigJsonBtn.disabled = false;
+
+      showToast('success', 'Config Structure Loaded', `Loaded ${configStructureData.summary?.totalCategories || 0} categories, ${configStructureData.summary?.totalStatusSets || 0} status sets, ${configStructureData.summary?.totalCustomAttributes || 0} custom attributes`);
+    } catch (err) {
+      console.error('Failed to load config structure:', err);
+      if (el.configStructureLoading) el.configStructureLoading.hidden = true;
+      if (el.configStructureError) {
+        el.configStructureError.style.display = 'block';
+        if (el.configErrorMessage) el.configErrorMessage.textContent = err.message;
+      }
+      showToast('error', 'Failed to Load Config Structure', err.message);
+    }
+  }
+
+  function renderConfigSummary(data) {
+    if (!el.configSummary) return;
+
+    const summary = data.summary || {};
+    const summaryCards = [
+      {
+        label: 'Categories',
+        value: summary.totalCategories || 0,
+        icon: '<path d="M3 4a1 1 0 011-1h12a1 1 0 011 1v2a1 1 0 01-1 1H4a1 1 0 01-1-1V4zm0 6a1 1 0 011-1h12a1 1 0 011 1v6a1 1 0 01-1 1H4a1 1 0 01-1-1v-6z"/>',
+        color: 'var(--forge-primary)'
+      },
+      {
+        label: 'Status Sets',
+        value: summary.totalStatusSets || 0,
+        icon: '<circle cx="10" cy="10" r="8"/>',
+        color: 'var(--forge-success)'
+      },
+      {
+        label: 'Custom Attributes',
+        value: summary.totalCustomAttributes || 0,
+        icon: '<path d="M3 6a2 2 0 012-2h10a2 2 0 012 2v8a2 2 0 01-2 2H5a2 2 0 01-2-2V6zm2 0v8h10V6H5z"/>',
+        color: 'var(--forge-warning)'
+      },
+      {
+        label: 'Project ID',
+        value: data.projectId ? `${data.projectId.substring(0, 8)}...` : 'N/A',
+        icon: '<path d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 11H9v-2h2v2zm0-4H9V5h2v4z"/>',
+        color: 'var(--forge-text-muted)',
+        fullValue: data.projectId
+      }
+    ];
+
+    el.configSummary.innerHTML = summaryCards.map(card => `
+      <div style="padding: 16px; background: var(--forge-bg-secondary); border-radius: 8px; border: 1px solid var(--forge-border);">
+        <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 8px;">
+          <svg width="20" height="20" fill="${card.color}" style="flex-shrink: 0;">
+            ${card.icon}
+          </svg>
+          <div style="font-size: 0.75rem; color: var(--forge-text-muted); text-transform: uppercase; letter-spacing: 0.5px; font-weight: 600;">
+            ${card.label}
+          </div>
+        </div>
+        <div style="font-size: 1.5rem; font-weight: 700; color: var(--forge-text);" ${card.fullValue ? `title="${card.fullValue}"` : ''}>
+          ${card.value}
+        </div>
+      </div>
+    `).join('');
+  }
+
+  // Config Structure button handlers
+  el.loadConfigStructureBtn?.addEventListener('click', async () => {
+    await loadConfigStructure();
+  });
+
+  el.downloadConfigJsonBtn?.addEventListener('click', () => {
+    if (!configStructureData) {
+      showToast('warning', 'No Data', 'Please load the config structure first');
+      return;
+    }
+
+    const blob = new Blob([JSON.stringify(configStructureData, null, 2)], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `config-structure-${new Date().toISOString().split('T')[0]}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+
+    showToast('success', 'Downloaded', 'Config structure JSON downloaded successfully');
+  });
+
+  el.copyConfigJsonBtn?.addEventListener('click', async () => {
+    if (!configStructureData) {
+      showToast('warning', 'No Data', 'Please load the config structure first');
+      return;
+    }
+
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(configStructureData, null, 2));
+      showToast('success', 'Copied', 'JSON copied to clipboard');
+    } catch (err) {
+      showToast('error', 'Copy Failed', 'Failed to copy to clipboard');
+    }
+  });
+
+  // ========================================
+  // END CONFIG STRUCTURE TAB
+  // ========================================
 
   // Tab switching
   document.querySelectorAll('.forge-tab').forEach(tab => {

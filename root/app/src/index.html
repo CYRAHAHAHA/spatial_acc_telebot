@@ -161,6 +161,14 @@
           >
             Update Asset
           </button>
+          <button
+            class="forge-tab"
+            data-tab="config-structure"
+            role="tab"
+            aria-selected="false"
+          >
+            Config Structure
+          </button>
         </nav>
 
         <!-- ========== TAB PANELS ========== -->
@@ -472,6 +480,137 @@
                   </button>
                 </div>
               </form>
+            </div>
+          </section>
+
+          <!-- CONFIG STRUCTURE TAB -->
+          <section
+            id="tab-config-structure"
+            class="forge-tab-panel"
+            role="tabpanel"
+            hidden
+          >
+            <div class="forge-panel-header">
+              <h2>Configuration Structure</h2>
+              <p
+                style="
+                  margin: 8px 0;
+                  color: var(--forge-text-muted);
+                  font-size: 0.875rem;
+                "
+              >
+                Complete hierarchical view of categories, status sets, and
+                custom attributes
+              </p>
+            </div>
+            <div class="forge-panel-body">
+              <div class="forge-form-actions" style="margin-bottom: 16px">
+                <button
+                  id="loadConfigStructureBtn"
+                  class="forge-btn forge-btn-primary"
+                >
+                  <svg width="16" height="16" fill="currentColor">
+                    <path
+                      d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"
+                    />
+                  </svg>
+                  Load Config Structure
+                </button>
+                <button id="downloadConfigJsonBtn" class="forge-btn" disabled>
+                  <svg width="16" height="16" fill="currentColor">
+                    <path
+                      d="M8 2v8m0 0l3-3m-3 3L5 7m-3 7h12a2 2 0 002-2v-2a2 2 0 00-2-2H4a2 2 0 00-2 2v2a2 2 0 002 2z"
+                    />
+                  </svg>
+                  Download JSON
+                </button>
+              </div>
+
+              <div id="configStructureLoading" class="forge-spinner" hidden>
+                <div class="spinner"></div>
+                <p>Loading configuration structure...</p>
+              </div>
+
+              <div id="configStructureContent" style="display: none">
+                <!-- Summary Stats -->
+                <div
+                  id="configSummary"
+                  style="
+                    display: grid;
+                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                    gap: 16px;
+                    margin-bottom: 24px;
+                  "
+                >
+                  <!-- Summary cards will be inserted here -->
+                </div>
+
+                <!-- JSON Viewer -->
+                <div
+                  style="
+                    background: var(--forge-bg-secondary);
+                    border-radius: 8px;
+                    padding: 16px;
+                    border: 1px solid var(--forge-border);
+                  "
+                >
+                  <div
+                    style="
+                      display: flex;
+                      justify-content: space-between;
+                      align-items: center;
+                      margin-bottom: 12px;
+                    "
+                  >
+                    <h3 style="margin: 0; font-size: 1rem; font-weight: 600">
+                      JSON Structure
+                    </h3>
+                    <button
+                      id="copyConfigJsonBtn"
+                      class="forge-btn"
+                      style="padding: 4px 12px; font-size: 0.875rem"
+                    >
+                      <svg width="14" height="14" fill="currentColor">
+                        <path
+                          d="M4 2a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h8v8H4V4z"
+                        />
+                        <path
+                          d="M0 6a2 2 0 012-2h2v2H2v8h8v-2h2v2a2 2 0 01-2 2H2a2 2 0 01-2-2V6z"
+                        />
+                      </svg>
+                      Copy
+                    </button>
+                  </div>
+                  <pre
+                    id="configJsonViewer"
+                    style="
+                      margin: 0;
+                      padding: 16px;
+                      background: var(--forge-bg);
+                      border-radius: 4px;
+                      overflow-x: auto;
+                      max-height: 600px;
+                      font-size: 0.875rem;
+                      line-height: 1.5;
+                      border: 1px solid var(--forge-border);
+                    "
+                  ></pre>
+                </div>
+              </div>
+
+              <div
+                id="configStructureError"
+                style="
+                  display: none;
+                  padding: 16px;
+                  background: var(--forge-error-light);
+                  border: 1px solid var(--forge-error);
+                  border-radius: 8px;
+                  color: var(--forge-error-dark);
+                "
+              >
+                <strong>Error:</strong> <span id="configErrorMessage"></span>
+              </div>
             </div>
           </section>
         </div>

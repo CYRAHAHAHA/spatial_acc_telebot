@@ -226,6 +226,102 @@ def fetch_assets_config(access_token: str):
                     row.get("custom_attributes") or "",
                 ])
 
+        # === 9️⃣ Using information from categories_csv, status_sets_csv, custom_fields_csv ===
+        # To make a JSON mapping of category → status set → custom attributes
+        # In output folder
+        
+        # Build dictionaries for quick lookup
+        status_sets_lookup = {}
+        for ss in status_sets:
+            status_sets_lookup[ss.get("id")] = {
+                "id": ss.get("id"),
+                "name": ss.get("name"),
+                "description": ss.get("description", ""),
+                "statuses": ss.get("statuses", [])
+            }
+        
+        custom_attributes_lookup = {}
+        for ca in custom_attributes:
+            custom_attributes_lookup[ca.get("displayName")] = {
+                "id": ca.get("id"),
+                "name": ca.get("name"),
+                "displayName": ca.get("displayName"),
+                "description": ca.get("description", ""),
+                "dataType": ca.get("dataType"),
+                "enumValues": ca.get("enumValues", []),
+                "defaultValue": ca.get("defaultValue"),
+                "required": ca.get("requiredOnIngress", False)
+            }
+        
+        # Build category structure with mapped data
+        category_config_list = []
+        for cat_csv in categories_csv:
+            # Get status set details
+            status_set_id = cat_csv.get("status_set_id")
+            status_set_obj = status_sets_lookup.get(status_set_id)
+            
+            # Get custom attributes details
+            custom_attrs_str = cat_csv.get("custom_attributes", "")
+            custom_attrs_list = []
+            if custom_attrs_str:
+                attr_names = [name.strip() for name in custom_attrs_str.split(";") if name.strip()]
+                for attr_name in attr_names:
+                    attr_obj = custom_attributes_lookup.get(attr_name)
+                    if attr_obj:
+                        custom_attrs_list.append(attr_obj)
+            
+            category_config_list.append({
+                "categoryId": cat_csv.get("category_id"),
+                "categoryName": cat_csv.get("category_name"),
+                "parentId": cat_csv.get("parent_id"),
+                "statusSet": status_set_obj,
+                "customAttributes": custom_attrs_list
+            })
+        
+        # Build hierarchical tree structure
+        def build_category_tree(categories_list):
+            """Build hierarchical tree structure from flat category list"""
+            categories_dict = {cat["categoryId"]: cat.copy() for cat in categories_list}
+            
+            # Initialize children arrays
+            for cat_id, cat in categories_dict.items():
+                cat["children"] = []
+            
+            # Build the tree structure
+            root_categories = []
+            for cat in categories_dict.values():
+                parent_id = cat.get("parentId")
+                if parent_id and parent_id in categories_dict:
+                    # This is a child category
+                    categories_dict[parent_id]["children"].append(cat)
+                else:
+                    # This is a root category
+                    root_categories.append(cat)
+            
+            return root_categories
+        
+        hierarchical_categories = build_category_tree(category_config_list)
+        
+        # Build comprehensive config structure
+        config_structure = {
+            "projectId": project_id,
+            "summary": {
+                "totalCategories": len(categories_csv),
+                "totalStatusSets": len(status_sets),
+                "totalCustomAttributes": len(custom_attributes)
+            },
+            "statusSets": list(status_sets_lookup.values()),
+            "customAttributes": list(custom_attributes_lookup.values()),
+            "categories": hierarchical_categories
+        }
+        
+        # Save comprehensive config structure to JSON
+        config_structure_path = Path("./output/config_structure.json")
+        with config_structure_path.open("w", encoding="utf-8") as f:
+            json.dump(config_structure, f, indent=2, ensure_ascii=False)
+        print("\n=== Saved config_structure.json with complete hierarchical config ===")
+        print(config_structure_path.resolve())
+
         print(msg)
         return redirect(f"/?msg={msg}")
 
