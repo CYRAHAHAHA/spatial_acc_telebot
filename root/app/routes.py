@@ -3,6 +3,7 @@ from app import app
 from app.functions.fetch_assets_config import fetch_assets_config
 from app.utils import require_access_token
 from app.config import config
+from app.functions.fetch_metadata import fetch_ifc_metadata
 from app.functions.create_status_sets import create_status_sets
 from app.functions.create_custom_fields import create_custom_fields
 from urllib.parse import quote_plus
@@ -38,6 +39,14 @@ def callback():
     
     session["access_token"] = token
     return redirect("/?msg=Authenticated+successfully.")
+
+# ---- API: fetching of metadata ---- #
+@app.route("/fetch_ifc_metadata")
+@require_access_token(pass_token=True)
+def fetch_metadata_route(token):
+    result = fetch_ifc_metadata(token)   
+    return jsonify(result), 200
+
 
 # ---- API: assets config and status updates ---- #
 @app.route("/fetch_assets_config")
