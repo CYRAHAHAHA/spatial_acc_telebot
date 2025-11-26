@@ -194,41 +194,59 @@ def map_ifc_to_assets(ifc_items):
 # ------------------------------------------------------------
 # MAIN WORKFLOW (extract + map)
 # ------------------------------------------------------------
-def fetch_ifc_metadata(token):
-    print("🚀 Fetching IFC Metadata & Mapping to Asset Format")
+def fetch_ifc_metadata(token, runs=2):
+    print("🚀 Starting double-run IFC metadata extraction for validation...")
 
-    token = get_token()
+    first_ifc = None
+    final_ifc = None
+
     hubs = list_hubs(token)
-    HUB_ID = hubs[0]["id"]  # auto-select first hub
+    HUB_ID = hubs[0]["id"]
 
-    raw = config.project_id.strip()
-    PROJECT_ID = raw if raw.startswith("b.") else f"b.{raw}"
+    PROJECT_ID = config.project_id.strip()
+    if not PROJECT_ID.startswith("b."):
+        PROJECT_ID = f"b.{PROJECT_ID}"
 
-    root = get_root_folder(HUB_ID, PROJECT_ID, token)
-    files = list_ifc_files(PROJECT_ID, root, token)
+    for run in range(runs):
+        print(f"\n🔁 Run {run+1}/{runs}...")
 
-    all_ifc = []
-    for f in files:
-        urn = get_latest_version(PROJECT_ID, f["id"], token)
-        all_ifc.extend(extract_ifc_properties(urn, token))
+        root = get_root_folder(HUB_ID, PROJECT_ID, token)
+        files = list_ifc_files(PROJECT_ID, root, token)
 
-    # Save output to root/output directory
+        extracted = []
+        for f in files:
+            urn = get_latest_version(PROJECT_ID, f["id"], token)
+            extracted.extend(extract_ifc_properties(urn, token))
+
+        if run == 0:
+            first_ifc = extracted
+        else:
+            final_ifc = extracted
+
+        print(f"📌 Run {run+1}: Extracted {len(extracted)} items")
+
+    # Validation — compare run outputs
+    if first_ifc == final_ifc:
+        print("\n✔ Validation passed: Both runs produce identical results!")
+    else:
+        print("\n⚠ Validation warning: Outputs differ between runs!")
+
+    # Convert using final results only
+    mapped = map_ifc_to_assets(final_ifc)
+
+    # Save output files (overwrite same name each run)
     nlp_dir = Path(__file__).resolve().parents[3] / "data"
     nlp_dir.mkdir(exist_ok=True)
+    nlp_path = nlp_dir / "nlp_metadata.json"
+    with nlp_path.open("w", encoding="utf-8") as f:
+        json.dump(final_ifc, f, indent=2)
 
-    raw_path = nlp_dir / "nlp_metadata.json"
-    with raw_path.open("w", encoding="utf-8") as f:
-        json.dump(all_ifc, f, indent=2)
-    print(f"💾 Saved NLP metadata → {raw_path}")
-
-    # NEW: Separate directory for mapped assets
     mapped_dir = Path(__file__).resolve().parents[2] / "output"
     mapped_dir.mkdir(exist_ok=True)
-
-    mapped = map_ifc_to_assets(all_ifc)
     mapped_path = mapped_dir / "mapped_assets.json"
     with mapped_path.open("w", encoding="utf-8") as f:
         json.dump(mapped, f, indent=2)
-    print(f"💾 Saved Mapped Asset Data → {mapped_path}")
 
-    print(f"\n🎉 DONE! Extracted {len(all_ifc)} IFC items, mapped {len(mapped)} assets.\n")
+    print(f"💾 Final results saved: {nlp_path}")
+    print(f"💾 Final mapped assets saved: {mapped_path}")
+    print("\n🎉 Done with validation & final output!\n")
