@@ -8,10 +8,14 @@ from app.functions.create_custom_fields import create_custom_fields
 from urllib.parse import quote_plus
 from pathlib import Path
 from app.functions.update_status import update_assets
+from app.functions.update_issue import update_issue
+from app.functions.create_issue import create_issue
 from app.functions.fetch_all_assets_info import fetch_all_assets_info 
 from app.functions.create_categories import create_categories
+from app.functions.fetch_issue_subtypes import fetch_issue_subtypes, format_subtypes_output
 import json
 import logging
+import requests
 
 logger = logging.getLogger(__name__)
 
@@ -49,12 +53,137 @@ def fetch_all_assets(token):
 @app.route("/update_status", methods=["POST"])
 @require_access_token(pass_token=True)
 def update_status(token):
+    """
+    Update asset status in ACC.
+    Expected JSON: {"asset_guid": "...", "status_value": "..."}
+    """
     data = request.get_json(silent=True) or {}
     asset_guid = data.get("asset_guid")
     status_value = data.get("status_value")
+    
     if not asset_guid or not status_value:
         return jsonify({"error": "Missing asset_guid or status_value"}), 400
+    
     return update_assets(token, asset_guid, status_value)
+
+# ---- Issue status update endpoint ---- #
+@app.route("/update_issue_status", methods=["POST"])
+@require_access_token(pass_token=True)
+def update_issue_status(token):
+    """
+    Update an issue's status in ACC.
+    
+    Expected JSON body:
+    {
+        "issue_guid": "cae94f63-282c-435b-b798-ec527afcde1d",
+        "status_value": "open"
+    }
+    """
+    data = request.get_json(silent=True) or {}
+    issue_guid = data.get("issue_guid")
+    status_value = data.get("status_value")
+    
+    if not issue_guid or not status_value:
+        return jsonify({"error": "Missing issue_guid or status_value"}), 400
+    
+    # Call your existing update_issue function
+    return update_issue(token, issue_guid, status_value)
+
+# ---- Create issue endpoint ---- #
+@app.route("/create_issue", methods=["POST"])
+@require_access_token(pass_token=True)
+def create_issue_endpoint(token):
+    """
+    Create a new issue in ACC.
+    
+    Expected JSON body:
+    {
+        "title": "Water leakage at Level 3",
+        "status": "open",
+        "issue_subtype_id": "06e9ad10-7a05-43e8-9e27-38fb455dd50f",
+        "description": "Water leaking from ceiling",  // optional
+        "location_description": "Building A, Level 3"  // optional
+    }
+    """
+    data = request.get_json(silent=True) or {}
+    
+    title = data.get("title")
+    status = data.get("status")
+    issue_subtype_id = data.get("issue_subtype_id")
+    description = data.get("description")
+    location_description = data.get("location_description")
+    
+    if not title or not status:
+        return jsonify({"error": "Missing required fields: title and status"}), 400
+    
+    # Call your existing create_issue function
+    return create_issue(
+        access_token=token,
+        title=title,
+        status=status,
+        issue_subtype_id=issue_subtype_id,
+        description=description,
+        location_description=location_description
+    )
+
+# ---- Fetch issue subtypes and recent issues endpoint ---- #
+@app.route("/fetch_issue_subtypes")
+@require_access_token(pass_token=True)
+def fetch_subtypes(token):
+    """
+    Fetch all issue subtypes and recent issues from ACC.
+    Returns JSON with all subtypes grouped by type and recent issues.
+    Does NOT save to file.
+    """
+    try:
+        logger.info("Fetching issue information from ACC...")
+        
+        # Fetch subtypes using your function
+        all_subtypes = fetch_issue_subtypes(token)
+        
+        # Format for display
+        console_output, grouped = format_subtypes_output(all_subtypes)
+        
+        # Print to console
+        print(console_output)
+        
+        # Fetch recent issues
+        logger.info("Fetching recent issues...")
+        project_id = config.project_id
+        issues_url = f"https://developer.api.autodesk.com/construction/issues/v1/projects/{project_id}/issues"
+        
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json"
+        }
+        
+        recent_issues = []
+        try:
+            issues_response = requests.get(issues_url, headers=headers, timeout=10)
+            if issues_response.status_code == 200:
+                issues_data = issues_response.json().get("results", [])
+                # Get all issues or limit to recent ones
+                recent_issues = issues_data  # You can add [:20] to limit to 20 issues
+                logger.info(f"Fetched {len(recent_issues)} recent issues")
+            else:
+                logger.warning(f"Failed to fetch issues: {issues_response.status_code}")
+        except Exception as e:
+            logger.error(f"Error fetching issues: {e}")
+        
+        # Return JSON response (no file saving)
+        return jsonify({
+            "success": True,
+            "total_count": len(all_subtypes),
+            "grouped_by_type": grouped,
+            "all_subtypes": all_subtypes,
+            "recent_issues": recent_issues
+        }), 200
+        
+    except Exception as ex:
+        logger.error(f"Failed to fetch issue information: {str(ex)}", exc_info=True)
+        return jsonify({
+            "error": f"Failed to fetch issue information: {str(ex)}"
+        }), 500
 
 # --- Create custom fields, status sets, then categories in one go ---
 @app.route("/setup_initial_configs", methods=["POST"])
@@ -85,7 +214,7 @@ def setup_initial_configs(token):
         logger.info("Step 2.5: Fetching assets config to refresh CSV files...")
         fetch_assets_config(token)
         logger.info("CSV files refreshed successfully")
-
+        
         # 3. Create categories (now they can reference updated CSVs)
         logger.info("Step 3: Creating categories...")
         cat_path = initial_dir / "new_categories.json"
