@@ -8,14 +8,10 @@ from app.functions.create_custom_fields import create_custom_fields
 from urllib.parse import quote_plus
 from pathlib import Path
 from app.functions.update_status import update_assets
-from app.functions.update_issue import update_issue
-from app.functions.create_issue import create_issue
 from app.functions.fetch_all_assets_info import fetch_all_assets_info 
 from app.functions.create_categories import create_categories
-from app.functions.fetch_issue_subtypes import fetch_issue_subtypes, format_subtypes_output
 import json
 import logging
-import requests
 
 logger = logging.getLogger(__name__)
 
@@ -53,17 +49,11 @@ def fetch_all_assets(token):
 @app.route("/update_status", methods=["POST"])
 @require_access_token(pass_token=True)
 def update_status(token):
-    """
-    Update asset status in ACC.
-    Expected JSON: {"asset_guid": "...", "status_value": "..."}
-    """
     data = request.get_json(silent=True) or {}
     asset_guid = data.get("asset_guid")
     status_value = data.get("status_value")
-    
     if not asset_guid or not status_value:
         return jsonify({"error": "Missing asset_guid or status_value"}), 400
-    
     return update_assets(token, asset_guid, status_value)
 
 # --- Create custom fields, status sets, then categories in one go ---
@@ -95,6 +85,7 @@ def setup_initial_configs(token):
         logger.info("Step 2.5: Fetching assets config to refresh CSV files...")
         fetch_assets_config(token)
         logger.info("CSV files refreshed successfully")
+
         # 3. Create categories (now they can reference updated CSVs)
         logger.info("Step 3: Creating categories...")
         cat_path = initial_dir / "new_categories.json"

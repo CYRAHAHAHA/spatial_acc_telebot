@@ -12,7 +12,7 @@ cd "$SCRIPT_DIR"
 mkdir -p logs
 
 
-# Load repo-level .env  
+# Load repo-level .env
 ENV_FILE=".env"
 if [ ! -f "$ENV_FILE" ]; then
     echo "ERROR: $ENV_FILE file not found!"
@@ -67,24 +67,16 @@ echo "==============================================="
 echo "Starting spatial_acc_telebot services..."
 echo "==============================================="
 
-# Start Flask Web App (root)
-echo "[1/3] Starting Flask Web App and API Server on port 8080..."
+# Start Flask Web App
+echo "[1/2] Starting Flask Web App and API Server on port 8080..."
 cd "$SCRIPT_DIR/root"
 nohup env PYTHONUNBUFFERED=1 python main.py > "$SCRIPT_DIR/logs/flask_webapp.log" 2>&1 &
 FLASK_WEBAPP_PID=$!
 echo "  → PID: $FLASK_WEBAPP_PID"
 cd "$SCRIPT_DIR"
 
-# Start Telebot Flask Forwarder (telebot)
-echo "[2/3] Starting Telebot Flask Forwarder on port 5000..."
-cd "$SCRIPT_DIR/telebot"
-nohup env PYTHONUNBUFFERED=1 TELEBOT_FLASK_PORT=5000 python flask_api.py > "$SCRIPT_DIR/logs/telebot_flask.log" 2>&1 &
-TELEBOT_FLASK_PID=$!
-echo "  → PID: $TELEBOT_FLASK_PID"
-cd "$SCRIPT_DIR"
-
-# Start Telegram Bot (polling)
-echo "[3/3] Starting Telegram Bot..."
+# Start Telegram Bot
+echo "[2/2] Starting Telegram Bot..."
 cd "$SCRIPT_DIR/telebot"
 nohup env PYTHONUNBUFFERED=1 python bot_logger.py > "$SCRIPT_DIR/logs/telegram_bot.log" 2>&1 &
 TELEGRAM_BOT_PID=$!
@@ -93,7 +85,6 @@ cd "$SCRIPT_DIR"
 
 # Save PIDs to file for stop script
 echo "$FLASK_WEBAPP_PID" > logs/pids.txt
-echo "$TELEBOT_FLASK_PID" >> logs/pids.txt
 echo "$TELEGRAM_BOT_PID" >> logs/pids.txt
 
 echo ""
@@ -101,17 +92,16 @@ echo "==============================================="
 echo "All services started successfully!"
 echo "==============================================="
 echo "Flask Web App:    PID $FLASK_WEBAPP_PID (http://localhost:8080)"
-echo "Telebot Forwarder: PID $TELEBOT_FLASK_PID (http://localhost:5000)"
 echo "Telegram Bot:     PID $TELEGRAM_BOT_PID"
 echo ""
 echo "Log files:"
 echo "  - logs/flask_webapp.log"
-echo "  - logs/telebot_flask.log"
 echo "  - logs/telegram_bot.log"
 echo ""
 echo "To stop all services, run: ./stop_all.sh"
 echo "To check status, run: ./status.sh"
 echo "To view logs, run: tail -f logs/*.log"
+# print the link for localhost 8080
 echo "Access the Flask Web App at: http://localhost:8080"
 echo "==============================================="
 
