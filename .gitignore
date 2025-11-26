@@ -11,7 +11,7 @@ __pycache__/
 *.py[cod]
 *$py.class
 *.so
-
+root/app/__pycache__/
 # Environment variables and secrets
 .env
 .env.local
