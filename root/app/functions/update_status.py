@@ -5,7 +5,7 @@ import csv
 import requests
 from flask import jsonify
 from app.config import config
-from app.utils import get_csv_path, get_output_dir
+from app.utils import get_csv_path, get_data_dir, get_output_dir
 
 API_BASE_V2 = "https://developer.api.autodesk.com/construction/assets/v2/projects"
 
@@ -34,7 +34,7 @@ def _lookup_status_id_by_label(label: str) -> Optional[str]:
 
 def _resolve_asset_id_from_guid(asset_guid: str) -> Optional[str]:
     # with the asset_guid, search root\output\assets_total.csv to find the header ifc_global_id and then get the corresponding b3f_id
-    csv_path = get_output_dir() / "assets_total.csv"
+    csv_path = get_data_dir() / "assets_total.csv"
     if not csv_path.exists():
         print("no assets_total.csv found")
         return None
