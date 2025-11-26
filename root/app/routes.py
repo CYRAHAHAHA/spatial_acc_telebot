@@ -144,8 +144,12 @@ def fetch_subtypes(token):
         # Format for display
         console_output, grouped = format_subtypes_output(all_subtypes)
         
-        # Print to console
-        print(console_output)
+        # Print to console (handle encoding safely)
+        try:
+            print(console_output)
+        except UnicodeEncodeError:
+            # Fallback: encode with UTF-8 and ignore errors
+            print(console_output.encode('utf-8', errors='replace').decode('utf-8', errors='replace'))
         
         # Fetch recent issues
         logger.info("Fetching recent issues...")

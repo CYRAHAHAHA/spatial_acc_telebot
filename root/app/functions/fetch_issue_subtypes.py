@@ -20,14 +20,14 @@ def fetch_issue_subtypes(access_token):
     }
     
     # STEP 1: Fetch from ACC Configuration API
-    print("\n1️⃣ Fetching from ACC Issue Types API (default + custom)...")
+    print("\nFetching from ACC Issue Types API (default + custom)...")
     
     types_url = f"https://developer.api.autodesk.com/issues/v1/projects/{config.project_id}/issue-types"
     try:
         types_response = requests.get(types_url, headers=headers, timeout=10)
         
         if types_response.status_code == 200:
-            print("   ✅ SUCCESS! Retrieved issue types from configuration.")
+            print("   SUCCESS! Retrieved issue types from configuration.")
             types_data = types_response.json().get("results", [])
             
             for issue_type in types_data:
@@ -45,15 +45,15 @@ def fetch_issue_subtypes(access_token):
             
             print(f"   Found {len(all_subtypes)} subtypes from configuration.")
         else:
-            print(f"   ⚠️ Failed to fetch issue types ({types_response.status_code})")
+            print(f"   Failed to fetch issue types ({types_response.status_code})")
             print(f"   Response: {types_response.text[:200]}")
     
     except requests.exceptions.RequestException as e:
-        print(f"   ⚠️ Request error: {e}")
+        print(f"   Request error: {e}")
     
     # STEP 2: Fallback – Check Existing Issues
     if not all_subtypes:
-        print("\n2️⃣ No configuration data found. Checking existing issues (fallback)...")
+        print("\nNo configuration data found. Checking existing issues (fallback)...")
         issues_url = f"https://developer.api.autodesk.com/construction/issues/v1/projects/{config.project_id}/issues"
         
         try:
@@ -73,10 +73,10 @@ def fetch_issue_subtypes(access_token):
                         }
                 print(f"   Found {len(all_subtypes)} subtypes from existing issues.")
             else:
-                print(f"   ⚠️ Could not fetch fallback issues: {issues_response.text[:200]}")
+                print(f"   Could not fetch fallback issues: {issues_response.text[:200]}")
         
         except requests.exceptions.RequestException as e:
-            print(f"   ⚠️ Request error: {e}")
+            print(f"   Request error: {e}")
     
     return all_subtypes
 
@@ -99,22 +99,22 @@ def format_subtypes_output(all_subtypes):
     # Build console output
     output_lines = []
     output_lines.append("\n" + "=" * 80)
-    output_lines.append(f"✅ COMPLETE LIST OF ISSUE SUBTYPES ({len(all_subtypes)} total)")
+    output_lines.append(f" COMPLETE LIST OF ISSUE SUBTYPES ({len(all_subtypes)} total)")
     output_lines.append("=" * 80)
     
     if not all_subtypes:
-        output_lines.append("\n❌ No subtypes found!")
+        output_lines.append("\n No subtypes found!")
         output_lines.append("Make sure you have project access or issue types configured in ACC.")
     else:
         for type_name, subtypes in sorted(grouped.items()):
-            output_lines.append(f"\n📁 {type_name}")
+            output_lines.append(f"\n {type_name}")
             for sub in sorted(subtypes, key=lambda x: x["subtype"]):
-                output_lines.append(f"   ├─ {sub['subtype']}")
-                output_lines.append(f"   │  ID: {sub['id']}")
-                output_lines.append(f"   │  Source: {sub['source']}")
+                output_lines.append(f"   +- {sub['subtype']}")
+                output_lines.append(f"   |  ID: {sub['id']}")
+                output_lines.append(f"   |  Source: {sub['source']}")
         
         output_lines.append("\n" + "=" * 80)
-        output_lines.append("💻 PYTHON DICTIONARY:")
+        output_lines.append(" PYTHON DICTIONARY:")
         output_lines.append("=" * 80)
         output_lines.append("ISSUE_SUBTYPES = {")
         for type_name, subtypes in sorted(grouped.items()):

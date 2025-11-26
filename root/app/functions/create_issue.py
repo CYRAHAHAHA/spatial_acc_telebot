@@ -37,7 +37,7 @@ def _get_issue_subtypes(access_token: str, project_id: str) -> Dict[str, Dict[st
         resp = requests.get(issues_url, headers=headers, timeout=30)
         if resp.status_code == 200:
             issues_data = resp.json().get("results", [])
-            print(f"✅ Found {len(issues_data)} existing issues")
+            print(f"Found {len(issues_data)} existing issues")
             
             for issue in issues_data:
                 subtype_id = issue.get("issueSubtypeId")
@@ -90,11 +90,11 @@ def create_issue(
         owner_id = _get_current_user_id(access_token)
         if not owner_id:
             return jsonify({"error": "Could not determine user ID"}), 500
-        print(f"✅ Using current user ID: {owner_id}")
+        print(f"Using current user ID: {owner_id}")
     
     # If no subtype ID provided, try to discover available subtypes
     if not issue_subtype_id:
-        print("🔍 No issue_subtype_id provided, fetching available subtypes...")
+        print("No issue_subtype_id provided, fetching available subtypes...")
         subtypes = _get_issue_subtypes(access_token, project_id)
         
         if not subtypes:
@@ -104,7 +104,7 @@ def create_issue(
             }), 400
         
         # Print available subtypes for reference
-        print("📋 Available Issue Subtypes:")
+        print("Available Issue Subtypes:")
         for subtype_id, info in subtypes.items():
             print(f"   • {info['type']} > {info['subtype']} (ID: {subtype_id})")
         
@@ -147,7 +147,7 @@ def create_issue(
             try:
                 result = resp.json()
                 issue_id = result.get("id")
-                print(f"✅ Issue created successfully! ID: {issue_id}")
+                print(f"Issue created successfully! ID: {issue_id}")
                 return jsonify(result), resp.status_code
             except Exception:
                 return jsonify({"success": True, "message": "Issue created"}), resp.status_code
