@@ -1,9 +1,0 @@
-﻿project_id,category_id,category_name,parent_id,status_set_id,status_set_name,custom_attributes
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,1,ROOT,,9fb88510-9264-4e7c-a516-3b3577016161,Default,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material;webpage;webpage1;webpage2;Count
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,2,Custom Category,1,efa61e18-0f5a-4add-bafa-ae6b192e8e9e,testing 2,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material;webpage;webpage1;webpage2;Count
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,3,Doors,1,87d0f805-d837-407f-a6c6-b8a4dd0df2cf,testing 1,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material;webpage;webpage1;webpage2;Count
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,4,API testing,1,87d0f805-d837-407f-a6c6-b8a4dd0df2cf,testing 1,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material;webpage;webpage1;webpage2;Count
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,5,Windows,1,9fb88510-9264-4e7c-a516-3b3577016161,Default,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material;webpage;webpage1;webpage2;Count
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,12,Custom SubCategory,2,efa61e18-0f5a-4add-bafa-ae6b192e8e9e,testing 2,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material;webpage;webpage1;webpage2;Count
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,13,Testing from web page,5,9fb88510-9264-4e7c-a516-3b3577016161,Default,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material;webpage;webpage1;webpage2;Count
-a824e4c7-7bdb-42e0-a874-6ab45fb74d84,14,Doorsubcategory,3,87d0f805-d837-407f-a6c6-b8a4dd0df2cf,testing 1,IFCGlobalId;IFC_Type;Discipline;Subcontractor;Planned Date;Asset Value;Notes;Size of Material;webpage;webpage1;webpage2;Count

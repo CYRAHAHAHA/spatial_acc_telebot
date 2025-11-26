@@ -1,9 +1,0 @@
-﻿category_name,category_id,default_status_id,IFCGlobalID_cat_name
-ROOT,1,9606b15d-1209-4007-9912-0a8564cd5f04,ca1
-Custom Category,2,7cad71c6-a84a-46e1-9ce1-e52de64b6a43,ca1
-Doors,3,4ee2681f-2f16-4aae-be5e-c1e220ca0685,ca1
-API testing,4,4ee2681f-2f16-4aae-be5e-c1e220ca0685,ca1
-Windows,5,9606b15d-1209-4007-9912-0a8564cd5f04,ca1
-Custom SubCategory,12,7cad71c6-a84a-46e1-9ce1-e52de64b6a43,ca1
-Testing from web page,13,9606b15d-1209-4007-9912-0a8564cd5f04,ca1
-Doorsubcategory,14,4ee2681f-2f16-4aae-be5e-c1e220ca0685,ca1
