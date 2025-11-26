@@ -1,5 +1,6 @@
-data/
-
+# Ignore files generated during development and runtime
+*.json
+*.csv
 # Python virtual environment
 venv/
 .venv/
@@ -67,3 +68,9 @@ build/
 #ifc files
 model_files/
 *.ifc
+root/output/assets_raw.json
+telebot/site_updates.json
+root/output/assets_raw.json
+telebot/site_updates.json
+root/output/assets_raw.json
+telebot/site_updates.json
