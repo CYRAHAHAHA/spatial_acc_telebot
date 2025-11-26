@@ -1,5 +1,4 @@
 # Run code: python bot_logger.py
-
 import os
 import re
 import json
@@ -9,7 +8,6 @@ from datetime import datetime as dt
 from typing import Dict, List, Any, Tuple
 from threading import Lock
 from datetime import UTC
-
 from dotenv import load_dotenv, find_dotenv
 from telegram import Update
 from telegram.constants import ChatMemberStatus
@@ -21,25 +19,27 @@ from telegram.ext import (
     ChatMemberHandler,
     filters,
 )
-
 import requests
 
-API_URL = "http://localhost:8080/update_status"  # Flask main.py runs on this
+# Flask API URLs
+API_UPDATE_STATUS_URL = "http://localhost:8080/update_status"  # For assets
+API_UPDATE_ISSUE_URL = "http://localhost:8080/update_issue_status"  # For issues
+API_FETCH_ISSUE_SUBTYPES_URL = "http://localhost:8080/fetch_issue_subtypes"  # For fetching issue info
+API_CREATE_ISSUE_URL = "http://localhost:8080/create_issue"  # For creating issues
 
 # Load environment variables (supports running from /telebot)
 load_dotenv(find_dotenv(usecwd=True), override=True)
 
-
 # -------------------------------------------------------------------
-# Local JSON logging for compiled/parsed updates (replaces flask_api)
+# Local JSON logging for compiled/parsed updates
 # -------------------------------------------------------------------
-
 BASE_DIR = pathlib.Path(__file__).resolve().parent
 SITE_UPDATES_PATH = BASE_DIR / "site_updates.json"
+ISSUE_UPDATES_PATH = BASE_DIR / "issue_updates.json"
+ISSUE_CREATED_PATH = BASE_DIR / "issues_created.json"
 
 # Map each Telegram chat (group) to a project_id
 PROJECT_MAP_PATH = BASE_DIR / "group_project_map.json"
-
 
 def load_project_map() -> Dict[str, str]:
     if PROJECT_MAP_PATH.exists():
@@ -52,7 +52,6 @@ def load_project_map() -> Dict[str, str]:
             print("Bot: error reading project map:", repr(e))
     return {}
 
-
 def save_project_map(mapping: Dict[str, str]) -> None:
     with open(PROJECT_MAP_PATH, "w", encoding="utf-8") as f:
         json.dump(mapping, f, ensure_ascii=False, indent=2)
@@ -60,43 +59,43 @@ def save_project_map(mapping: Dict[str, str]) -> None:
 DB: Dict[str, Dict[str, Any]] = {}
 DB_LOCK = Lock()
 
-
-def append_pretty_update(entry: dict) -> None:
+def append_pretty_update(entry: dict, file_path: pathlib.Path = SITE_UPDATES_PATH) -> None:
     """
-    Append one entry into site_updates.json, stored as a JSON array.
+    Append one entry into a JSON file, stored as a JSON array.
+    NOTE: Currently disabled - keeping function for potential future use.
     """
-
-    if SITE_UPDATES_PATH.exists():
+    if file_path.exists():
         try:
-            with open(SITE_UPDATES_PATH, "r", encoding="utf-8") as rf:
+            with open(file_path, "r", encoding="utf-8") as rf:
                 data = json.load(rf)
             if not isinstance(data, list):
                 data = []
         except Exception as e:
-            print("Bot: error reading existing JSON:", repr(e))
+            print(f"Bot: error reading existing JSON from {file_path}:", repr(e))
             data = []
     else:
         data = []
-
+    
     data.append(entry)
-
-    with open(SITE_UPDATES_PATH, "w", encoding="utf-8") as wf:
+    
+    with open(file_path, "w", encoding="utf-8") as wf:
         json.dump(data, wf, ensure_ascii=False, indent=2)
         wf.write("\n")
-    print("Bot: write complete, total entries:", len(data))  # debug
+    
+    print(f"Bot: would write to {file_path.name}, total entries:", len(data))
 
 def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
-    print("Bot: logging payload for GUID", guid)  # still keep this
-
+    print("Bot: logging payload for GUID", guid)
+    
     # 1) Pull timestamp -> date (YYYY-MM-DD)
     full_ts = payload.get("timestamp", "")
     date_only = full_ts.split("T")[0] if "T" in full_ts else full_ts
-
+    
     # 2) Get parsed fields
     parsed = payload.get("parsed") or {}
     loc = parsed.get("location") or {}
     area = parsed.get("area") or {}
-
+    
     # 3) Build 'location' string: "Building C, Level 8"
     location_str = None
     if isinstance(loc, dict):
@@ -110,7 +109,7 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
             location_str = f"Level {lvl}"
     elif isinstance(loc, str):
         location_str = loc
-
+    
     # 4) Build 'area' string: "Grid 5-7, East Wing"
     area_str = None
     if isinstance(area, dict):
@@ -124,7 +123,7 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
         area_str = ", ".join(parts) if parts else None
     elif isinstance(area, str):
         area_str = area
-
+    
     # 5) Flatten and clean the parsed fields
     flattened_parsed = {
         "location": location_str,
@@ -133,17 +132,16 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
         "status": parsed.get("status"),
         "remarks": parsed.get("remarks"),
     }
-
-    # 6) In-memory versioning + save to site_updates.json
+    
+    # 6) In-memory versioning (JSON logging disabled)
     with DB_LOCK:
         rec = DB.get(guid) or {"guid": guid, "version": 0, "history": []}
         rec["version"] += 1
-        # you can keep this or later switch to timezone-aware:
         rec["updated_at"] = dt.now(UTC).isoformat()
         rec["last"] = payload
         rec["history"].append(payload)
         DB[guid] = rec
-
+        
         clean_payload = {
             "guid": guid,
             "version": rec["version"],
@@ -151,89 +149,264 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
             "project_id": project_id,   
             "parsed": flattened_parsed,
         }
-
-        append_pretty_update(clean_payload)
-
+        # JSON logging disabled - data kept in memory only
+        # append_pretty_update(clean_payload, SITE_UPDATES_PATH)
+    
     return clean_payload
 
+def log_issue_update(guid: str, payload: dict, project_id: str | None) -> dict:
+    """Log issue status updates (in-memory only, no JSON file)."""
+    print("Bot: logging issue update for GUID", guid)
+    
+    full_ts = payload.get("timestamp", "")
+    date_only = full_ts.split("T")[0] if "T" in full_ts else full_ts
+    
+    with DB_LOCK:
+        clean_payload = {
+            "issue_guid": guid,
+            "timestamp": full_ts,
+            "date": date_only,
+            "project_id": project_id,
+            "status": payload.get("status"),
+            "sender": payload.get("sender"),
+            "sender_id": payload.get("sender_id"),
+            "raw_text": payload.get("raw_text"),
+        }
+        # JSON logging disabled - data kept in memory only
+        # append_pretty_update(clean_payload, ISSUE_UPDATES_PATH)
+    
+    return clean_payload
 
+def log_issue_created(issue_data: dict, project_id: str | None) -> dict:
+    """Log newly created issues (in-memory only, no JSON file)."""
+    print("Bot: logging issue creation")
+    
+    with DB_LOCK:
+        clean_payload = {
+            "timestamp": dt.now(UTC).isoformat(),
+            "project_id": project_id,
+            "issue_data": issue_data
+        }
+        # JSON logging disabled - data kept in memory only
+        # append_pretty_update(clean_payload, ISSUE_CREATED_PATH)
+    
+    return clean_payload
 
 # Optional helper: /template quick reply -------------------------------------
-
 TEMPLATE = (
     "[UPDATE]\n"
     "Location: Building A, Level 3\n"
     "Zone / Grid / Area: Grid 5-7, East Wing\n"
     "Task: Internal Partition Walls\n"
-    "Status: Completed\n"
+    "Status: 2\n"
     "Date: 17 Oct 2025\n"
     "Remarks: Ready for inspection\n"
     "GUID: 1$p8tACJ938vr1_lKOJJ9g"
 )
 
+ISSUE_TEMPLATE = (
+    "[ISSUE STATUS]\n"
+    "GUID: cae94f63-282c-435b-b798-ec527afcde1d\n"
+    "Status: open"
+)
+
+CREATE_ISSUE_TEMPLATE = (
+    "[CREATE ISSUE]\n"
+    "Title: Water leakage at Level 3\n"
+    "Status: open\n"
+    "Subtype ID: 06e9ad10-7a05-43e8-9e27-38fb455dd50f\n"
+    "Description: Water leaking from ceiling\n"
+    "Location: Building A, Level 3"
+)
 
 async def cmd_template(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
-    await update.message.reply_text("Copy, edit, and send this format:\n\n" + TEMPLATE)
+    await update.message.reply_text(
+        "📋 Copy, edit, and send one of these formats:\n\n"
+        "🔧 For ASSET updates:\n" + TEMPLATE + "\n\n"
+        "⚠️ For ISSUE status updates:\n" + ISSUE_TEMPLATE + "\n\n"
+        "➕ For CREATING a new issue:\n" + CREATE_ISSUE_TEMPLATE + "\n\n"
+        "ℹ️ To view all issue types and IDs, use:\n/issuesinfo"
+    )
 
 async def cmd_setproject(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat = update.effective_chat
-
     # Only allow in groups
     if chat.type not in ("group", "supergroup"):
         await update.message.reply_text("This command is only for group chats.")
         return
-
+    
     if not context.args:
         await update.message.reply_text("Usage: /setproject <project_id>")
         return
-
+    
     project_id = context.args[0].strip()
     mapping = load_project_map()
     mapping[str(chat.id)] = project_id
     save_project_map(mapping)
-
+    
     await update.message.reply_text(
-        f"Project ID for this group is now set to: {project_id}"
+        f"✅ Project ID for this group is now set to: {project_id}"
     )
+
+# Command to fetch issue information with new format
+async def cmd_issues_info(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
+    """
+    Fetch all issue types, subtypes, and recent issues from ACC.
+    Usage: /issuesinfo
+    """
+    msg = update.effective_message
+    
+    # Send initial message
+    status_msg = await msg.reply_text("🔍 Fetching issue information from ACC...")
+    
+    try:
+        # Call Flask endpoint
+        resp = requests.get(API_FETCH_ISSUE_SUBTYPES_URL, timeout=30)
+        
+        if resp.status_code == 200:
+            data = resp.json()
+            grouped = data.get("grouped_by_type", {})
+            all_subtypes = data.get("all_subtypes", {})
+            
+            # Get recent issues from the data if available
+            recent_issues = data.get("recent_issues", [])
+            
+            # Count total subtypes
+            total_subtypes = len(all_subtypes)
+            total_issues = len(recent_issues)
+            
+            if total_subtypes == 0:
+                await status_msg.edit_text(
+                    "❌ No issue information found.\n"
+                    "Make sure you have project access or issue types configured in ACC."
+                )
+                return
+            
+            # Build message in the specified format
+            messages = []
+            current_message = (
+                "📊 ISSUE INFORMATION\n"
+                "========================================\n"
+                f"Total Issue Types/Subtypes: {len(grouped)}\n"
+                f"Total Issues: {total_issues}\n\n"
+                "📁 Issue Types & Subtypes:\n"
+            )
+            
+            # Add all issue types and subtypes
+            for type_name, subtypes in sorted(grouped.items()):
+                type_section = f"{type_name}:\n"
+                
+                for sub in sorted(subtypes, key=lambda x: x["subtype"]):
+                    subtype_line = f"  • {sub['subtype']}\n"
+                    subtype_id_line = f"    {sub['id']}\n"
+                    
+                    # Check if adding this would exceed Telegram's limit
+                    test_message = current_message + type_section + subtype_line + subtype_id_line
+                    
+                    if len(test_message) > 3800:
+                        # Save current message and start a new one
+                        messages.append(current_message)
+                        current_message = "📊 ISSUE INFORMATION (continued)...\n========================================\n\n"
+                        type_section = f"{type_name}:\n"
+                    
+                    type_section += subtype_line + subtype_id_line
+                
+                current_message += type_section
+            
+            # Add separator before recent issues
+            current_message += "\n========================================\n"
+            
+            # Add recent issues section
+            if total_issues > 0:
+                current_message += f"📋 Recent Issues (showing {total_issues}):\n\n"
+                
+                for issue in recent_issues:
+                    title = issue.get("title", "Untitled")
+                    status = issue.get("status", "unknown")
+                    issue_type = issue.get("issueTypeName") or "None"
+                    issue_subtype = issue.get("issueSubtypeName") or "None"
+                    issue_id = issue.get("id", "")
+                    
+                    issue_section = (
+                        f"{title}\n"
+                        f"  Status: {status}\n"
+                        f"  Type: {issue_type} → {issue_subtype}\n"
+                        f"  ID: {issue_id}\n\n"
+                    )
+                    
+                    # Check if adding this would exceed Telegram's limit
+                    if len(current_message + issue_section) > 3800:
+                        # Save current message and start a new one
+                        messages.append(current_message)
+                        current_message = "📊 ISSUE INFORMATION (continued)...\n========================================\n📋 Recent Issues (continued):\n\n"
+                    
+                    current_message += issue_section
+            else:
+                current_message += "📋 Recent Issues: None found\n"
+            
+            # Add the last message
+            messages.append(current_message)
+            
+            # Send all messages
+            for i, message_text in enumerate(messages):
+                if i == 0:
+                    # Edit the first "fetching..." message
+                    await status_msg.edit_text(message_text)
+                else:
+                    # Send additional messages
+                    await msg.reply_text(message_text)
+            
+        else:
+            error_msg = f"❌ Failed to fetch issue information (HTTP {resp.status_code})"
+            try:
+                error_data = resp.json()
+                error_msg += f"\nError: {error_data.get('error', 'Unknown error')}"
+            except:
+                pass
+            
+            await status_msg.edit_text(error_msg)
+    
+    except requests.exceptions.Timeout:
+        await status_msg.edit_text("❌ Request timed out. Please try again.")
+    except Exception as e:
+        print(f"Error fetching issue information: {repr(e)}")
+        await status_msg.edit_text(f"❌ Error: {str(e)}")
 
 async def on_new_chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     chat = update.effective_chat
     member = update.my_chat_member
-
+    
     # Fire only when *this* bot becomes a member of the group
     if member and member.new_chat_member.status == ChatMemberStatus.MEMBER:
         await context.bot.send_message(
             chat_id=chat.id,
             text=(
-                "Hello! I'm your site update bot.\n\n"
+                "👋 Hello! I'm your site update bot.\n\n"
                 "Please provide the Project ID for this group (one time):\n"
                 "Example:\n"
                 "Project ID: KotaKinabalu-A\n\n"
-                "Once set, send your [UPDATE] messages using the template."
+                "Once set, send your [UPDATE] or [ISSUE STATUS] messages.\n"
+                "Use /template to see message formats."
             )
         )
-
 
 async def handle_project_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     chat = update.effective_chat
     msg = update.effective_message
     text = (msg.text or "").strip()
-
+    
     m = re.match(r"(?i)^project\s*id\s*:\s*(.+)", text)
     if not m:
         return
-
+    
     project_id = m.group(1).strip()
     mapping = load_project_map()
     mapping[str(chat.id)] = project_id
     save_project_map(mapping)
-
-    await msg.reply_text(f"Project ID for this group is now set to: {project_id}")
-
-
+    
+    await msg.reply_text(f"✅ Project ID for this group is now set to: {project_id}")
 
 # Canon + typo-fix helpers -------------------------
-
 BUILDINGS_CANON = ["Building A", "Building B", "Building C", "Block A", "Block B"]
 LEVELS_CANON = ["B3", "B2", "B1", "1", "2", "3", "4", "5", "6", "7"]
 TASKS_CANON = [
@@ -254,18 +427,27 @@ COMMON_WORD_FIXES = {
     "parititon": "partition",
     "complted": "completed",
     "compeleted": "completed",
+    "reay": "ready",
+    "inspec": "inspection",
+    "inspct": "inspection",
+    "insp": "inspection",
+    "com": "completed",
+    "compl": "completed",
+    "complet": "completed",
 }
 
+DIRECTIONS = {"east", "west", "north", "south"}
 
 def _closest_canon(user_text: str, canon: List[str], cutoff_low: float = 0.60) -> str:
     if not user_text or not canon:
         return user_text
+    
     for c in canon:
         if user_text.strip().lower() == c.lower():
             return c
+    
     match = difflib.get_close_matches(user_text, canon, n=1, cutoff=cutoff_low)
     return match[0] if match else user_text
-
 
 def _fix_common_words(text: str) -> str:
     if not text:
@@ -278,12 +460,26 @@ def _fix_common_words(text: str) -> str:
             words[i] = COMMON_WORD_FIXES[core] + suffix
     return " ".join(words)
 
-
 # Regexes & parsing ------------------------------------------
-
 UPDATE_BLOCK_RE = re.compile(
     r"""
     ^\s*\[UPDATE\]\s*
+    (?P<body>.+?)\s*$
+    """,
+    re.IGNORECASE | re.DOTALL | re.VERBOSE,
+)
+
+ISSUE_STATUS_RE = re.compile(
+    r"""
+    ^\s*\[ISSUE\s+STATUS\]\s*
+    (?P<body>.+?)\s*$
+    """,
+    re.IGNORECASE | re.DOTALL | re.VERBOSE,
+)
+
+CREATE_ISSUE_RE = re.compile(
+    r"""
+    ^\s*\[CREATE\s+ISSUE\]\s*
     (?P<body>.+?)\s*$
     """,
     re.IGNORECASE | re.DOTALL | re.VERBOSE,
@@ -304,15 +500,112 @@ GUID_LINE_RE = re.compile(
     re.MULTILINE | re.IGNORECASE,
 )
 
-
 def extract_guid_block_format(text: str):
     if not text:
         return None
     m = GUID_LINE_RE.search(text)
     if m:
-        return m.group("guid")
+        return m.group("guid").strip()
     return None
 
+def _parse_issue_status(text: str) -> Tuple[str | None, str | None, List[str]]:
+    """
+    Parse [ISSUE STATUS] message format.
+    Returns: (guid, status, errors)
+    
+    Example input:
+    [ISSUE STATUS]
+    GUID: cae94f63-282c-435b-b798-ec527afcde1d
+    Status: open
+    """
+    m = ISSUE_STATUS_RE.match(text or "")
+    if not m:
+        return (None, None, ["Message must start with [ISSUE STATUS]."])
+    
+    body = m.group("body")
+    
+    guid = None
+    status = None
+    
+    for raw_line in body.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+            
+        m = LINE_RE.match(line)
+        if not m:
+            continue
+        
+        key = m.group("key").strip().lower()
+        val = m.group("val").strip()
+        
+        if key == "guid":
+            guid = val
+        elif key == "status":
+            status = val
+    
+    errors = []
+    if not guid:
+        errors.append("Missing 'GUID: ...'")
+    if not status:
+        errors.append("Missing 'Status: ...'")
+    
+    return (guid, status, errors)
+
+def _parse_create_issue(text: str) -> Tuple[Dict[str, Any] | None, List[str]]:
+    """
+    Parse [CREATE ISSUE] message format.
+    Returns: (issue_data, errors)
+    """
+    m = CREATE_ISSUE_RE.match(text or "")
+    if not m:
+        return (None, ["Message must start with [CREATE ISSUE]."])
+    
+    body = m.group("body")
+    
+    issue_data = {
+        "title": None,
+        "status": None,
+        "subtype_id": None,
+        "description": None,
+        "location": None
+    }
+    
+    for raw_line in body.splitlines():
+        line = raw_line.strip()
+        if not line:
+            continue
+            
+        m = LINE_RE.match(line)
+        if not m:
+            continue
+        
+        key = m.group("key").strip().lower()
+        val = m.group("val").strip()
+        
+        if key == "title":
+            issue_data["title"] = val
+        elif key == "status":
+            issue_data["status"] = val
+        elif key.startswith("subtype") and "id" in key:
+            issue_data["subtype_id"] = val
+        elif key == "description":
+            issue_data["description"] = val
+        elif key == "location":
+            issue_data["location"] = val
+    
+    errors = []
+    if not issue_data["title"]:
+        errors.append("Missing 'Title: ...'")
+    if not issue_data["status"]:
+        errors.append("Missing 'Status: ...'")
+    if not issue_data["subtype_id"]:
+        errors.append("Missing 'Subtype ID: ...' (Use /issuesinfo to find IDs)")
+    
+    if errors:
+        return (None, errors)
+    
+    return (issue_data, [])
 
 def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], List[str]]:
     """
@@ -323,9 +616,9 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
     m = UPDATE_BLOCK_RE.match(text or "")
     if not m:
         return ({}, ["Message must start with [UPDATE]."])
-
+    
     body = m.group("body")
-
+    
     # We'll collect all fields, forcing whitespace-only values to None
     found = {
         "location": None,
@@ -335,16 +628,15 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         "date": None,
         "remarks": None,
     }
-
+    
     # Parse line by line so each field is mapped correctly
     for raw_line in body.splitlines():
         m = LINE_RE.match(raw_line)
         if not m:
             continue
-
         key = m.group("key").strip().lower()
         val = _normalize_and_strip(m.group("val"))
-
+        
         if key.startswith("location"):
             found["location"] = val
         elif key.startswith("zone") or key.startswith("grid") or key.startswith("area"):
@@ -358,8 +650,7 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         elif key == "remarks":
             found["remarks"] = val
         # GUID is handled separately by extract_guid_block_format()
-
-
+    
     # Requireds
     label = {
         "location": "Location: Building X, Level Y",
@@ -371,7 +662,7 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
     for key in ("location", "area", "task", "status"):
         if not found.get(key):
             errors.append(f"Missing '{label[key]}'")
-
+    
     # Location -> building, level
     building = level = None
     if found["location"]:
@@ -384,28 +675,28 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
             level = lm.group("l")
         else:
             building = found["location"]
-
+    
     # Area -> grid, wing
     grid = wing = None
     if found["area"]:
         parts = [p.strip() for p in found["area"].split(",", 1)]
         grid = parts[0] if parts else None
         wing = parts[1] if len(parts) > 1 else None
-
+    
     # Use message date (YYYY-MM-DD)
     date_iso = (message_dt_iso or "").split("T", 1)[0] or dt.utcnow().date().isoformat()
-
+    
     # Canonicalization / polishing
     if building:
         building = _closest_canon(building, BUILDINGS_CANON)
     if level:
         level = _closest_canon(str(level), LEVELS_CANON)
-
+    
     grid, wing = _normalize_area_parts(grid, wing)
     found["task"] = _canonicalize_task(found["task"])
     found["status"] = _canonicalize_status(found["status"])
     found["remarks"] = _polish_remarks(found["remarks"])
-
+    
     # Enforce canon values
     if found.get("task") and found["task"] not in TASKS_CANON:
         errors.append("Unrecognized 'Task'. Allowed: " + ", ".join(TASKS_CANON))
@@ -417,11 +708,11 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
                 + ", ".join(STATUSES_CANON)
                 + " or numeric codes like 1, 2, 3."
             )
-
+    
     # If any errors, return tuple with {} + errors
     if errors:
         return ({}, errors)
-
+    
     parsed = {
         "type": "UPDATE",
         "location": {"building": building, "level": level},
@@ -431,24 +722,8 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         "date": date_iso,
         "remarks": found["remarks"] or None,
     }
+    
     return (parsed, [])
-
-
-# Expand typo map - typo helper
-COMMON_WORD_FIXES.update(
-    {
-        "reay": "ready",
-        "inspec": "inspection",
-        "inspct": "inspection",
-        "insp": "inspection",
-        "com": "completed",
-        "compl": "completed",
-        "complet": "completed",
-    }
-)
-
-DIRECTIONS = {"east", "west", "north", "south"}
-
 
 def _prefix_or_fuzzy(value: str, choices: List[str]) -> str | None:
     """Prefer case-insensitive prefix match; fallback to fuzzy."""
@@ -461,20 +736,15 @@ def _prefix_or_fuzzy(value: str, choices: List[str]) -> str | None:
     cand = difflib.get_close_matches(value, choices, n=1, cutoff=0.6)
     return cand[0] if cand else None
 
-
 def _canonicalize_status(s: str | None) -> str | None:
     if not s:
         return None
-
     s = s.strip()
-
     # If it's a pure number like "1", "2", "3", keep as-is
     if s.isdigit():
         return s
-
     # Otherwise, try to map to one of the textual statuses
     return _prefix_or_fuzzy(s, STATUSES_CANON)
-
 
 def _canonicalize_task(t: str | None) -> str | None:
     if not t:
@@ -482,7 +752,6 @@ def _canonicalize_task(t: str | None) -> str | None:
     t = _fix_common_words(t)
     mapped = _closest_canon(t, TASKS_CANON)
     return mapped or _prefix_or_fuzzy(t, TASKS_CANON)
-
 
 def _normalize_area_parts(
     grid: str | None, wing: str | None
@@ -497,7 +766,6 @@ def _normalize_area_parts(
             wing = w.capitalize() + " Wing"
     return grid, wing
 
-
 def _polish_remarks(text: str | None) -> str | None:
     if not text:
         return None
@@ -511,7 +779,6 @@ def _polish_remarks(text: str | None) -> str | None:
     s = s.replace("ready for inspection", "Ready for inspection")
     return s
 
-
 def _normalize_and_strip(s: str) -> str | None:
     if s is None:
         return None
@@ -523,54 +790,241 @@ def _normalize_and_strip(s: str) -> str | None:
     s = s.strip()
     return s if s != "" else None
 
-def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> str | None: ##To change when connecting with NLP
+def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> str | None:
     """
     Placeholder: later this will call your NLP model to pick the best GUID
     based on project_id + parsed fields.
-
     For now, this is just a stub that returns None.
-    You can replace this with:
-    - a lookup in a CSV/JSON
-    - or a call to a real NLP model
     """
-    # Example of what you *might* use later:
-    # building = (parsed.get("location") or {}).get("building")
-    # level = (parsed.get("location") or {}).get("level")
-    # grid = (parsed.get("area") or {}).get("grid")
-    # task = parsed.get("task")
-    #
-    # ...do your scoring / NLP matching here...
-    #
-    # return best_guid or None if you can't decide
     return None
 
+# -------------------------------------------------------------------
+# Create issue handler
+# -------------------------------------------------------------------
+async def create_issue_handler(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    """Handle [CREATE ISSUE] messages."""
+    # Only act in group chats
+    if update.effective_chat.type not in ("group", "supergroup"):
+        return
+    
+    msg = update.effective_message
+    text = (msg.text or msg.caption or "").strip()
+    
+    # Only react to messages that start with [CREATE ISSUE]
+    if not text.upper().startswith("[CREATE ISSUE]"):
+        return
+    
+    chat_id_str = str(msg.chat_id)
+    mapping = load_project_map()
+    project_id = mapping.get(chat_id_str)
+    
+    # If this group has no project_id yet, ask once and stop
+    if not project_id:
+        await msg.reply_text(
+            "⚠️ No Project ID linked to this group yet.\n\n"
+            "Please set it once using:\n"
+            "Project ID: <project_id>\n\n"
+            "Example:\n"
+            "Project ID: Pasir Ris-EC-01\n\n"
+            "Then resend your [CREATE ISSUE] message."
+        )
+        return
+    
+    # Parse the create issue message
+    issue_data, errors = _parse_create_issue(text)
+    
+    if errors:
+        await msg.reply_text(
+            "❌ Error: Issue not created.\n\n"
+            "Please fix:\n" + "\n".join(f"• {e}" for e in errors) + 
+            "\n\nUse /template to see the correct format.\nUse /issuesinfo to find Subtype IDs."
+        )
+        return
+    
+    # Call Flask /create_issue
+    payload = {
+        "title": issue_data["title"],
+        "status": issue_data["status"],
+        "issue_subtype_id": issue_data["subtype_id"],
+        "description": issue_data.get("description"),
+        "location_description": issue_data.get("location")
+    }
+    
+    try:
+        resp = requests.post(API_CREATE_ISSUE_URL, json=payload, timeout=15)
+    except Exception as e:
+        print("Bot: error calling /create_issue:", repr(e))
+        await msg.reply_text(
+            f"⚠️ Failed to contact the ACC server.\n"
+            f"Error: {str(e)}"
+        )
+        return
+    
+    if 200 <= resp.status_code < 300:
+        try:
+            result = resp.json()
+            issue_id = result.get("id", "Unknown")
+            
+            # Log the created issue
+            log_issue_created(result, project_id)
+            
+            await msg.reply_text(
+                f"✅ Issue created in ACC!\n\n"
+                f"Title: {issue_data['title']}\n"
+                f"Status: {issue_data['status']}\n"
+                f"ID: {issue_id}\n"
+                f"Project: {project_id}"
+            )
+        except:
+            await msg.reply_text(
+                f"✅ Issue created in ACC!\n\n"
+                f"Title: {issue_data['title']}\n"
+                f"Status: {issue_data['status']}\n"
+                f"Project: {project_id}"
+            )
+    else:
+        print("Bot: ACC issue creation failed:", resp.status_code, resp.text[:500])
+        error_msg = "Unknown error"
+        try:
+            error_data = resp.json()
+            error_msg = error_data.get("error", str(error_data))
+        except:
+            error_msg = resp.text[:200]
+        
+        await msg.reply_text(
+            f"❌ Issue creation FAILED (HTTP {resp.status_code}).\n\n"
+            f"Error: {error_msg}\n\n"
+            f"Use /issuesinfo to check valid Subtype IDs."
+        )
 
 # -------------------------------------------------------------------
-# Telegram handler --------------------------------------------------
+# Issue status update handler
 # -------------------------------------------------------------------
+async def issue_status_handler(
+    update: Update, context: ContextTypes.DEFAULT_TYPE
+) -> None:
+    """Handle [ISSUE STATUS] messages."""
+    # Only act in group chats
+    if update.effective_chat.type not in ("group", "supergroup"):
+        return
+    
+    msg = update.effective_message
+    text = (msg.text or msg.caption or "").strip()
+    
+    # Only react to messages that start with [ISSUE STATUS]
+    if not text.upper().startswith("[ISSUE STATUS]"):
+        return
+    
+    chat_id_str = str(msg.chat_id)
+    mapping = load_project_map()
+    project_id = mapping.get(chat_id_str)
+    
+    # If this group has no project_id yet, ask once and stop
+    if not project_id:
+        await msg.reply_text(
+            "⚠️ No Project ID linked to this group yet.\n\n"
+            "Please set it once using:\n"
+            "Project ID: <project_id>\n\n"
+            "Example:\n"
+            "Project ID: Pasir Ris-EC-01\n\n"
+            "Then resend your [ISSUE STATUS] message."
+        )
+        return
+    
+    # Parse the issue status message
+    guid, status, errors = _parse_issue_status(text)
+    
+    if errors:
+        await msg.reply_text(
+            "❌ Error: Issue status not updated.\n\n"
+            "Please fix:\n" + "\n".join(f"• {e}" for e in errors) + 
+            "\n\nUse /template to see the correct format."
+        )
+        return
+    
+    # Log the issue update
+    payload_for_log = {
+        "timestamp": msg.date.isoformat(),
+        "chat_id": msg.chat_id,
+        "message_id": msg.message_id,
+        "sender": (
+            f"{msg.from_user.first_name or ''} {msg.from_user.last_name or ''}".strip()
+            if msg.from_user
+            else None
+        ),
+        "sender_id": (msg.from_user.id if msg.from_user else None),
+        "raw_text": text,
+        "status": status,
+    }
+    
+    log_issue_update(guid, payload_for_log, project_id)
+    
+    # Call Flask /update_issue_status
+    payload = {
+        "issue_guid": guid,
+        "status_value": status,
+    }
+    
+    try:
+        resp = requests.post(API_UPDATE_ISSUE_URL, json=payload, timeout=15)
+    except Exception as e:
+        print("Bot: error calling /update_issue_status:", repr(e))
+        await msg.reply_text(
+            f"⚠️ Issue update logged for GUID {guid} (Project: {project_id}), "
+            "but failed to contact the ACC server.\n"
+            f"Error: {str(e)}"
+        )
+        return
+    
+    if 200 <= resp.status_code < 300:
+        await msg.reply_text(
+            f"✅ Issue status updated in ACC!\n\n"
+            f"GUID: {guid}\n"
+            f"Status: {status}\n"
+            f"Project: {project_id}"
+        )
+    else:
+        print("Bot: ACC issue update failed:", resp.status_code, resp.text[:500])
+        error_msg = "Unknown error"
+        try:
+            error_data = resp.json()
+            error_msg = error_data.get("error", str(error_data))
+        except:
+            error_msg = resp.text[:200]
+        
+        await msg.reply_text(
+            f"❌ Issue update logged for GUID {guid} (Project: {project_id}), "
+            f"but ACC update FAILED (HTTP {resp.status_code}).\n\n"
+            f"Error: {error_msg}"
+        )
 
+# -------------------------------------------------------------------
+# Telegram handler for [UPDATE] (assets) - UNCHANGED
+# -------------------------------------------------------------------
 async def one_shot_update_handler(
     update: Update, context: ContextTypes.DEFAULT_TYPE
 ) -> None:
     # Only act in group chats
     if update.effective_chat.type not in ("group", "supergroup"):
         return
-
+    
     msg = update.effective_message
     text = (msg.text or msg.caption or "").strip()
-
+    
     # Only react to messages that start with [UPDATE]
     if not text.startswith("[UPDATE]"):
         return
-
+    
     chat_id_str = str(msg.chat_id)
     mapping = load_project_map()
     project_id = mapping.get(chat_id_str)
-
+    
     # If this group has no project_id yet, ask once and stop
     if not project_id:
         await msg.reply_text(
-            "No Project ID linked to this group yet.\n\n"
+            "⚠️ No Project ID linked to this group yet.\n\n"
             "Please set it once using:\n"
             "Project ID: <project_id>\n\n"
             "Example:\n"
@@ -578,24 +1032,25 @@ async def one_shot_update_handler(
             "Then resend your [UPDATE] message."
         )
         return
-
+    
     # Parse the message into a structured dict
     parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
-
+    
     # If any required fields are missing/blank, STOP here
     if errors:
         await msg.reply_text(
-            "Error: Update not logged.\nPlease fix:\n- " + "\n- ".join(errors)
+            "❌ Error: Update not logged.\n\n"
+            "Please fix:\n" + "\n".join(f"• {e}" for e in errors)
         )
         return
-
+    
     # --- 1) Try to get GUID WITHOUT requiring it in the text --------------
     guid = resolve_guid_from_nlp(project_id, parsed)
-
+    
     # --- 2) (Optional) Fallback: still support GUID in text while testing -
     if not guid:
         guid = extract_guid_block_format(text)
-
+    
     # Build the payload that we log in site_updates.json
     raw_text = text
     payload_for_site_updates = {
@@ -611,81 +1066,110 @@ async def one_shot_update_handler(
         "raw_text": raw_text,
         "parsed": parsed,
     }
-
+    
     # Always log the update, even if we failed to match a GUID
     clean = log_site_update(guid or "UNKNOWN", payload_for_site_updates, project_id)
-
+    
     # If we still have no GUID, we can't call ACC yet
     if not guid:
         await msg.reply_text(
-            "Update logged, but I could not match this to a BIM element yet "
+            "⚠️ Update logged, but I could not match this to a BIM element yet "
             f"(no GUID resolved). Project: {project_id}."
         )
         return
-
+    
     # --- 3) We have a GUID → call Autodesk to update status ---------------
     status_value = parsed.get("status")
     if not status_value:
         await msg.reply_text(
-            f"Update logged for GUID {guid} (Project: {project_id}), "
+            f"⚠️ Update logged for GUID {guid} (Project: {project_id}), "
             "but no Status field was parsed."
         )
         return
-
+    
     # --- 4) Call Flask /update_status via HTTP -----------
     payload = {
         "asset_guid": guid,
         "status_value": status_value,
     }
-
+    
     try:
-        resp = requests.post(API_URL, json=payload, timeout=15)
+        resp = requests.post(API_UPDATE_STATUS_URL, json=payload, timeout=15)
     except Exception as e:
         print("Bot: error calling /update_status:", repr(e))
         await msg.reply_text(
-            f"Update logged for GUID {guid} (Project: {project_id}), "
+            f"⚠️ Update logged for GUID {guid} (Project: {project_id}), "
             "but failed to contact the ACC server."
         )
         return
-
+    
     if 200 <= resp.status_code < 300:
         await msg.reply_text(
-            f"Update logged and ACC updated for GUID {guid} "
+            f"✅ Update logged and ACC updated for GUID {guid} "
             f"(Project: {project_id})."
         )
     else:
         # Optional: log body for debugging
         print("Bot: ACC update failed:", resp.status_code, resp.text[:500])
         await msg.reply_text(
-            f"Update logged for GUID {guid} (Project: {project_id}), "
+            f"⚠️ Update logged for GUID {guid} (Project: {project_id}), "
             f"but ACC update FAILED (HTTP {resp.status_code})."
         )
-
 
 # Main bootstrap -------------
 def main() -> None:
     token = os.environ.get("TELEGRAM_TOKEN")
     if not token:
         raise RuntimeError("Please set TELEGRAM_TOKEN environment variable first")
-
+    
     app = Application.builder().token(token).build()
-
+    
+    # Command handlers
     app.add_handler(CommandHandler("template", cmd_template))
-    # when the bot is added to a group → ask for Project ID
+    app.add_handler(CommandHandler("setproject", cmd_setproject))
+    app.add_handler(CommandHandler("issuesinfo", cmd_issues_info))
+    
+    # When the bot is added to a group → ask for Project ID
     app.add_handler(ChatMemberHandler(on_new_chat, ChatMemberHandler.MY_CHAT_MEMBER))
-
-    # capture messages like "Project ID: KotaKinabalu-A"
+    
+    # Capture messages like "Project ID: KotaKinabalu-A"
     app.add_handler(
         MessageHandler(filters.Regex(r"(?i)^project\s*id\s*:\s*(.+)"), handle_project_id)
     )
-
-    # actual [UPDATE] processing
-    app.add_handler(MessageHandler(filters.TEXT & filters.ChatType.GROUPS, one_shot_update_handler))
-
-
-    print("Bot is running... listening for messages.")
+    
+    # IMPORTANT: Order matters! More specific patterns must come first
+    
+    # Handle [CREATE ISSUE] messages (NEW)
+    app.add_handler(
+        MessageHandler(
+            filters.TEXT & filters.ChatType.GROUPS & filters.Regex(r"(?i)^\[CREATE\s+ISSUE\]"),
+            create_issue_handler
+        )
+    )
+    
+    # Handle [ISSUE STATUS] messages
+    app.add_handler(
+        MessageHandler(
+            filters.TEXT & filters.ChatType.GROUPS & filters.Regex(r"(?i)^\[ISSUE\s+STATUS\]"),
+            issue_status_handler
+        )
+    )
+    
+    # Handle [UPDATE] messages (for assets)
+    app.add_handler(
+        MessageHandler(filters.TEXT & filters.ChatType.GROUPS, one_shot_update_handler)
+    )
+    
+    print("🤖 Bot is running... listening for messages.")
+    print("📋 Commands available:")
+    print("   /template - Show message formats")
+    print("   /setproject <id> - Set project ID")
+    print("   /issuesinfo - Fetch and display all issue information")
+    print("\n⚙️  Message handlers registered:")
+    print("   - [CREATE ISSUE] → create_issue")
+    print("   - [ISSUE STATUS] → update_issue_status")
+    print("   - [UPDATE] → update_status")
     app.run_polling(allowed_updates=Update.ALL_TYPES)
-
 
 if __name__ == "__main__":
     main()
