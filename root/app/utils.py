@@ -4,6 +4,7 @@ from flask import current_app, session, redirect
 from pathlib import Path
 from typing import Dict, List, Any
 import csv
+import os
 
 
 def require_access_token(pass_token: bool = False, msg: str = "Please configure Autodesk credentials and authenticate."):
@@ -34,14 +35,62 @@ def require_access_token(pass_token: bool = False, msg: str = "Please configure 
 
 # ============ CSV Utility Functions ============
 
+def get_persistent_dir(subdir: str = "") -> Path:
+    """
+    Get persistent directory path for Railway or local development.
+    Railway volumes should be mounted at /app/data for persistence.
+    
+    Args:
+        subdir: Optional subdirectory name
+    
+    Returns:
+        Path object to persistent directory
+    """
+    if os.getenv("RAILWAY_ENVIRONMENT"):
+        # Railway deployment - use mounted volume
+        base = Path("/app/data")
+    else:
+        # Local development - use workspace data directory
+        base = Path(__file__).resolve().parents[2] / "data"
+    
+    base.mkdir(parents=True, exist_ok=True)
+    
+    if subdir:
+        full_path = base / subdir
+        full_path.mkdir(parents=True, exist_ok=True)
+        return full_path
+    
+    return base
+
+
 def get_data_dir() -> Path:
     """Get the path to the data directory at workspace root level (spatial_acc_telebot/data)"""
-    return Path(__file__).resolve().parents[2] / "data"
+    return get_persistent_dir()
 
 
 def get_output_dir() -> Path:
-    """Get the path to the output directory (root/output)"""
-    return Path(__file__).resolve().parents[1] / "output"
+    """Get the path to the output directory (root/output or Railway persistent)"""
+    if os.getenv("RAILWAY_ENVIRONMENT"):
+        # On Railway, use persistent volume for output too
+        return get_persistent_dir("output")
+    else:
+        # Local development - use root/output
+        return Path(__file__).resolve().parents[1] / "output"
+
+
+def get_token_file_path() -> Path:
+    """
+    Get path for autodesk_tokens.json (must be persistent across deploys).
+    
+    Returns:
+        Path object to token file location
+    """
+    if os.getenv("RAILWAY_ENVIRONMENT"):
+        # Railway - store in persistent volume
+        return get_persistent_dir() / "autodesk_tokens.json"
+    else:
+        # Local - store in root directory
+        return Path(__file__).resolve().parents[1] / "autodesk_tokens.json"
 
 
 def get_csv_path(filename: str) -> Path:
