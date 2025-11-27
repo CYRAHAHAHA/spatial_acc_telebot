@@ -1149,6 +1149,9 @@ async def one_shot_update_handler(
     # --- NLP: get GUID + canonical status (overrides text status) ------
     guid, status_value = resolve_guid_from_nlp(project_id, parsed)
 
+    # DEBUG: confirm what handler received from NLP
+    print(f"Bot: handler got from NLP -> GUID={guid}, STATUS={status_value}")
+
     # If NLP cannot determine GUID or status → log as UNKNOWN and stop
     if not guid or not status_value:
         raw_text = text
