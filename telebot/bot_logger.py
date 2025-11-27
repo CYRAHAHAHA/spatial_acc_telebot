@@ -29,8 +29,9 @@ import requests
 # Locate project root → telebot/../
 ROOT_DIR = Path(__file__).resolve().parents[1]
 
-# Append NLP folder so io_wrapper.py can be imported directly
-sys.path.append(str(ROOT_DIR / "NLP"))
+# Append project root so NLP package can be resolved
+if str(ROOT_DIR) not in sys.path:
+    sys.path.append(str(ROOT_DIR))
 
 from NLP.io_wrapper import run_sample_match  # <- working import
 
