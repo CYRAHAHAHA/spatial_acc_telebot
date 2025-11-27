@@ -38,6 +38,13 @@
     configSummary: document.getElementById("configSummary"),
     configJsonViewer: document.getElementById("configJsonViewer"),
     configErrorMessage: document.getElementById("configErrorMessage"),
+    // Issue-related form elements
+    createIssueForm: document.getElementById("createIssueForm"),
+    updateIssueForm: document.getElementById("updateIssueForm"),
+    fetchIssuesBtn: document.getElementById("fetchIssuesBtn"),
+    issuesLoading: document.getElementById("issuesLoading"),
+    issueSubtypesDisplay: document.getElementById("issueSubtypesDisplay"),
+    recentIssuesDisplay: document.getElementById("recentIssuesDisplay"),
   };
 
   // Toast notification system
@@ -1808,6 +1815,178 @@
   // ========================================
   // END CATEGORY STATUS DEFAULT TAB
   // ========================================
+
+  // Handle Create Issue form
+  el.createIssueForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+      title: document.getElementById('issueTitle').value,
+      status: document.getElementById('issueStatus').value,
+      issue_subtype_id: document.getElementById('issueSubtypeId').value,
+      description: document.getElementById('issueDescription').value || undefined,
+      location_description: document.getElementById('issueLocation').value || undefined,
+    };
+
+    try {
+      const response = await fetch('/create_issue', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+
+      let data;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('Non-JSON response:', text.substring(0, 200));
+        showToast('error', '❌ Server Error', 'Server returned an error page. Check authentication or server logs.');
+        return;
+      }
+
+      if (response.ok) {
+        showToast('success', '✅ Issue Created', `Issue ID: ${data.id}`);
+        el.createIssueForm.reset();
+      } else {
+        showToast('error', '❌ Creation Failed', data.error || 'Unknown error');
+      }
+    } catch (err) {
+      showToast('error', '⚠️ Request Error', err.message);
+      console.error('Create issue error:', err);
+    }
+  });
+
+  // Handle Update Issue Status form
+  el.updateIssueForm?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    
+    const formData = {
+      issue_guid: document.getElementById('updateIssueGuid').value,
+      status_value: document.getElementById('updateIssueStatus').value,
+    };
+
+    try {
+      const response = await fetch('/update_issue_status', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+
+      let data;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('Non-JSON response:', text.substring(0, 200));
+        showToast('error', '❌ Server Error', 'Server returned an error page. Check authentication or server logs.');
+        return;
+      }
+
+      if (response.ok) {
+        showToast('success', '✅ Status Updated', `Issue status changed to ${formData.status_value}`);
+        el.updateIssueForm.reset();
+      } else {
+        showToast('error', '❌ Update Failed', data.error || 'Unknown error');
+      }
+    } catch (err) {
+      showToast('error', '⚠️ Request Error', err.message);
+      console.error('Update issue error:', err);
+    }
+  });
+
+  // Handle Fetch Issues button
+  el.fetchIssuesBtn?.addEventListener('click', async () => {
+    showLoading(el.issuesLoading);
+    
+    try {
+      const response = await fetch('/fetch_issue_subtypes', {
+        credentials: 'include'
+      });
+
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      }
+
+      let data;
+      const contentType = response.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        data = await response.json();
+      } else {
+        const text = await response.text();
+        console.error('Non-JSON response:', text.substring(0, 200));
+        showToast('error', '❌ Server Error', 'Server returned an error page. Check authentication or server logs.');
+        hideLoading(el.issuesLoading);
+        return;
+      }
+
+      if (data.success) {
+        // Display issue subtypes grouped by type
+        let subtypesHtml = '<h3>Issue Types & Subtypes</h3>';
+        subtypesHtml += '<div class="issues-table-wrapper"><table class="issues-table"><thead><tr><th>Type</th><th>Subtype</th><th>ID</th><th>Source</th></tr></thead><tbody>';
+        
+        for (const [typeKey, typeData] of Object.entries(data.grouped_by_type || {})) {
+          typeData.forEach((subtype, index) => {
+            subtypesHtml += `
+              <tr>
+                <td>${index === 0 ? typeKey : ''}</td>
+                <td>${subtype.subtype}</td>
+                <td><code>${subtype.id}</code></td>
+                <td>${subtype.source}</td>
+              </tr>
+            `;
+          });
+        }
+        
+        subtypesHtml += '</tbody></table></div>';
+        el.issueSubtypesDisplay.innerHTML = subtypesHtml;
+
+        // Display recent issues
+        if (data.recent_issues && data.recent_issues.length > 0) {
+          let issuesHtml = '<h3>Recent Issues</h3>';
+          issuesHtml += '<div class="issues-table-wrapper"><table class="issues-table"><thead><tr><th>Issue ID</th><th>Title</th><th>Status</th><th>Type</th></tr></thead><tbody>';
+          
+          data.recent_issues.slice(0, 20).forEach(issue => {
+            issuesHtml += `
+              <tr>
+                <td><code>${issue.id || 'N/A'}</code></td>
+                <td>${issue.title || 'N/A'}</td>
+                <td>${issue.status || 'N/A'}</td>
+                <td>${issue.issueTypeName || 'N/A'}</td>
+              </tr>
+            `;
+          });
+          
+          issuesHtml += '</tbody></table></div>';
+          el.recentIssuesDisplay.innerHTML = issuesHtml;
+        }
+
+        showToast('success', '✅ Issues Loaded', `Found ${data.total_count} subtypes`);
+      } else {
+        showToast('error', '❌ Load Failed', data.error || 'Unknown error');
+      }
+    } catch (err) {
+      showToast('error', '⚠️ Request Error', err.message);
+      console.error('Fetch issues error:', err);
+    } finally {
+      hideLoading(el.issuesLoading);
+    }
+  });
 
   // Tab switching
   document.querySelectorAll('.forge-tab').forEach(tab => {

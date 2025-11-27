@@ -205,7 +205,7 @@ TEMPLATE = (
     "Location: Building A, Level 3\n"
     "Zone / Grid / Area: Grid 5-7, East Wing\n"
     "Task: Internal Partition Walls\n"
-    "Status: Completed\n"
+    "Status: 3\n"
     "Date: 17 Oct 2025\n"
     "Remarks: Ready for inspection\n"
     "GUID: 1$p8tACJ938vr1_lKOJJ9g"
