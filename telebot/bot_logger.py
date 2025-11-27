@@ -9,6 +9,8 @@ from datetime import datetime as dt
 from typing import Dict, List, Any, Tuple
 from threading import Lock
 from datetime import UTC
+from pathlib import Path
+import sys
 
 from dotenv import load_dotenv, find_dotenv
 from telegram import Update
@@ -23,6 +25,13 @@ from telegram.ext import (
 )
 
 import requests
+
+# Add project root to sys.path so we can import NLP.io_wrapper
+ROOT_DIR = Path(__file__).resolve().parents[1]
+sys.path.append(str(ROOT_DIR))
+
+from NLP.io_wrapper import run_sample_match
+
 
 API_URL = "http://localhost:8080/update_status"  # Flask main.py runs on this
 API_UPDATE_ISSUE_URL = "http://localhost:8080/update_issue_status" # For issues		
@@ -131,7 +140,7 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
         area_str = area
 
     # 5) Flatten and clean the parsed fields
-    flattened_parsed = {
+    flattened = {
         "location": location_str,
         "area": area_str,
         "task": parsed.get("task"),
@@ -154,7 +163,7 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
             "version": rec["version"],
             "date": date_only,
             "project_id": project_id,   
-            "parsed": flattened_parsed,
+            "parsed": flattened,
         }
 
         append_pretty_update(clean_payload)
@@ -825,26 +834,66 @@ def _normalize_and_strip(s: str) -> str | None:
     s = s.strip()
     return s if s != "" else None
 
-def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> str | None: ##To change when connecting with NLP
+def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str | None, str | None]:
     """
-    Placeholder: later this will call your NLP model to pick the best GUID
-    based on project_id + parsed fields.
+    Call the NLP matcher (via run_sample_match) and get BOTH:
+      - guid  (which BIM element to update)
+      - status (canonical status to apply)
 
-    For now, this is just a stub that returns None.
-    You can replace this with:
-    - a lookup in a CSV/JSON
-    - or a call to a real NLP model
+    Expected NLP output: {"guid": "...", "status": "..."}
     """
-    # Example of what you *might* use later:
-    # building = (parsed.get("location") or {}).get("building")
-    # level = (parsed.get("location") or {}).get("level")
-    # grid = (parsed.get("area") or {}).get("grid")
-    # task = parsed.get("task")
-    #
-    # ...do your scoring / NLP matching here...
-    #
-    # return best_guid or None if you can't decide
-    return None
+    try:
+        loc = parsed.get("location") or {}
+        area = parsed.get("area") or {}
+
+        building = loc.get("building") or ""
+        level = loc.get("level") or ""
+        grid = area.get("grid") or ""
+        wing = area.get("wing") or ""
+        task = parsed.get("task") or ""
+        status_from_text = parsed.get("status") or ""   # original from message
+        date = parsed.get("date") or ""
+        remarks = parsed.get("remarks") or ""
+
+        # Rebuild an [UPDATE] block for the matcher (if your matcher expects text)
+        update_lines = [
+            "[UPDATE]",
+            f"Location: {building}, Level {level}".strip().rstrip(", "),
+            f"Zone / Grid / Area: {grid}, {wing}".strip().rstrip(", "),
+            f"Task: {task}",
+            f"Status: {status_from_text}",
+            f"Date: {date}",
+        ]
+        if remarks:
+            update_lines.append(f"Remarks: {remarks}")
+
+        update_text = "\n".join(update_lines)
+
+        # Call your NLP wrapper (io_wrapper.run_sample_match)
+        result = run_sample_match(update_text)
+
+        # Your NLP output is exactly: {"guid": "...", "status": "..."}
+        guid = result.get("guid")
+        status_value = result.get("status")
+
+        if isinstance(guid, str):
+            guid = guid.strip()
+        if isinstance(status_value, str):
+            status_value = status_value.strip()
+
+        if not guid or not status_value:
+            print("Bot: NLP did not return both guid and status:", result)
+            return None, None
+
+        print(f"Bot: NLP resolved GUID={guid}, STATUS={status_value} for project {project_id}")
+        return guid, status_value
+
+    except Exception as e:
+        print("Bot: error while running NLP matcher:", repr(e))
+        return None, None
+
+
+
 
 # -------------------------------------------------------------------
 # Create issue handler
@@ -1086,6 +1135,7 @@ async def one_shot_update_handler(
         )
         return
 
+
     # Parse the message into a structured dict
     parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
 
@@ -1096,12 +1146,36 @@ async def one_shot_update_handler(
         )
         return
 
-    # --- 1) Try to get GUID WITHOUT requiring it in the text --------------
-    guid = resolve_guid_from_nlp(project_id, parsed)
+    # --- NLP: get GUID + canonical status (overrides text status) ------
+    guid, status_value = resolve_guid_from_nlp(project_id, parsed)
 
-    # --- 2) (Optional) Fallback: still support GUID in text while testing -
-    if not guid:
-        guid = extract_guid_block_format(text)
+    # If NLP cannot determine GUID or status → log as UNKNOWN and stop
+    if not guid or not status_value:
+        raw_text = text
+        payload_for_site_updates = {
+            "timestamp": msg.date.isoformat(),
+            "chat_id": msg.chat_id,
+            "message_id": msg.message_id,
+            "sender": (
+                f"{msg.from_user.first_name or ''} {msg.from_user.last_name or ''}".strip()
+                if msg.from_user
+                else None
+            ),
+            "sender_id": (msg.from_user.id if msg.from_user else None),
+            "raw_text": raw_text,
+            "parsed": parsed,
+        }
+
+        log_site_update("UNKNOWN", payload_for_site_updates, project_id)
+
+        await msg.reply_text(
+            "Update logged, but NLP could not determine a valid GUID and status "
+            f"for this update. Project: {project_id}."
+        )
+        return
+
+    # Overwrite parsed status with NLP status so logs & ACC are consistent
+    parsed["status"] = status_value
 
     # Build the payload that we log in site_updates.json
     raw_text = text
@@ -1116,34 +1190,18 @@ async def one_shot_update_handler(
         ),
         "sender_id": (msg.from_user.id if msg.from_user else None),
         "raw_text": raw_text,
-        "parsed": parsed,
+        "parsed": parsed,  # now contains NLP status
     }
 
-    # Always log the update, even if we failed to match a GUID
-    clean = log_site_update(guid or "UNKNOWN", payload_for_site_updates, project_id)
+    # Log the update with the resolved GUID
+    clean = log_site_update(guid, payload_for_site_updates, project_id)
 
-    # If we still have no GUID, we can't call ACC yet
-    if not guid:
-        await msg.reply_text(
-            "Update logged, but I could not match this to a BIM element yet "
-            f"(no GUID resolved). Project: {project_id}."
-        )
-        return
-
-    # --- 3) We have a GUID → call Autodesk to update status ---------------
-    status_value = parsed.get("status")
-    if not status_value:
-        await msg.reply_text(
-            f"Update logged for GUID {guid} (Project: {project_id}), "
-            "but no Status field was parsed."
-        )
-        return
-
-    # --- 4) Call Flask /update_status via HTTP -----------
+    # --- Call Flask /update_status via HTTP using NLP status -----------
     payload = {
         "asset_guid": guid,
-        "status_value": status_value,
+        "status_value": status_value,  # from NLP, not from raw text
     }
+
     print("Bot: calling /update_status with payload:", payload)
     print("API_URL:", API_URL)
     try:
