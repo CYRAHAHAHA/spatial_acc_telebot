@@ -26,11 +26,13 @@ from telegram.ext import (
 
 import requests
 
-# Add project root to sys.path so we can import NLP.io_wrapper
+# Locate project root → telebot/../
 ROOT_DIR = Path(__file__).resolve().parents[1]
-sys.path.append(str(ROOT_DIR))
 
-from NLP.io_wrapper import run_sample_match
+# Append NLP folder so io_wrapper.py can be imported directly
+sys.path.append(str(ROOT_DIR / "NLP"))
+
+from io_wrapper import run_sample_match  # <- working import
 
 
 API_URL = "http://localhost:8080/update_status"  # Flask main.py runs on this
@@ -836,11 +838,11 @@ def _normalize_and_strip(s: str) -> str | None:
 
 def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str | None, str | None]:
     """
-    Call the NLP matcher (via run_sample_match) and get BOTH:
+    Call the matcher (via run_sample_match) and get BOTH:
       - guid  (which BIM element to update)
       - status (canonical status to apply)
 
-    Expected NLP output: {"guid": "...", "status": "..."}
+    Expected matcher output: {"guid": "...", "status": "..."}
     """
     try:
         loc = parsed.get("location") or {}
@@ -851,12 +853,12 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
         grid = area.get("grid") or ""
         wing = area.get("wing") or ""
         task = parsed.get("task") or ""
-        status_from_text = parsed.get("status") or ""   # original from message
+        status_from_text = parsed.get("status") or ""  # original from message
         date = parsed.get("date") or ""
         remarks = parsed.get("remarks") or ""
 
-        # Rebuild an [UPDATE] block for the matcher (if your matcher expects text)
-        update_lines = [
+        # Rebuild the [UPDATE] text that your matcher expects
+        lines = [
             "[UPDATE]",
             f"Location: {building}, Level {level}".strip().rstrip(", "),
             f"Zone / Grid / Area: {grid}, {wing}".strip().rstrip(", "),
@@ -865,14 +867,14 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
             f"Date: {date}",
         ]
         if remarks:
-            update_lines.append(f"Remarks: {remarks}")
+            lines.append(f"Remarks: {remarks}")
 
-        update_text = "\n".join(update_lines)
+        update_text = "\n".join(lines)
 
-        # Call your NLP wrapper (io_wrapper.run_sample_match)
-        result = run_sample_match(update_text)
+        # Call your NLP matcher here
+        result = run_sample_match(update_path=update_text)
 
-        # Your NLP output is exactly: {"guid": "...", "status": "..."}
+        # Your NLP output: {"guid": "xyz", "status": "abc"}
         guid = result.get("guid")
         status_value = result.get("status")
 
@@ -889,10 +891,8 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
         return guid, status_value
 
     except Exception as e:
-        print("Bot: error while running NLP matcher:", repr(e))
+        print("Bot: error while running NLP matcher via run_sample_match:", repr(e))
         return None, None
-
-
 
 
 # -------------------------------------------------------------------
