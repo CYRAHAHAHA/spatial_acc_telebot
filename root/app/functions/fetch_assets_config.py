@@ -237,12 +237,22 @@ def fetch_assets_config(access_token: str):
                 "IFCGlobalID_cat_name": ifc_global_id_name or ""
             })
         
-        write_csv(
-            "category_status_default.csv",
-            category_status_default_csv,
-            ["category_name", "category_id", "default_status_id", "IFCGlobalID_cat_name"]
-        )
-        print("\n=== Saved category_status_default.csv with default status mappings ===")
+        # Write category_status_default.csv to output directory
+        output_dir = get_output_dir()
+        output_dir.mkdir(parents=True, exist_ok=True)
+        output_path = output_dir / "category_status_default.csv"
+        
+        with output_path.open('w', newline='', encoding='utf-8-sig') as f:
+            writer = csv.DictWriter(f, fieldnames=["category_name", "category_id", "default_status_id", "IFCGlobalID_cat_name"], lineterminator='\n')
+            writer.writeheader()
+            for row in category_status_default_csv:
+                formatted_row = {}
+                for key in ["category_name", "category_id", "default_status_id", "IFCGlobalID_cat_name"]:
+                    value = row.get(key)
+                    formatted_row[key] = str(value) if value is not None else ""
+                writer.writerow(formatted_row)
+        
+        print(f"\n=== Saved category_status_default.csv with default status mappings to {output_path} ===")
 
         print(msg)
         return redirect(f"/?msg={msg}")

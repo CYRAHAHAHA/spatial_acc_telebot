@@ -4,7 +4,7 @@ from app.config import config
 from app.authentication import AutodeskAuth
 from datetime import datetime, timezone
 from flask_cors import CORS
-from app.utils import get_csv_path, get_data_dir
+from app.utils import get_csv_path, get_data_dir, get_output_dir
 import csv
 import json
 import re
@@ -243,7 +243,10 @@ def api_preview_custom_fields():
 # view the category_status_default CSV as JSON
 @app.route("/api/category_status_default")
 def api_category_status_default():
-    csv_path = get_csv_path("category_status_default.csv")
+    csv_path = get_output_dir() / "category_status_default.csv"
+    if not csv_path.exists():
+        return jsonify({"error": "category_status_default.csv not found"}), 404
+    
     try:
         with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
             reader = csv.DictReader(f)
