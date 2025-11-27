@@ -32,7 +32,7 @@ ROOT_DIR = Path(__file__).resolve().parents[1]
 # Append NLP folder so io_wrapper.py can be imported directly
 sys.path.append(str(ROOT_DIR / "NLP"))
 
-from io_wrapper import run_sample_match  # <- working import
+from NLP.io_wrapper import run_sample_match  # <- working import
 
 
 API_URL = "http://localhost:8080/update_status"  # Flask main.py runs on this
@@ -429,54 +429,6 @@ async def handle_project_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await msg.reply_text(f"Project ID for this group is now set to: {project_id}")
 
 
-
-# Canon + typo-fix helpers -------------------------
-
-BUILDINGS_CANON = ["Building A", "Building B", "Building C", "Block A", "Block B"]
-LEVELS_CANON = ["B3", "B2", "B1", "1", "2", "3", "4", "5", "6", "7"]
-TASKS_CANON = [
-    "Internal Partition Walls",
-    "Masonry Walls",
-    "Drywall",
-    "Slab",
-    "MEP Rough-in",
-    "Painting",
-]
-STATUSES_CANON = ["Completed", "In Progress", "Delayed", "Issue"]
-
-COMMON_WORD_FIXES = {
-    "inspecton": "inspection",
-    "inspetion": "inspection",
-    "inspeciton": "inspection",
-    "partion": "partition",
-    "parititon": "partition",
-    "complted": "completed",
-    "compeleted": "completed",
-}
-
-
-def _closest_canon(user_text: str, canon: List[str], cutoff_low: float = 0.60) -> str:
-    if not user_text or not canon:
-        return user_text
-    for c in canon:
-        if user_text.strip().lower() == c.lower():
-            return c
-    match = difflib.get_close_matches(user_text, canon, n=1, cutoff=cutoff_low)
-    return match[0] if match else user_text
-
-
-def _fix_common_words(text: str) -> str:
-    if not text:
-        return text
-    words = text.split()
-    for i, w in enumerate(words):
-        core = w.strip(",.;:!?").lower()
-        if core in COMMON_WORD_FIXES:
-            suffix = w[len(w.rstrip(",.;:!?")) :]
-            words[i] = COMMON_WORD_FIXES[core] + suffix
-    return " ".join(words)
-
-
 # Regexes & parsing ------------------------------------------
 
 UPDATE_BLOCK_RE = re.compile(
@@ -630,8 +582,10 @@ def _parse_create_issue(text: str) -> Tuple[Dict[str, Any] | None, List[str]]:
 def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], List[str]]:
     """
     Parse a single-shot [UPDATE] message.
-    Always returns (parsed_dict, errors_list).
-    If there are validation errors, parsed_dict will be {} and errors_list non-empty.
+
+    Now:
+    - Only checks that required fields are present and non-empty.
+    - Does NOT canonicalise or restrict values (any text is allowed).
     """
     m = UPDATE_BLOCK_RE.match(text or "")
     if not m:
@@ -639,7 +593,7 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
 
     body = m.group("body")
 
-    # We'll collect all fields, forcing whitespace-only values to None
+    # Collect all fields, forcing whitespace-only values to None
     found = {
         "location": None,
         "area": None,
@@ -672,8 +626,7 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
             found["remarks"] = val
         # GUID is handled separately by extract_guid_block_format()
 
-
-    # Requireds
+    # Required fields: just make sure they're not empty
     label = {
         "location": "Location: Building X, Level Y",
         "area": "Zone / Grid / Area: ...",
@@ -682,83 +635,45 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
     }
     errors: List[str] = []
     for key in ("location", "area", "task", "status"):
-        if not found.get(key):
+        value = found.get(key)
+        if value is None or str(value).strip() == "":
             errors.append(f"Missing '{label[key]}'")
 
-    # Location -> building, level
+    # If any required fields missing → return errors
+    if errors:
+        return ({}, errors)
+
+    # --- Light parsing of location/area, but no canonicalisation ----
     building = level = None
     if found["location"]:
         lm = LOC_SPLIT_RE.search(found["location"])
         if lm:
-            braw = lm.group("b")
-            building = (
-                braw if braw.lower().startswith("building") else f"Building {braw}"
-            )
-            level = lm.group("l")
+            building = lm.group("b")   # e.g. "A", "Building A", "Tower 1" etc.
+            level = lm.group("l")      # e.g. "3", "L2", "Roof"
         else:
+            # If it doesn't match the pattern, just keep full string as "building"
             building = found["location"]
 
-    # Area -> grid, wing
     grid = wing = None
     if found["area"]:
         parts = [p.strip() for p in found["area"].split(",", 1)]
         grid = parts[0] if parts else None
         wing = parts[1] if len(parts) > 1 else None
 
-    # Use message date (YYYY-MM-DD)
+    # Use message date (YYYY-MM-DD) if present, else today
     date_iso = (message_dt_iso or "").split("T", 1)[0] or dt.utcnow().date().isoformat()
-
-    # Canonicalization / polishing
-    if building:
-        building = _closest_canon(building, BUILDINGS_CANON)
-    if level:
-        level = _closest_canon(str(level), LEVELS_CANON)
-
-    grid, wing = _normalize_area_parts(grid, wing)
-    found["task"] = _canonicalize_task(found["task"])
-    found["status"] = _canonicalize_status(found["status"])
-    found["remarks"] = _polish_remarks(found["remarks"])
-
-    # Enforce canon values
-    if found.get("task") and found["task"] not in TASKS_CANON:
-        errors.append("Unrecognized 'Task'. Allowed: " + ", ".join(TASKS_CANON))
-    if found.get("status"):
-        s = str(found["status"])
-        if not s.isdigit() and s not in STATUSES_CANON:
-            errors.append(
-                "Unrecognized 'Status'. Allowed: "
-                + ", ".join(STATUSES_CANON)
-                + " or numeric codes like 1, 2, 3."
-            )
-
-    # If any errors, return tuple with {} + errors
-    if errors:
-        return ({}, errors)
 
     parsed = {
         "type": "UPDATE",
         "location": {"building": building, "level": level},
         "area": {"zone": None, "grid": grid, "wing": wing},
-        "task": found["task"],
-        "status": found["status"],
+        "task": found["task"],          # raw text
+        "status": found["status"],      # raw text
         "date": date_iso,
         "remarks": found["remarks"] or None,
     }
     return (parsed, [])
 
-
-# Expand typo map - typo helper
-COMMON_WORD_FIXES.update(
-    {
-        "reay": "ready",
-        "inspec": "inspection",
-        "inspct": "inspection",
-        "insp": "inspection",
-        "com": "completed",
-        "compl": "completed",
-        "complet": "completed",
-    }
-)
 
 DIRECTIONS = {"east", "west", "north", "south"}
 
@@ -775,26 +690,6 @@ def _prefix_or_fuzzy(value: str, choices: List[str]) -> str | None:
     return cand[0] if cand else None
 
 
-def _canonicalize_status(s: str | None) -> str | None:
-    if not s:
-        return None
-
-    s = s.strip()
-
-    # If it's a pure number like "1", "2", "3", keep as-is
-    if s.isdigit():
-        return s
-
-    # Otherwise, try to map to one of the textual statuses
-    return _prefix_or_fuzzy(s, STATUSES_CANON)
-
-
-def _canonicalize_task(t: str | None) -> str | None:
-    if not t:
-        return None
-    t = _fix_common_words(t)
-    mapped = _closest_canon(t, TASKS_CANON)
-    return mapped or _prefix_or_fuzzy(t, TASKS_CANON)
 
 
 def _normalize_area_parts(
@@ -809,20 +704,6 @@ def _normalize_area_parts(
         if w.lower() in DIRECTIONS:
             wing = w.capitalize() + " Wing"
     return grid, wing
-
-
-def _polish_remarks(text: str | None) -> str | None:
-    if not text:
-        return None
-    tokens = []
-    for w in text.split():
-        core = w.strip(",.;:!?")
-        fixed = COMMON_WORD_FIXES.get(core.lower(), core)
-        suffix = w[len(core) :]
-        tokens.append(fixed + suffix)
-    s = " ".join(tokens)
-    s = s.replace("ready for inspection", "Ready for inspection")
-    return s
 
 
 def _normalize_and_strip(s: str) -> str | None:
