@@ -3,6 +3,7 @@ import json
 import os
 from datetime import datetime, timedelta
 from pathlib import Path
+from urllib.parse import quote
 
 class AutodeskAuth:
     def __init__(self, client_id, client_secret, redirect_uri, scopes):
@@ -151,12 +152,15 @@ class AutodeskAuth:
     
     def get_auth_url(self):
         """Get the authorization URL for user login"""
+        # URL-encode scopes to handle spaces properly
+        encoded_scopes = quote(self.scopes, safe='')
+        
         return (
             "https://developer.api.autodesk.com/authentication/v2/authorize"
             f"?response_type=code"
             f"&client_id={self.client_id}"
-            f"&redirect_uri={self.redirect_uri}"
-            f"&scope={self.scopes}"
+            f"&redirect_uri={quote(self.redirect_uri, safe='')}"
+            f"&scope={encoded_scopes}"
         )
     
     def is_authenticated(self):
