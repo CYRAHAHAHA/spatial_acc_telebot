@@ -26,7 +26,7 @@ class Config:
         "SCOPES",
         "PROJECT_ID",
         "TELEGRAM_TOKEN",
-        "GEMINI_KEY",
+        "OPENAI_API_KEY",
     ]
 
     def __init__(self):
@@ -37,7 +37,7 @@ class Config:
         self.scopes = os.getenv("SCOPES")
         self.project_id = os.getenv("PROJECT_ID")
 
-        self.gemini_key = os.getenv("GEMINI_KEY")
+        self.openai_api_key = os.getenv("OPENAI_API_KEY")
 
         # Telegram and app-specific settings
         self.telegram_token = os.getenv("TELEGRAM_TOKEN")
