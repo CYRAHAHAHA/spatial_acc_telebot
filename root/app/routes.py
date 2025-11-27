@@ -3,6 +3,8 @@ from app import app
 from app.functions.fetch_assets_config import fetch_assets_config
 from app.utils import require_access_token
 from app.config import config
+from app.functions.fetch_metadata import fetch_ifc_metadata
+from app.functions.create_assets import run_create_assets
 from app.functions.create_status_sets import create_status_sets
 from app.functions.create_custom_fields import create_custom_fields
 from urllib.parse import quote_plus
@@ -13,6 +15,7 @@ from app.functions.create_issue import create_issue
 from app.functions.fetch_all_assets_info import fetch_all_assets_info 
 from app.functions.create_categories import create_categories
 from app.functions.fetch_issue_subtypes import fetch_issue_subtypes, format_subtypes_output
+
 import json
 import logging
 import requests
@@ -38,6 +41,22 @@ def callback():
     
     session["access_token"] = token
     return redirect("/?msg=Authenticated+successfully.")
+
+# ---- API: fetching of metadata ---- #
+@app.route("/fetch_metadata")
+@require_access_token(pass_token=True)
+def fetch_metadata_route(token):
+    result = fetch_ifc_metadata(token)   
+    return jsonify(result), 200
+
+# ---- API: create assets ---- #
+
+@app.route("/createassets", methods=["POST"])
+@require_access_token(pass_token=True)
+def upload_ai_assets(token):
+    result = run_create_assets(token)
+    return jsonify(result)
+
 
 # ---- API: assets config and status updates ---- #
 @app.route("/fetch_assets_config")
