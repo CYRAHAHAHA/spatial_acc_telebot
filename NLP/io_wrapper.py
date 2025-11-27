@@ -4,7 +4,7 @@ import json
 from pathlib import Path
 from typing import Any
 
-from matcher import run_matching
+from NLP.matcher import run_matching
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 MODEL_PATH = BASE_DIR / "data" / "model.json"
