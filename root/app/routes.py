@@ -19,8 +19,19 @@ from app.functions.fetch_issue_subtypes import fetch_issue_subtypes, format_subt
 import json
 import logging
 import requests
+import os
 
 logger = logging.getLogger(__name__)
+
+# Health check endpoint (for Railway and monitoring)
+@app.route("/health")
+def health_check():
+    """Health check endpoint for Railway and load balancers"""
+    return jsonify({
+        "status": "healthy",
+        "environment": "railway" if os.getenv("RAILWAY_ENVIRONMENT") else "local",
+        "service": "flask-web"
+    }), 200
 
 # Auth flow
 @app.route("/authorize")

@@ -1,0 +1,1 @@
+worker: cd telebot && python bot_logger.py

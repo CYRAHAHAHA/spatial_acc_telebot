@@ -24,10 +24,13 @@ from telegram.ext import (
 
 import requests
 
-API_URL = "http://localhost:8080/update_status"  # Flask main.py runs on this
-API_UPDATE_ISSUE_URL = "http://localhost:8080/update_issue_status" # For issues		
-API_FETCH_ISSUE_SUBTYPES_URL = "http://localhost:8080/fetch_issue_subtypes" # For fetching issue info		
-API_CREATE_ISSUE_URL = "http://localhost:8080/create_issue" # For creating issues
+# API URL - Bot and Flask run in same container, use localhost
+# On Railway: Both processes share the same container and filesystem
+API_BASE = "http://localhost:8080"
+API_URL = f"{API_BASE}/update_status"  # Flask main.py runs on this
+API_UPDATE_ISSUE_URL = f"{API_BASE}/update_issue_status"  # For issues		
+API_FETCH_ISSUE_SUBTYPES_URL = f"{API_BASE}/fetch_issue_subtypes"  # For fetching issue info		
+API_CREATE_ISSUE_URL = f"{API_BASE}/create_issue"  # For creating issues
 
 # Load environment variables (supports running from /telebot)
 load_dotenv(find_dotenv(usecwd=True), override=True)

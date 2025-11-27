@@ -2,6 +2,7 @@ import requests
 import json
 import os
 from datetime import datetime, timedelta
+from pathlib import Path
 
 class AutodeskAuth:
     def __init__(self, client_id, client_secret, redirect_uri, scopes):
@@ -9,7 +10,16 @@ class AutodeskAuth:
         self.client_secret = client_secret
         self.redirect_uri = redirect_uri
         self.scopes = scopes
-        self.token_file = "autodesk_tokens.json"
+        
+        # Use persistent path for token storage (Railway-aware)
+        if os.getenv("RAILWAY_ENVIRONMENT"):
+            # Railway deployment - use mounted volume
+            token_dir = Path("/app/data")
+            token_dir.mkdir(parents=True, exist_ok=True)
+            self.token_file = str(token_dir / "autodesk_tokens.json")
+        else:
+            # Local development
+            self.token_file = "autodesk_tokens.json"
         
         self.access_token = None
         self.refresh_token = None
