@@ -60,9 +60,11 @@ def update_assets(access_token: str, asset_guid: str, status_value: str):
         "<assetId>": { "statusId": "<statusId>" }
       }
     """
+    print("update_assets called, asset_guid:", asset_guid, "status_value:", status_value)
     project_id = config.project_id
     
     status_id = _lookup_status_id_by_label(status_value)
+    print("Resolved status_id:", status_id)
     if not status_id:
         return jsonify({"error": f"Status '{status_value}' not found in status_sets.csv"}), 404
 

@@ -72,6 +72,9 @@ def fetch_all_assets_info(token: str):
     # Find the IFCGlobalId custom attribute name
     ifc_global_id_name = retrieve_GUID_ca_name()
 
+    # Build category_id -> status_set_id mapping from categories.csv
+    category_to_status_set_id = build_category_to_status_set_mapping()
+
     # Prepare CSV data
     csv_headers = [
         "B3F_id",
@@ -79,6 +82,7 @@ def fetch_all_assets_info(token: str):
         "companyId",
         "clientAssetId",
         "category_id",
+        "status_set_id",
         "status_id",
         "ifc_global_id"
     ]
@@ -87,13 +91,18 @@ def fetch_all_assets_info(token: str):
     for asset in all_assets:
         custom_attrs = asset.get("customAttributes") or {}
         ifc_global_id_value = custom_attrs.get(ifc_global_id_name, "")
+        category_id = asset.get("categoryId") or ""
+        
+        # Lookup status_set_id from categories.csv using category_id
+        status_set_id = category_to_status_set_id.get(category_id, "")
         
         csv_data.append({
             "B3F_id": asset.get("id") or "",
             "description": asset.get("description") or "",
             "companyId": asset.get("companyId") or "",
             "clientAssetId": asset.get("clientAssetId") or "",
-            "category_id": asset.get("categoryId") or "",
+            "category_id": category_id,
+            "status_set_id": status_set_id,
             "status_id": asset.get("statusId") or "",
             "ifc_global_id": ifc_global_id_value
         })
@@ -128,6 +137,29 @@ def retrieve_GUID_ca_name() -> str:
     
     print("IFCGlobalId custom field not found")
     return ""
+
+
+def build_category_to_status_set_mapping() -> Dict[str, str]:
+    """
+    Build a mapping from category_id to status_set_id by reading categories.csv
+    Returns: {category_id: status_set_id}
+    """
+    categories_path = get_csv_path("categories.csv")
+    if not categories_path.exists():
+        print("categories.csv not found")
+        return {}
+    
+    mapping: Dict[str, str] = {}
+    with categories_path.open("r", encoding="utf-8-sig") as f:
+        reader = csv.DictReader(f)
+        for row in reader:
+            category_id = row.get("category_id", "").strip()
+            status_set_id = row.get("status_set_id", "").strip()
+            if category_id and status_set_id:
+                mapping[category_id] = status_set_id
+    
+    print(f"Loaded {len(mapping)} category -> status_set_id mappings")
+    return mapping
 
 
 def generate_guid_status_names_mapping(csv_data: List[Dict[str, Any]]) -> None:

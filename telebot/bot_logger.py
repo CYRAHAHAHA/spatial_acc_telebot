@@ -434,7 +434,16 @@ TASKS_CANON = [
     "MEP Rough-in",
     "Painting",
 ]
-STATUSES_CANON = ["Completed", "In Progress", "Delayed", "Issue"]
+STATUSES_CANON = ["Completed", "In Progress", "Delayed", "Issue", "Specified", 
+                    "Inspected",
+                    "Ordered",
+                    "Delivered",
+                    "Installed",
+                    "Inspected",
+                    "Rectified",
+                    "Approved",
+                    "Handed Over"
+                ]
 
 COMMON_WORD_FIXES = {
     "inspecton": "inspection",
