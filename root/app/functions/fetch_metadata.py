@@ -1,7 +1,7 @@
 import json
 import requests
 import base64
-import os
+import csv
 from pathlib import Path
 
 from app.functions.authentication import AutodeskAuth
@@ -29,61 +29,56 @@ def get_token():
 # ------------------------------------------------------------
 # Decode externalId
 # ------------------------------------------------------------
-def decode_external_id(b64_id):
+def decode_external_id(b64_id: str):
     try:
         padding = "=" * (-len(b64_id) % 4)
         return base64.b64decode(b64_id + padding).decode("utf-8")
-    except:
+    except Exception:
         return None
 
 
 # ------------------------------------------------------------
 # LIST HUBS
 # ------------------------------------------------------------
-def list_hubs(token):
+def list_hubs(token: str):
     url = "https://developer.api.autodesk.com/project/v1/hubs"
     headers = {"Authorization": f"Bearer {token}"}
-
     r = requests.get(url, headers=headers)
     r.raise_for_status()
+
     hubs = r.json()["data"]
-
-    print(f"\n🏢 Found {len(hubs)} hub(s):")
-    for h in hubs:
-        print(f"   - {h['attributes']['name']} → {h['id']}")
-
+    print(f"\n🏢 Found {len(hubs)} hub(s)")
     return hubs
 
 
 # ------------------------------------------------------------
 # GET ROOT FOLDER
 # ------------------------------------------------------------
-def get_root_folder(hub_id, project_id, token):
+def get_root_folder(hub_id: str, project_id: str, token: str):
     url = f"https://developer.api.autodesk.com/project/v1/hubs/{hub_id}/projects/{project_id}/topFolders"
     headers = {"Authorization": f"Bearer {token}"}
-
     r = requests.get(url, headers=headers)
     r.raise_for_status()
-    data = r.json()["data"]
 
+    data = r.json()["data"]
     pf = next((f for f in data if f["attributes"]["name"].lower() == "project files"), None)
     folder_id = pf["id"] if pf else data[0]["id"]
 
-    print(f"\n📦 Root Folder ID → {folder_id}")
+    print(f"📦 Root Folder ID → {folder_id}")
     return folder_id
 
 
 # ------------------------------------------------------------
 # LIST IFC FILES
 # ------------------------------------------------------------
-def list_ifc_files(project_id, folder_id, token):
+def list_ifc_files(project_id: str, folder_id: str, token: str):
     headers = {"Authorization": f"Bearer {token}"}
 
-    def get_contents(fid):
-        url = f"https://developer.api.autodesk.com/data/v1/projects/{project_id}/folders/{fid}/contents"
-        r = requests.get(url, headers=headers)
-        r.raise_for_status()
-        return r.json().get("data", [])
+    def get_contents(folder):
+        url = f"https://developer.api.autodesk.com/data/v1/projects/{project_id}/folders/{folder}/contents"
+        res = requests.get(url, headers=headers)
+        res.raise_for_status()
+        return res.json().get("data", [])
 
     found = []
     stack = [folder_id]
@@ -97,14 +92,14 @@ def list_ifc_files(project_id, folder_id, token):
             elif name.lower().endswith(".ifc"):
                 found.append(item)
 
-    print(f"\n🔍 Found {len(found)} IFC file(s).")
+    print(f"🔍 Found {len(found)} IFC file(s)")
     return found
 
 
 # ------------------------------------------------------------
 # GET LATEST VERSION
 # ------------------------------------------------------------
-def get_latest_version(project_id, item_id, token):
+def get_latest_version(project_id: str, item_id: str, token: str):
     url = f"https://developer.api.autodesk.com/data/v1/projects/{project_id}/items/{item_id}/versions"
     headers = {"Authorization": f"Bearer {token}"}
     r = requests.get(url, headers=headers)
@@ -113,140 +108,118 @@ def get_latest_version(project_id, item_id, token):
 
 
 # ------------------------------------------------------------
-# EXTRACT IFC PROPERTIES
+# EXTRACT IFC METADATA (FULL)
 # ------------------------------------------------------------
-def extract_ifc_properties(version_urn, token):
+def extract_ifc_properties(version_urn: str, token: str):
     headers = {"Authorization": f"Bearer {token}"}
+    encoded_urn = base64.urlsafe_b64encode(version_urn.encode()).decode().rstrip("=")
 
-    encoded = base64.urlsafe_b64encode(version_urn.encode()).decode().rstrip("=")
-    meta_url = f"https://developer.api.autodesk.com/modelderivative/v2/designdata/{encoded}/metadata"
+    meta_url = f"https://developer.api.autodesk.com/modelderivative/v2/designdata/{encoded_urn}/metadata"
     meta = requests.get(meta_url, headers=headers).json()
 
-    views = meta.get("data", {}).get("metadata", [])
-    if not views:
-        return []
+    all_items = []
+    metadata_views = meta.get("data", {}).get("metadata", [])
 
-    view_guid = views[0]["guid"]
+    for view in metadata_views:
+        guid = view.get("guid")
+        view_name = view.get("name")
 
-    prop_url = f"https://developer.api.autodesk.com/modelderivative/v2/designdata/{encoded}/metadata/{view_guid}/properties"
-    props = requests.get(prop_url, headers=headers).json()
+        print(f"📄 Reading view → {view_name}")
 
-    items = []
+        prop_url = f"https://developer.api.autodesk.com/modelderivative/v2/designdata/{encoded_urn}/metadata/{guid}/properties"
+        res = requests.get(prop_url, headers=headers).json()
 
-    for e in props.get("data", {}).get("collection", []):
-        ext = e.get("externalId")
-        if not ext:
-            continue
+        for e in res.get("data", {}).get("collection", []):
+            ext_id = e.get("externalId")
+            if not ext_id:
+                continue
 
-        ifc = e.get("properties", {}).get("IFC Attributes", {}) or {}
-        ifc_class = ifc.get("IfcClass")
-        if not ifc_class:
-            continue
+            props = e.get("properties", {}) or {}
+            ifc = props.get("IFC Attributes") or {}
 
-        items.append({
-            "name": e.get("name"),
-            "externalId": ext,
-            "decodedExternalId": decode_external_id(ext),
-            "ifcClass": ifc_class,
-            "objectType": ifc.get("ObjectType"),
-            "predefinedType": ifc.get("predefinedType"),
-            "tag": ifc.get("Tag"),
-            "spatialContainer": ifc.get("IfcSpatialContainer"),
-            "rawAttributes": ifc
-        })
+            # ⛔ Skip IFC Space
+            if ifc.get("IfcClass") == "IfcSpace":
+                continue
 
-    return items
+            all_items.append({
+                "name": e.get("name"),
+                "externalId": ext_id,
+                "decodedExternalId": decode_external_id(ext_id),
+                "geometry": e.get("geometry", {}),
+                "viewGuid": guid,
+                "viewName": view_name,
+                "allProperties": props,
+                "ifcAttributes": ifc
+            })
+
+    print(f"📌 Extracted {len(all_items)} metadata elements")
+    return all_items
+
+
+# ------------------------------------------------------------
+# LOAD ASSET NAMES FROM CSV → MATCH EXACT IFC .name
+# ------------------------------------------------------------
+def load_asset_names_from_csv(csv_path: Path):
+    if not csv_path.exists():
+        print(f"⚠ Missing CSV: {csv_path}")
+        return set()
+
+    names = set()
+    with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
+        reader = csv.DictReader(f)
+        if "clientAssetId" not in (reader.fieldnames or []):
+            print("⚠ Missing 'clientAssetId' column!")
+            return set()
+
+        for row in reader:
+            val = (row.get("clientAssetId") or "").strip().lower()
+            if val:
+                names.add(val)
+
+    print(f"📄 Loaded {len(names)} clientAssetId entries")
+    return names
 
 
 # ------------------------------------------------------------
-# MAP IFC → ASSET FORMAT
+# MAIN WORKFLOW
 # ------------------------------------------------------------
-def map_ifc_to_assets(ifc_items):
-    assets = []
-
-    for idx, item in enumerate(ifc_items, start=1):
-        name = item.get("name")
-        raw = item.get("rawAttributes", {})
-        global_id = raw.get("GlobalId")
-
-        # Skip invalid rows
-        if not name or not global_id:
-            continue
-
-        asset = {
-            "name": name,
-            "description": item.get("tag") or "",
-            "category": item.get("ifcClass") or "Default",
-            "status": item.get("predefinedType") or "Default",
-            "location": {
-                "latitude": None,
-                "longitude": None
-            },
-            "custom_attributes": {
-                "GlobalId": global_id
-            }
-        }
-
-        assets.append(asset)
-
-    return assets
-
-# ------------------------------------------------------------
-# MAIN WORKFLOW (extract + map)
-# ------------------------------------------------------------
-def fetch_ifc_metadata(token, runs=2):
-    print("🚀 Starting double-run IFC metadata extraction for validation...")
-
-    first_ifc = None
-    final_ifc = None
-
+def fetch_ifc_metadata(token: str):
     hubs = list_hubs(token)
-    HUB_ID = hubs[0]["id"]
+    hub_id = hubs[0]["id"]
 
-    PROJECT_ID = config.project_id.strip()
-    if not PROJECT_ID.startswith("b."):
-        PROJECT_ID = f"b.{PROJECT_ID}"
+    project_id = config.project_id.strip()
+    if not project_id.startswith("b."):
+        project_id = f"b.{project_id}"
 
-    for run in range(runs):
-        print(f"\n🔁 Run {run+1}/{runs}...")
+    root = get_root_folder(hub_id, project_id, token)
+    ifc_files = list_ifc_files(project_id, root, token)
 
-        root = get_root_folder(HUB_ID, PROJECT_ID, token)
-        files = list_ifc_files(PROJECT_ID, root, token)
+    final_ifc = []
+    for file in ifc_files:
+        urn = get_latest_version(project_id, file["id"], token)
+        final_ifc.extend(extract_ifc_properties(urn, token))
 
-        extracted = []
-        for f in files:
-            urn = get_latest_version(PROJECT_ID, f["id"], token)
-            extracted.extend(extract_ifc_properties(urn, token))
+    data_dir = Path(__file__).resolve().parents[3] / "data"
+    data_dir.mkdir(exist_ok=True)
 
-        if run == 0:
-            first_ifc = extracted
-        else:
-            final_ifc = extracted
+    raw_path = data_dir / "nlp_raw_metadata.json"
+    json.dump(final_ifc, raw_path.open("w", encoding="utf-8"), indent=2)
+    print(f"💾 Raw metadata saved → {raw_path}")
 
-        print(f"📌 Run {run+1}: Extracted {len(extracted)} items")
+    # Filter results using CSV names
+    csv_path = data_dir / "assets_total.csv"
+    ids = load_asset_names_from_csv(csv_path)
 
-    # Validation — compare run outputs
-    if first_ifc == final_ifc:
-        print("\n✔ Validation passed: Both runs produce identical results!")
+    if ids:
+        filtered = []
+        for item in final_ifc:
+            if (item["name"] or "").strip().lower() in ids:
+                filtered.append(item)
+
+        filtered_path = data_dir / "nlp_metadata.json"
+        json.dump(filtered, filtered_path.open("w", encoding="utf-8"), indent=2)
+        print(f"💾 Filtered metadata saved ({len(filtered)} items) → {filtered_path}")
     else:
-        print("\n⚠ Validation warning: Outputs differ between runs!")
+        print("⚠ No matches — filtered JSON not created")
 
-    # Convert using final results only
-    mapped = map_ifc_to_assets(final_ifc)
-
-    # Save output files (overwrite same name each run)
-    nlp_dir = Path(__file__).resolve().parents[3] / "data"
-    nlp_dir.mkdir(exist_ok=True)
-    nlp_path = nlp_dir / "nlp_metadata.json"
-    with nlp_path.open("w", encoding="utf-8") as f:
-        json.dump(final_ifc, f, indent=2)
-
-    mapped_dir = Path(__file__).resolve().parents[2] / "output"
-    mapped_dir.mkdir(exist_ok=True)
-    mapped_path = mapped_dir / "mapped_assets.json"
-    with mapped_path.open("w", encoding="utf-8") as f:
-        json.dump(mapped, f, indent=2)
-
-    print(f"💾 Final results saved: {nlp_path}")
-    print(f"💾 Final mapped assets saved: {mapped_path}")
-    print("\n🎉 Done with validation & final output!\n")
+    print("\n🎉 Metadata extraction complete!\n")
