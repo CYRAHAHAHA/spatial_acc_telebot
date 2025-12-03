@@ -9,6 +9,8 @@ from datetime import datetime as dt
 from typing import Dict, List, Any, Tuple
 from threading import Lock
 from datetime import UTC
+from pathlib import Path
+import sys
 
 from dotenv import load_dotenv, find_dotenv
 from telegram import Update
@@ -134,7 +136,7 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
         area_str = area
 
     # 5) Flatten and clean the parsed fields
-    flattened_parsed = {
+    flattened = {
         "location": location_str,
         "area": area_str,
         "task": parsed.get("task"),
@@ -157,7 +159,7 @@ def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
             "version": rec["version"],
             "date": date_only,
             "project_id": project_id,   
-            "parsed": flattened_parsed,
+            "parsed": flattened,
         }
 
         append_pretty_update(clean_payload)
@@ -208,10 +210,9 @@ TEMPLATE = (
     "Location: Building A, Level 3\n"
     "Zone / Grid / Area: Grid 5-7, East Wing\n"
     "Task: Internal Partition Walls\n"
-    "Status: 3\n"
+    "Status: Completed\n"
     "Date: 17 Oct 2025\n"
     "Remarks: Ready for inspection\n"
-    "GUID: 1$p8tACJ938vr1_lKOJJ9g"
 )
 
 ISSUE_TEMPLATE = (
@@ -421,63 +422,6 @@ async def handle_project_id(update: Update, context: ContextTypes.DEFAULT_TYPE):
     await msg.reply_text(f"Project ID for this group is now set to: {project_id}")
 
 
-
-# Canon + typo-fix helpers -------------------------
-
-BUILDINGS_CANON = ["Building A", "Building B", "Building C", "Block A", "Block B"]
-LEVELS_CANON = ["B3", "B2", "B1", "1", "2", "3", "4", "5", "6", "7"]
-TASKS_CANON = [
-    "Internal Partition Walls",
-    "Masonry Walls",
-    "Drywall",
-    "Slab",
-    "MEP Rough-in",
-    "Painting",
-]
-STATUSES_CANON = ["Completed", "In Progress", "Delayed", "Issue", "Specified", 
-                    "Inspected",
-                    "Ordered",
-                    "Delivered",
-                    "Installed",
-                    "Inspected",
-                    "Rectified",
-                    "Approved",
-                    "Handed Over"
-                ]
-
-COMMON_WORD_FIXES = {
-    "inspecton": "inspection",
-    "inspetion": "inspection",
-    "inspeciton": "inspection",
-    "partion": "partition",
-    "parititon": "partition",
-    "complted": "completed",
-    "compeleted": "completed",
-}
-
-
-def _closest_canon(user_text: str, canon: List[str], cutoff_low: float = 0.60) -> str:
-    if not user_text or not canon:
-        return user_text
-    for c in canon:
-        if user_text.strip().lower() == c.lower():
-            return c
-    match = difflib.get_close_matches(user_text, canon, n=1, cutoff=cutoff_low)
-    return match[0] if match else user_text
-
-
-def _fix_common_words(text: str) -> str:
-    if not text:
-        return text
-    words = text.split()
-    for i, w in enumerate(words):
-        core = w.strip(",.;:!?").lower()
-        if core in COMMON_WORD_FIXES:
-            suffix = w[len(w.rstrip(",.;:!?")) :]
-            words[i] = COMMON_WORD_FIXES[core] + suffix
-    return " ".join(words)
-
-
 # Regexes & parsing ------------------------------------------
 
 UPDATE_BLOCK_RE = re.compile(
@@ -631,8 +575,10 @@ def _parse_create_issue(text: str) -> Tuple[Dict[str, Any] | None, List[str]]:
 def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], List[str]]:
     """
     Parse a single-shot [UPDATE] message.
-    Always returns (parsed_dict, errors_list).
-    If there are validation errors, parsed_dict will be {} and errors_list non-empty.
+
+    Now:
+    - Only checks that required fields are present and non-empty.
+    - Does NOT canonicalise or restrict values (any text is allowed).
     """
     m = UPDATE_BLOCK_RE.match(text or "")
     if not m:
@@ -640,7 +586,7 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
 
     body = m.group("body")
 
-    # We'll collect all fields, forcing whitespace-only values to None
+    # Collect all fields, forcing whitespace-only values to None
     found = {
         "location": None,
         "area": None,
@@ -673,8 +619,7 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
             found["remarks"] = val
         # GUID is handled separately by extract_guid_block_format()
 
-
-    # Requireds
+    # Required fields: just make sure they're not empty
     label = {
         "location": "Location: Building X, Level Y",
         "area": "Zone / Grid / Area: ...",
@@ -683,10 +628,15 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
     }
     errors: List[str] = []
     for key in ("location", "area", "task", "status"):
-        if not found.get(key):
+        value = found.get(key)
+        if value is None or str(value).strip() == "":
             errors.append(f"Missing '{label[key]}'")
 
-    # Location -> building, level
+    # If any required fields missing → return errors
+    if errors:
+        return ({}, errors)
+
+    # --- Light parsing of location/area, but no canonicalisation ----
     building = level = None
     if found["location"]:
         lm = LOC_SPLIT_RE.search(found["location"])
@@ -699,42 +649,14 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
         else:
             building = found["location"]
 
-    # Area -> grid, wing
     grid = wing = None
     if found["area"]:
         parts = [p.strip() for p in found["area"].split(",", 1)]
         grid = parts[0] if parts else None
         wing = parts[1] if len(parts) > 1 else None
 
-    # Use message date (YYYY-MM-DD)
+    # Use message date (YYYY-MM-DD) if present, else today
     date_iso = (message_dt_iso or "").split("T", 1)[0] or dt.utcnow().date().isoformat()
-
-    # Canonicalization / polishing
-    if building:
-        building = _closest_canon(building, BUILDINGS_CANON)
-    if level:
-        level = _closest_canon(str(level), LEVELS_CANON)
-
-    grid, wing = _normalize_area_parts(grid, wing)
-    found["task"] = _canonicalize_task(found["task"])
-    found["status"] = _canonicalize_status(found["status"])
-    found["remarks"] = _polish_remarks(found["remarks"])
-
-    # Enforce canon values
-    if found.get("task") and found["task"] not in TASKS_CANON:
-        errors.append("Unrecognized 'Task'. Allowed: " + ", ".join(TASKS_CANON))
-    if found.get("status"):
-        s = str(found["status"])
-        if not s.isdigit() and s not in STATUSES_CANON:
-            errors.append(
-                "Unrecognized 'Status'. Allowed: "
-                + ", ".join(STATUSES_CANON)
-                + " or numeric codes like 1, 2, 3."
-            )
-
-    # If any errors, return tuple with {} + errors
-    if errors:
-        return ({}, errors)
 
     parsed = {
         "type": "UPDATE",
@@ -747,19 +669,6 @@ def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], 
     }
     return (parsed, [])
 
-
-# Expand typo map - typo helper
-COMMON_WORD_FIXES.update(
-    {
-        "reay": "ready",
-        "inspec": "inspection",
-        "inspct": "inspection",
-        "insp": "inspection",
-        "com": "completed",
-        "compl": "completed",
-        "complet": "completed",
-    }
-)
 
 DIRECTIONS = {"east", "west", "north", "south"}
 
@@ -776,26 +685,6 @@ def _prefix_or_fuzzy(value: str, choices: List[str]) -> str | None:
     return cand[0] if cand else None
 
 
-def _canonicalize_status(s: str | None) -> str | None:
-    if not s:
-        return None
-
-    s = s.strip()
-
-    # If it's a pure number like "1", "2", "3", keep as-is
-    if s.isdigit():
-        return s
-
-    # Otherwise, try to map to one of the textual statuses
-    return _prefix_or_fuzzy(s, STATUSES_CANON)
-
-
-def _canonicalize_task(t: str | None) -> str | None:
-    if not t:
-        return None
-    t = _fix_common_words(t)
-    mapped = _closest_canon(t, TASKS_CANON)
-    return mapped or _prefix_or_fuzzy(t, TASKS_CANON)
 
 
 def _normalize_area_parts(
@@ -812,20 +701,6 @@ def _normalize_area_parts(
     return grid, wing
 
 
-def _polish_remarks(text: str | None) -> str | None:
-    if not text:
-        return None
-    tokens = []
-    for w in text.split():
-        core = w.strip(",.;:!?")
-        fixed = COMMON_WORD_FIXES.get(core.lower(), core)
-        suffix = w[len(core) :]
-        tokens.append(fixed + suffix)
-    s = " ".join(tokens)
-    s = s.replace("ready for inspection", "Ready for inspection")
-    return s
-
-
 def _normalize_and_strip(s: str) -> str | None:
     if s is None:
         return None
@@ -837,26 +712,64 @@ def _normalize_and_strip(s: str) -> str | None:
     s = s.strip()
     return s if s != "" else None
 
-def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> str | None: ##To change when connecting with NLP
+def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str | None, str | None]:
     """
-    Placeholder: later this will call your NLP model to pick the best GUID
-    based on project_id + parsed fields.
+    Call the matcher (via run_sample_match) and get BOTH:
+      - guid  (which BIM element to update)
+      - status (canonical status to apply)
 
-    For now, this is just a stub that returns None.
-    You can replace this with:
-    - a lookup in a CSV/JSON
-    - or a call to a real NLP model
+    Expected matcher output: {"guid": "...", "status": "..."}
     """
-    # Example of what you *might* use later:
-    # building = (parsed.get("location") or {}).get("building")
-    # level = (parsed.get("location") or {}).get("level")
-    # grid = (parsed.get("area") or {}).get("grid")
-    # task = parsed.get("task")
-    #
-    # ...do your scoring / NLP matching here...
-    #
-    # return best_guid or None if you can't decide
-    return None
+    try:
+        loc = parsed.get("location") or {}
+        area = parsed.get("area") or {}
+
+        building = loc.get("building") or ""
+        level = loc.get("level") or ""
+        grid = area.get("grid") or ""
+        wing = area.get("wing") or ""
+        task = parsed.get("task") or ""
+        status_from_text = parsed.get("status") or ""  # original from message
+        date = parsed.get("date") or ""
+        remarks = parsed.get("remarks") or ""
+
+        # Rebuild the [UPDATE] text that your matcher expects
+        lines = [
+            "[UPDATE]",
+            f"Location: {building}, Level {level}".strip().rstrip(", "),
+            f"Zone / Grid / Area: {grid}, {wing}".strip().rstrip(", "),
+            f"Task: {task}",
+            f"Status: {status_from_text}",
+            f"Date: {date}",
+        ]
+        if remarks:
+            lines.append(f"Remarks: {remarks}")
+
+        update_text = "\n".join(lines)
+
+        # Call your NLP matcher here
+        result = run_sample_match(update_path=update_text)
+
+        # Your NLP output: {"guid": "xyz", "status": "abc"}
+        guid = result.get("guid")
+        status_value = result.get("status")
+
+        if isinstance(guid, str):
+            guid = guid.strip()
+        if isinstance(status_value, str):
+            status_value = status_value.strip()
+
+        if not guid or not status_value:
+            print("Bot: NLP did not return both guid and status:", result)
+            return None, None
+
+        print(f"Bot: NLP resolved GUID={guid}, STATUS={status_value} for project {project_id}")
+        return guid, status_value
+
+    except Exception as e:
+        print("Bot: Error while running NLP matcher via run_sample_match:", repr(e))
+        return None, None
+
 
 # -------------------------------------------------------------------
 # Create issue handler
@@ -1098,6 +1011,7 @@ async def one_shot_update_handler(
         )
         return
 
+
     # Parse the message into a structured dict
     parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
 
@@ -1108,12 +1022,39 @@ async def one_shot_update_handler(
         )
         return
 
-    # --- 1) Try to get GUID WITHOUT requiring it in the text --------------
-    guid = resolve_guid_from_nlp(project_id, parsed)
+    # --- NLP: get GUID + canonical status (overrides text status) ------
+    guid, status_value = resolve_guid_from_nlp(project_id, parsed)
 
-    # --- 2) (Optional) Fallback: still support GUID in text while testing -
-    if not guid:
-        guid = extract_guid_block_format(text)
+    # DEBUG: confirm what handler received from NLP
+    print(f"Bot: handler got from NLP -> GUID={guid}, STATUS={status_value}")
+
+    # If NLP cannot determine GUID or status → log as UNKNOWN and stop
+    if not guid or not status_value:
+        raw_text = text
+        payload_for_site_updates = {
+            "timestamp": msg.date.isoformat(),
+            "chat_id": msg.chat_id,
+            "message_id": msg.message_id,
+            "sender": (
+                f"{msg.from_user.first_name or ''} {msg.from_user.last_name or ''}".strip()
+                if msg.from_user
+                else None
+            ),
+            "sender_id": (msg.from_user.id if msg.from_user else None),
+            "raw_text": raw_text,
+            "parsed": parsed,
+        }
+
+        log_site_update("UNKNOWN", payload_for_site_updates, project_id)
+
+        await msg.reply_text(
+            "Update logged, but NLP could not determine a valid GUID and status "
+            f"for this update. Project: {project_id}."
+        )
+        return
+
+    # Overwrite parsed status with NLP status so logs & ACC are consistent
+    parsed["status"] = status_value
 
     # Build the payload that we log in site_updates.json
     raw_text = text
@@ -1128,34 +1069,18 @@ async def one_shot_update_handler(
         ),
         "sender_id": (msg.from_user.id if msg.from_user else None),
         "raw_text": raw_text,
-        "parsed": parsed,
+        "parsed": parsed,  # now contains NLP status
     }
 
-    # Always log the update, even if we failed to match a GUID
-    clean = log_site_update(guid or "UNKNOWN", payload_for_site_updates, project_id)
+    # Log the update with the resolved GUID
+    clean = log_site_update(guid, payload_for_site_updates, project_id)
 
-    # If we still have no GUID, we can't call ACC yet
-    if not guid:
-        await msg.reply_text(
-            "Update logged, but I could not match this to a BIM element yet "
-            f"(no GUID resolved). Project: {project_id}."
-        )
-        return
-
-    # --- 3) We have a GUID → call Autodesk to update status ---------------
-    status_value = parsed.get("status")
-    if not status_value:
-        await msg.reply_text(
-            f"Update logged for GUID {guid} (Project: {project_id}), "
-            "but no Status field was parsed."
-        )
-        return
-
-    # --- 4) Call Flask /update_status via HTTP -----------
+    # --- Call Flask /update_status via HTTP using NLP status -----------
     payload = {
         "asset_guid": guid,
-        "status_value": status_value,
+        "status_value": status_value,  # from NLP, not from raw text
     }
+
     print("Bot: calling /update_status with payload:", payload)
     print("API_URL:", API_URL)
     try:
