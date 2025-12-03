@@ -11,6 +11,7 @@ from threading import Lock
 from datetime import UTC
 from pathlib import Path
 import sys
+import requests
 
 from dotenv import load_dotenv, find_dotenv
 from telegram import Update
@@ -23,8 +24,12 @@ from telegram.ext import (
     ChatMemberHandler,
     filters,
 )
-
-import requests
+sys.path.append(str(Path(__file__).resolve().parent))
+from activity_log import (
+    log_update_status_activity,
+    log_update_issue_activity,
+    log_create_issue_activity,
+)
 
 # Locate project root → telebot/../
 ROOT_DIR = Path(__file__).resolve().parents[1]
@@ -818,6 +823,15 @@ async def create_issue_handler(
     issue_data, errors = _parse_create_issue(text)
     
     if errors:
+        log_create_issue_activity(
+            msg=msg,
+            project_id=project_id,
+            subtype_id=None,
+            status=None,
+            title=None,
+            description=None,
+            error="; ".join(errors),
+        )
         await msg.reply_text(
             "Error: Issue not created.\n\n"
             "Please fix:\n" + "\n".join(f"• {e}" for e in errors) + 
@@ -851,6 +865,16 @@ async def create_issue_handler(
             
             # Log the created issue
             log_issue_created(result, project_id)
+
+            log_create_issue_activity(
+                msg=msg,
+                project_id=project_id,
+                subtype_id=issue_data["subtype_id"],
+                status=issue_data["status"],
+                title=issue_data["title"],
+                description=issue_data.get("description"),
+                error=None,
+            )
             
             await msg.reply_text(
                 f"Issue created in ACC!\n\n"
@@ -874,6 +898,16 @@ async def create_issue_handler(
             error_msg = error_data.get("error", str(error_data))
         except:
             error_msg = resp.text[:200]
+
+        log_create_issue_activity(
+            msg=msg,
+            project_id=project_id,
+            subtype_id=issue_data.get("subtype_id"),
+            status=issue_data.get("status"),
+            title=issue_data.get("title"),
+            description=issue_data.get("description"),
+            error=f"ACC issue creation failed (HTTP {resp.status_code}): {error_msg}",
+        )
         
         await msg.reply_text(
             f"Issue creation FAILED (HTTP {resp.status_code}).\n\n"
@@ -919,6 +953,13 @@ async def issue_status_handler(
     guid, status, errors = _parse_issue_status(text)
     
     if errors:
+        log_update_issue_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=None,
+            status=None,
+            error="; ".join(errors),
+        )
         await msg.reply_text(
             "Error: Issue status not updated.\n\n"
             "Please fix:\n" + "\n".join(f"• {e}" for e in errors) + 
@@ -942,7 +983,7 @@ async def issue_status_handler(
     }
     
     log_issue_update(guid, payload_for_log, project_id)
-    
+
     # Call Flask /update_issue_status
     payload = {
         "issue_guid": guid,
@@ -952,7 +993,16 @@ async def issue_status_handler(
     try:
         resp = requests.post(API_UPDATE_ISSUE_URL, json=payload, timeout=15)
     except Exception as e:
+        activity_log_error = f"Failed to contact ACC to update Issue Status: {str(e)}"
+        log_update_issue_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=guid,
+            status=status,
+            error=activity_log_error,
+        )
         print("Bot: error calling /update_issue_status:", repr(e))
+
         await msg.reply_text(
             f"Issue update logged for GUID {guid} (Project: {project_id}), "
             "but failed to contact the ACC server.\n"
@@ -967,6 +1017,14 @@ async def issue_status_handler(
             f"Status: {status}\n"
             f"Project: {project_id}"
         )
+        # ACC success → log clean success (error=None)
+        log_update_issue_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=guid,
+            status=status,
+            error=None,
+        )
     else:
         print("Bot: ACC issue update failed:", resp.status_code, resp.text[:500])
         error_msg = "Unknown error"
@@ -975,7 +1033,18 @@ async def issue_status_handler(
             error_msg = error_data.get("error", str(error_data))
         except:
             error_msg = resp.text[:200]
-        
+
+        activity_log_error = (
+            f"ACC Issue Status update failed: (HTTP {resp.status_code}): {error_msg}"
+        )
+        log_update_issue_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=guid,
+            status=status,
+            error=activity_log_error,
+        )
+    
         await msg.reply_text(
             f"Issue update logged for GUID {guid} (Project: {project_id}), "
             f"but ACC update FAILED (HTTP {resp.status_code}).\n\n"
@@ -1024,8 +1093,16 @@ async def one_shot_update_handler(
     # Parse the message into a structured dict
     parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
 
-    # If any required fields are missing/blank, STOP here
     if errors:
+        # Log to activity log with error
+        log_update_status_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=None,
+            status=None,
+            error="; ".join(errors),
+        )
+
         await msg.reply_text(
             "Error: Update not logged.\nPlease fix:\n- " + "\n- ".join(errors)
         )
@@ -1037,8 +1114,16 @@ async def one_shot_update_handler(
     # DEBUG: confirm what handler received from NLP
     print(f"Bot: handler got from NLP -> GUID={guid}, STATUS={status_value}")
 
-    # If NLP cannot determine GUID or status → log as UNKNOWN and stop
+    # If NLP cannot determine GUID or status, log as UNKNOWN and stop
     if not guid or not status_value:
+        # Activity log entry with error
+        log_update_status_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=None,
+            status=None,
+            error="NLP could not determine a valid GUID and status.",
+        )
         raw_text = text
         payload_for_site_updates = {
             "timestamp": msg.date.isoformat(),
@@ -1064,6 +1149,15 @@ async def one_shot_update_handler(
 
     # Overwrite parsed status with NLP status so logs & ACC are consistent
     parsed["status"] = status_value
+
+    # Activity log success entry
+    log_update_status_activity(
+        msg=msg,
+        project_id=project_id,
+        guid=guid,
+        status=status_value,
+        error=None,
+    )
 
     # Build the payload that we log in site_updates.json
     raw_text = text
