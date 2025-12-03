@@ -26,6 +26,15 @@ from telegram.ext import (
 
 import requests
 
+# Locate project root → telebot/../
+ROOT_DIR = Path(__file__).resolve().parents[1]
+
+# Append project root so NLP package can be resolved
+if str(ROOT_DIR) not in sys.path:
+    sys.path.append(str(ROOT_DIR))
+
+from NLP.io_wrapper import run_sample_match  # <- working import
+
 # API URL - Bot and Flask run in same container, use localhost
 # On Railway: Both processes share the same container and filesystem
 API_BASE = "http://localhost:8080"
