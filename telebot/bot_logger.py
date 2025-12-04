@@ -1175,9 +1175,20 @@ async def one_shot_update_handler(
 
 # Main bootstrap -------------
 def main() -> None:
-    token = os.environ.get("TELEGRAM_TOKEN")
+    # Use production token if available (Railway), otherwise use local token
+    token = os.environ.get("TELEGRAM_TOKEN_PROD") or os.environ.get("TELEGRAM_TOKEN")
+    
     if not token:
-        raise RuntimeError("Please set TELEGRAM_TOKEN environment variable first")
+        raise RuntimeError(
+            "Please set TELEGRAM_TOKEN (local) or TELEGRAM_TOKEN_PROD (production) environment variable first"
+        )
+    
+    # Log which token type is being used (without revealing the token)
+    if os.environ.get("RAILWAY_ENVIRONMENT"):
+        token_type = "PROD" if os.environ.get("TELEGRAM_TOKEN_PROD") else "DEV"
+        print(f"🤖 Bot starting in RAILWAY environment with {token_type} token")
+    else:
+        print("🤖 Bot starting in LOCAL environment")
 
     app = Application.builder().token(token).build()
 
