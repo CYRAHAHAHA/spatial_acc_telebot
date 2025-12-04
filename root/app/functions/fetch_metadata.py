@@ -5,6 +5,7 @@ import csv
 from pathlib import Path
 
 from app.functions.authentication import AutodeskAuth
+from app.functions.fetch_all_assets_info import fetch_all_assets_info
 from app.config import config
 
 
@@ -205,6 +206,9 @@ def fetch_ifc_metadata(token: str):
     raw_path = data_dir / "nlp_raw_metadata.json"
     json.dump(final_ifc, raw_path.open("w", encoding="utf-8"), indent=2)
     print(f"💾 Raw metadata saved → {raw_path}")
+
+    print("\n📥 Fetching all ACC assets before filtering IFC metadata...")
+    fetch_all_assets_info(token)
 
     # Filter results using CSV names
     csv_path = data_dir / "assets_total.csv"
