@@ -1,6 +1,9 @@
 import requests
 from app.config import config
 
+# Helper function used exclusively to obtain the project’s Root Folder ID,
+# which will later be persisted in the environment configuration (.env).
+# Root folder id can only be obtined by the root folder owner 
 
 def discover_root_folder(token: str):
     """
