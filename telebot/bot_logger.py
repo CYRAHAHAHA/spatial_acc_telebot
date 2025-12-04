@@ -731,6 +731,7 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
     Call the matcher (via run_sample_match) and get BOTH:
       - guid  (which BIM element to update)
       - status (canonical status to apply)
+      - error   (any NLP error message, if available)
 
     Expected matcher output: {"guid": "...", "status": "..."}
     """
@@ -762,11 +763,19 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
         update_text = "\n".join(lines)
 
         # Call your NLP matcher here
-        result = run_sample_match(update_path=update_text)
+        result = run_sample_match(update_path=update_text) or {}
 
         # Your NLP output: {"guid": "xyz", "status": "abc"}
         guid = result.get("guid")
         status_value = result.get("status")
+
+        # Try to extract any error description your NLP returns
+        nlp_error = (
+            result.get("error_description")
+            or result.get("error_msg")
+            or result.get("error")
+            or None
+        )
 
         if isinstance(guid, str):
             guid = guid.strip()
@@ -775,13 +784,18 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
 
         if not guid or not status_value:
             print("Bot: NLP did not return both guid and status:", result)
-            return None, None
+            # Return the NLP-provided error if present
+            if not nlp_error:
+                nlp_error = "NLP could not determine a valid GUID and status."
+            return None, None, nlp_error
 
-        print(f"Bot: NLP resolved GUID={guid}, STATUS={status_value} for project {project_id}")
-        return guid, status_value
+        print(
+            f"Bot: NLP resolved GUID={guid}, STATUS={status_value} for project {project_id}"
+        )
+        return guid, status_value, None
 
     except Exception as e:
-        print("Bot: Error while running NLP matcher via run_sample_match:", repr(e))
+        print("Bot: Error while running NLP matcher: {e}")
         return None, None
 
 
@@ -1117,11 +1131,13 @@ async def one_shot_update_handler(
         )
         return
 
-    # --- NLP: get GUID + canonical status (overrides text status) ------
-    guid, status_value = resolve_guid_from_nlp(project_id, parsed)
+    # --- NLP: get GUID + canonical status + any NLP error --------------
+    guid, status_value, nlp_error = resolve_guid_from_nlp(project_id, parsed)
 
     # DEBUG: confirm what handler received from NLP
-    print(f"Bot: handler got from NLP -> GUID={guid}, STATUS={status_value}")
+    print(
+        f"Bot: handler got from NLP -> GUID={guid}, STATUS={status_value}, NLP_ERROR={nlp_error}"
+    )
 
     # If NLP cannot determine GUID or status, log as UNKNOWN and stop
     if not guid or not status_value:
