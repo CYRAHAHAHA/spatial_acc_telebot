@@ -100,7 +100,6 @@ def update_status(token):
     
     if not asset_guid or not status_value:
         return jsonify({"error": "Missing asset_guid or status_value"}), 400
-    
     return update_assets(token, asset_guid, status_value)
 
 # ---- Issue status update endpoint ---- #

@@ -331,7 +331,29 @@ body {
   gap: var(--forge-space-sm);
   border-bottom: 2px solid var(--forge-border);
   margin-bottom: var(--forge-space-lg);
-  overflow-x: visible;
+  overflow-x: auto;
+  overflow-y: hidden;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: var(--forge-border) transparent;
+}
+
+.forge-tabs::-webkit-scrollbar {
+  height: 6px;
+}
+
+.forge-tabs::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.forge-tabs::-webkit-scrollbar-thumb {
+  background: var(--forge-border);
+  border-radius: 3px;
+}
+
+.forge-tabs::-webkit-scrollbar-thumb:hover {
+  background: var(--forge-gray-500);
 }
 
 .forge-tab {
@@ -347,6 +369,7 @@ body {
   transition: all var(--forge-transition);
   white-space: nowrap;
   margin-bottom: -2px;
+  flex-shrink: 0;
 }
 
 .forge-tab:hover {

@@ -180,6 +180,30 @@
           >
             Category Status Default
           </button>
+          <button
+            class="forge-tab"
+            data-tab="create-issue"
+            role="tab"
+            aria-selected="false"
+          >
+            Create Issue
+          </button>
+          <button
+            class="forge-tab"
+            data-tab="update-issue"
+            role="tab"
+            aria-selected="false"
+          >
+            Update Issue Status
+          </button>
+          <button
+            class="forge-tab"
+            data-tab="fetch-issues"
+            role="tab"
+            aria-selected="false"
+          >
+            Fetch Issues Info
+          </button>
         </nav>
 
         <!-- ========== TAB PANELS ========== -->
@@ -622,6 +646,172 @@
               >
                 <strong>Error:</strong> <span id="configErrorMessage"></span>
               </div>
+            </div>
+          </section>
+
+          <!-- CREATE ISSUE TAB -->
+          <section
+            id="tab-create-issue"
+            class="forge-tab-panel"
+            role="tabpanel"
+            hidden
+          >
+            <div class="forge-panel-header">
+              <h2>Create Issue</h2>
+            </div>
+            <div class="forge-panel-body">
+              <form id="createIssueForm" class="forge-form">
+                <div class="forge-form-group">
+                  <label for="issueTitle" class="forge-label">Title *</label>
+                  <input
+                    type="text"
+                    id="issueTitle"
+                    name="issueTitle"
+                    class="forge-input"
+                    placeholder="e.g., Water leakage at Level 3"
+                    required
+                  />
+                </div>
+                <div class="forge-form-group">
+                  <label for="issueStatus" class="forge-label">Status *</label>
+                  <select
+                    id="issueStatus"
+                    name="issueStatus"
+                    class="forge-input"
+                    required
+                  >
+                    <option value="">Select status...</option>
+                    <option value="open">Open</option>
+                    <option value="pending">Pending</option>
+                    <option value="in_review">In Review</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                </div>
+                <div class="forge-form-group">
+                  <label for="issueSubtypeId" class="forge-label"
+                    >Issue Subtype ID *</label
+                  >
+                  <input
+                    type="text"
+                    id="issueSubtypeId"
+                    name="issueSubtypeId"
+                    class="forge-input"
+                    placeholder="e.g., 06e9ad10-7a05-43e8-9e27-38fb455dd50f"
+                    required
+                  />
+                  <small class="forge-help-text"
+                    >Get IDs from the "Fetch Issues Info" tab</small
+                  >
+                </div>
+                <div class="forge-form-group">
+                  <label for="issueDescription" class="forge-label"
+                    >Description</label
+                  >
+                  <textarea
+                    id="issueDescription"
+                    name="issueDescription"
+                    class="forge-input"
+                    placeholder="Optional: describe the issue"
+                    rows="3"
+                  ></textarea>
+                </div>
+                <div class="forge-form-group">
+                  <label for="issueLocation" class="forge-label"
+                    >Location</label
+                  >
+                  <input
+                    type="text"
+                    id="issueLocation"
+                    name="issueLocation"
+                    class="forge-input"
+                    placeholder="Optional: e.g., Building A, Level 3"
+                  />
+                </div>
+                <div class="forge-form-actions">
+                  <button type="submit" class="forge-btn forge-btn-primary">
+                    Create Issue
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- UPDATE ISSUE STATUS TAB -->
+          <section
+            id="tab-update-issue"
+            class="forge-tab-panel"
+            role="tabpanel"
+            hidden
+          >
+            <div class="forge-panel-header">
+              <h2>Update Issue Status</h2>
+            </div>
+            <div class="forge-panel-body">
+              <form id="updateIssueForm" class="forge-form">
+                <div class="forge-form-group">
+                  <label for="updateIssueGuid" class="forge-label"
+                    >Issue GUID *</label
+                  >
+                  <input
+                    type="text"
+                    id="updateIssueGuid"
+                    name="updateIssueGuid"
+                    class="forge-input"
+                    placeholder="e.g., cae94f63-282c-435b-b798-ec527afcde1d"
+                    required
+                  />
+                  <small class="forge-help-text"
+                    >Get GUIDs from the "Fetch Issues Info" tab</small
+                  >
+                </div>
+                <div class="forge-form-group">
+                  <label for="updateIssueStatus" class="forge-label"
+                    >New Status *</label
+                  >
+                  <select
+                    id="updateIssueStatus"
+                    name="updateIssueStatus"
+                    class="forge-input"
+                    required
+                  >
+                    <option value="">Select status...</option>
+                    <option value="open">Open</option>
+                    <option value="pending">Pending</option>
+                    <option value="in_review">In Review</option>
+                    <option value="closed">Closed</option>
+                  </select>
+                </div>
+                <div class="forge-form-actions">
+                  <button type="submit" class="forge-btn forge-btn-primary">
+                    Update Status
+                  </button>
+                </div>
+              </form>
+            </div>
+          </section>
+
+          <!-- FETCH ISSUES TAB -->
+          <section
+            id="tab-fetch-issues"
+            class="forge-tab-panel"
+            role="tabpanel"
+            hidden
+          >
+            <div class="forge-panel-header">
+              <h2>Fetch Issues Information</h2>
+            </div>
+            <div class="forge-panel-body">
+              <div class="forge-form-actions" style="margin-bottom: 20px;">
+                <button id="fetchIssuesBtn" class="forge-btn forge-btn-primary">
+                  Load Issue Types & Recent Issues
+                </button>
+              </div>
+              <div id="issuesLoading" class="forge-spinner" hidden>
+                <div class="spinner"></div>
+                <p>Loading issues...</p>
+              </div>
+              <div id="issueSubtypesDisplay"></div>
+              <div id="recentIssuesDisplay"></div>
             </div>
           </section>
         </div>
