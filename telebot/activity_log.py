@@ -5,6 +5,10 @@ from pathlib import Path
 from threading import Lock
 from datetime import datetime, UTC
 from typing import Any, Dict, Optional
+from datetime import datetime, timezone, timedelta
+
+SGT = timezone(timedelta(hours=8))  # Singapore Timezone (UTC+8)
+
 
 from telegram import Message
 
@@ -48,7 +52,7 @@ def _username_from_msg(msg: Message) -> Optional[str]:
 
 def _base_from_msg(msg: Message, project_id: Optional[str]) -> Dict[str, Any]:
     # Format: YYYY-MM-DD (HH:MM:SS)
-    dt_obj = msg.date.astimezone(UTC) if msg.date else datetime.now(UTC)
+    dt_obj = msg.date.astimezone(SGT) if msg.date else datetime.now(UTC)
     ts = dt_obj.strftime("%Y-%m-%d (%H:%M:%S)")
 
     raw_text = (msg.text or msg.caption or "").strip()

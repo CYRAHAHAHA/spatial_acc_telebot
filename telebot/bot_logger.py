@@ -851,6 +851,15 @@ async def create_issue_handler(
     try:
         resp = requests.post(API_CREATE_ISSUE_URL, json=payload, timeout=15)
     except Exception as e:
+        log_create_issue_activity(
+            msg=msg,
+            project_id=project_id,
+            subtype_id=issue_data.get("subtype_id"),
+            status=issue_data.get("status"),
+            title=issue_data.get("title"),
+            description=issue_data.get("description"),
+            error=f"Failed to contact ACC server to Create Issue: {str(e)}",
+        )
         print("Bot: error calling /create_issue:", repr(e))
         await msg.reply_text(
             f"Failed to contact the ACC server.\n"
