@@ -57,7 +57,6 @@ load_dotenv(find_dotenv(usecwd=True), override=True)
 # -------------------------------------------------------------------
 
 BASE_DIR = pathlib.Path(__file__).resolve().parent
-SITE_UPDATES_PATH = BASE_DIR / "site_updates.json"
 ISSUE_UPDATES_PATH = BASE_DIR / "issue_updates.json"		
 ISSUE_CREATED_PATH = BASE_DIR / "issues_created.json"
 
@@ -84,101 +83,6 @@ def save_project_map(mapping: Dict[str, str]) -> None:
 DB: Dict[str, Dict[str, Any]] = {}
 DB_LOCK = Lock()
 
-
-def append_pretty_update(entry: dict) -> None:
-    """
-    Append one entry into site_updates.json, stored as a JSON array.
-    """
-
-    if SITE_UPDATES_PATH.exists():
-        try:
-            with open(SITE_UPDATES_PATH, "r", encoding="utf-8") as rf:
-                data = json.load(rf)
-            if not isinstance(data, list):
-                data = []
-        except Exception as e:
-            print("Bot: error reading existing JSON:", repr(e))
-            data = []
-    else:
-        data = []
-
-    data.append(entry)
-
-    with open(SITE_UPDATES_PATH, "w", encoding="utf-8") as wf:
-        json.dump(data, wf, ensure_ascii=False, indent=2)
-        wf.write("\n")
-    print("Bot: write complete, total entries:", len(data))  # debug
-
-def log_site_update(guid: str, payload: dict, project_id: str | None) -> dict:
-    print("Bot: logging payload for GUID", guid)  # still keep this
-
-    # 1) Pull timestamp -> date (YYYY-MM-DD)
-    full_ts = payload.get("timestamp", "")
-    date_only = full_ts.split("T")[0] if "T" in full_ts else full_ts
-
-    # 2) Get parsed fields
-    parsed = payload.get("parsed") or {}
-    loc = parsed.get("location") or {}
-    area = parsed.get("area") or {}
-
-    # 3) Build 'location' string: "Building C, Level 8"
-    location_str = None
-    if isinstance(loc, dict):
-        b = loc.get("building")
-        lvl = loc.get("level")
-        if b and lvl:
-            location_str = f"{b}, Level {lvl}"
-        elif b:
-            location_str = b
-        elif lvl:
-            location_str = f"Level {lvl}"
-    elif isinstance(loc, str):
-        location_str = loc
-
-    # 4) Build 'area' string: "Grid 5-7, East Wing"
-    area_str = None
-    if isinstance(area, dict):
-        parts = []
-        g = area.get("grid")
-        w = area.get("wing")
-        if g:
-            parts.append(g)
-        if w:
-            parts.append(w)
-        area_str = ", ".join(parts) if parts else None
-    elif isinstance(area, str):
-        area_str = area
-
-    # 5) Flatten and clean the parsed fields
-    flattened = {
-        "location": location_str,
-        "area": area_str,
-        "task": parsed.get("task"),
-        "status": parsed.get("status"),
-        "remarks": parsed.get("remarks"),
-    }
-
-    # 6) In-memory versioning + save to site_updates.json
-    with DB_LOCK:
-        rec = DB.get(guid) or {"guid": guid, "version": 0, "history": []}
-        rec["version"] += 1
-        # you can keep this or later switch to timezone-aware:
-        rec["updated_at"] = dt.now(UTC).isoformat()
-        rec["last"] = payload
-        rec["history"].append(payload)
-        DB[guid] = rec
-
-        clean_payload = {
-            "guid": guid,
-            "version": rec["version"],
-            "date": date_only,
-            "project_id": project_id,   
-            "parsed": flattened,
-        }
-
-        append_pretty_update(clean_payload)
-
-    return clean_payload
 
 def log_issue_update(guid: str, payload: dict, project_id: str | None) -> dict:
     """Log issue status updates (in-memory only, no JSON file)."""
@@ -784,7 +688,6 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
 
         if not guid or not status_value:
             print("Bot: NLP did not return both guid and status:", result)
-            # Return the NLP-provided error if present
             if not nlp_error:
                 nlp_error = "NLP could not determine a valid GUID and status."
             return None, None, nlp_error
@@ -795,8 +698,9 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
         return guid, status_value, None
 
     except Exception as e:
-        print("Bot: Error while running NLP matcher: {e}")
-        return None, None
+        err_msg = f"Error while running NLP matcher: {e}"
+        print("Bot:", err_msg)
+        return None, None, err_msg
 
 
 # -------------------------------------------------------------------
@@ -1141,13 +1045,15 @@ async def one_shot_update_handler(
 
     # If NLP cannot determine GUID or status, log as UNKNOWN and stop
     if not guid or not status_value:
+        error_msg = nlp_error or "NLP could not determine a valid GUID and status."
+
         # Activity log entry with error
         log_update_status_activity(
             msg=msg,
             project_id=project_id,
             guid=None,
             status=None,
-            error="NLP could not determine a valid GUID and status.",
+            error=error_msg,
         )
         raw_text = text
         payload_for_site_updates = {
@@ -1162,13 +1068,13 @@ async def one_shot_update_handler(
             "sender_id": (msg.from_user.id if msg.from_user else None),
             "raw_text": raw_text,
             "parsed": parsed,
+            "nlp_error": error_msg,
         }
-
-        log_site_update("UNKNOWN", payload_for_site_updates, project_id)
 
         await msg.reply_text(
             "Update logged, but NLP could not determine a valid GUID and status "
-            f"for this update. Project: {project_id}."
+            f"for this update.\n\n"
+            f"NLP error: {error_msg}"
         )
         return
 
@@ -1201,7 +1107,11 @@ async def one_shot_update_handler(
     }
 
     # Log the update with the resolved GUID
-    clean = log_site_update(guid, payload_for_site_updates, project_id)
+    clean = {
+    "guid": guid,
+    "project_id": project_id,
+    "parsed": parsed,
+    }
 
     # --- Call Flask /update_status via HTTP using NLP status -----------
     payload = {
