@@ -434,7 +434,7 @@ TASKS_CANON = [
     "MEP Rough-in",
     "Painting",
 ]
-STATUSES_CANON = ["Completed", "In Progress", "Delayed", "Issue"]
+STATUSES_CANON = ["Completed", "In Progress", "Delayed", "Issue", "Ordered", "Installed"]
 
 COMMON_WORD_FIXES = {
     "inspecton": "inspection",
@@ -1090,7 +1090,14 @@ async def one_shot_update_handler(
         return
 
     # Parse the message into a structured dict
+
     parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
+
+    # Log the text as-is for debugging, such as
+    print("Bot: received update message:")
+    print(text)
+    print("-----")
+    print("Bot: parsed update:", parsed, "errors:", errors)
 
     # If any required fields are missing/blank, STOP here
     if errors:
@@ -1186,9 +1193,9 @@ def main() -> None:
     # Log which token type is being used (without revealing the token)
     if os.environ.get("RAILWAY_ENVIRONMENT"):
         token_type = "PROD" if os.environ.get("TELEGRAM_TOKEN_PROD") else "DEV"
-        print(f"🤖 Bot starting in RAILWAY environment with {token_type} token")
+        print(f"[BOT] Starting in RAILWAY environment with {token_type} token")
     else:
-        print("🤖 Bot starting in LOCAL environment")
+        print("[BOT] Starting in LOCAL environment")
 
     app = Application.builder().token(token).build()
 
