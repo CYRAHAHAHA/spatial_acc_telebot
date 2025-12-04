@@ -16,7 +16,7 @@ def run_sample_match(update_path: str | Path = UPDATE_PATH) -> dict[str, Any]:
     Load the fixed model file and the provided update, run the matcher, and return the JSON result.
 
     update_path can be a path to a text file or a raw string containing the update text.
-    Returns the full matcher payload: {"guid": "...", "status": "...", "reason": "..."}.
+    Returns the full matcher payload: {"guid": "...", "status": "...", "error": "..."}.
     """
     model_payload = MODEL_PATH.read_text(encoding="utf-8")
     update_payload: str

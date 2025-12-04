@@ -480,7 +480,7 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
 
     reason_text = " ".join(reason_parts).strip()
 
-    return {"guid": matched_guid, "status": status, "reason": reason_text}
+    return {"guid": matched_guid, "status": status, "error": reason_text}
 
 
 def _read_file(path: str) -> str:
