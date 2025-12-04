@@ -351,6 +351,9 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
     elements, fallback_blob = parse_model_data(raw_model)
     client = OpenAIClient()
     element_index = {element.guid: element for element in elements}
+    reason_notes: list[str] = []
+    if not elements:
+        reason_notes.append("No GUID-bearing elements were found in the model; using fallback blob.")
 
     ranked_elements = prioritize_elements(elements, update_text, settings.max_elements)
     chunks = chunk_elements(ranked_elements, settings.max_chunk_chars)
@@ -362,6 +365,9 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
         chunks = chunks[: settings.max_openai_chunks]
 
     best = DEFAULT_RESPONSE.copy()
+    best_confidence = 0.0
+    best_rationale = DEFAULT_RESPONSE["rationale"]
+    match_source = ""
     for chunk in chunks:
         try:
             response = client.structured_match(chunk, update_text)
@@ -374,25 +380,31 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
         except (TypeError, ValueError):
             confidence = 0.0
 
-        if confidence >= best["confidence"]:
+        if confidence >= best_confidence:
+            best_confidence = confidence
+            best_rationale = str(response.get("rationale", "") or "").strip() or best_rationale
             best = {
                 "matched_guid": response.get("matched_guid", ""),
                 "confidence": confidence,
                 "action_required": response.get("action_required", "manual_review"),
                 "rationale": response.get("rationale", ""),
             }
+            match_source = "openai"
 
         if best["confidence"] >= 0.95:
             break
 
     inferred_action = infer_action_from_update(update_text)
+    status_source = "openai"
     if best["matched_guid"] and inferred_action:
         if not best["action_required"] or best["action_required"] == "manual_review":
             best["action_required"] = inferred_action
+            status_source = "inferred_action"
     status = best.get("action_required", "manual_review")
     matched_guid = best.get("matched_guid", "")
 
     # Guardrail: ensure the selected element shares tokens with the update to avoid spurious matches.
+    guardrail_reason = None
     if matched_guid:
         element = element_index.get(matched_guid)
         if element:
@@ -400,9 +412,13 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
             if _token_overlap(update_tokens, element_tokens) == 0:
                 matched_guid = ""
                 status = inferred_action or "manual_review"
+                status_source = "guardrail_reset"
+                guardrail_reason = "Dropped OpenAI match because it shared no tokens with the update text."
         else:
             matched_guid = ""
             status = inferred_action or "manual_review"
+            status_source = "guardrail_reset"
+            guardrail_reason = "Dropped OpenAI match because element payload was missing."
 
     # Heuristic fallback: pick the element with the strongest token overlap if the model returned nothing.
     if not matched_guid and update_tokens:
@@ -417,6 +433,8 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
         if best_overlap >= 2:  # require at least a couple of shared tokens to avoid noise
             matched_guid = best_guid
             status = inferred_action or status
+            status_source = "token_overlap"
+            reason_notes.append(f"Selected GUID via token-overlap heuristic (shared tokens: {best_overlap}).")
 
     if matched_guid:
         guid_statuses = load_guid_statuses().get(matched_guid)
@@ -426,10 +444,43 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
                 suggested_status = status_response.get("status")
                 if isinstance(suggested_status, str) and suggested_status.strip():
                     status = suggested_status.strip()
+                    status_source = "status_classifier"
             except Exception as exc:  # pragma: no cover - logging only
                 logger.warning("Status classification failed: %s", exc)
+                reason_notes.append("Status classifier failed; kept previous status choice.")
 
-    return {"guid": matched_guid, "status": status}
+    # Build a short reasoning string for downstream logging.
+    reason_parts: list[str] = []
+    if matched_guid:
+        source_label = {
+            "openai": "OpenAI structured match",
+            "token_overlap": "token-overlap heuristic",
+        }.get(match_source or status_source, "matcher")
+        reason_parts.append(f"Matched GUID {matched_guid} via {source_label} (confidence {best_confidence:.2f}).")
+    else:
+        if guardrail_reason:
+            reason_parts.append(guardrail_reason)
+        elif not elements:
+            reason_parts.append("No GUID-bearing elements were available to match.")
+        elif not update_tokens:
+            reason_parts.append("Update text contained no tokens to match against the model.")
+        else:
+            reason_parts.append("No confident GUID match; leaving status as manual review.")
+
+    if best_rationale:
+        reason_parts.append(f"Model rationale: {best_rationale}")
+    reason_parts.extend(reason_notes)
+
+    if status_source == "inferred_action":
+        reason_parts.append(f"Status inferred from update text patterns: {status}.")
+    elif status_source == "status_classifier":
+        reason_parts.append(f"Status refined using allowed statuses for GUID {matched_guid}.")
+    elif status == "manual_review" and matched_guid:
+        reason_parts.append("Status defaults to manual_review for this match.")
+
+    reason_text = " ".join(reason_parts).strip()
+
+    return {"guid": matched_guid, "status": status, "reason": reason_text}
 
 
 def _read_file(path: str) -> str:
