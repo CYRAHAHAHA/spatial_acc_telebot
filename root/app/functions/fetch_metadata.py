@@ -10,24 +10,6 @@ from app.config import config
 
 
 # ------------------------------------------------------------
-# AUTH
-# ------------------------------------------------------------
-auth = AutodeskAuth(
-    client_id=config.client_id,
-    client_secret=config.client_secret,
-    redirect_uri=config.redirect_uri,
-    scopes=config.scopes
-)
-
-
-def get_token():
-    token = auth.get_access_token()
-    if not token:
-        raise Exception("❌ No valid token. Please login via /login first.")
-    return token
-
-
-# ------------------------------------------------------------
 # Decode externalId
 # ------------------------------------------------------------
 def decode_external_id(b64_id: str):
@@ -36,38 +18,6 @@ def decode_external_id(b64_id: str):
         return base64.b64decode(b64_id + padding).decode("utf-8")
     except Exception:
         return None
-
-
-# ------------------------------------------------------------
-# LIST HUBS
-# ------------------------------------------------------------
-def list_hubs(token: str):
-    url = "https://developer.api.autodesk.com/project/v1/hubs"
-    headers = {"Authorization": f"Bearer {token}"}
-    r = requests.get(url, headers=headers)
-    r.raise_for_status()
-
-    hubs = r.json()["data"]
-    print(f"\n🏢 Found {len(hubs)} hub(s)")
-    return hubs
-
-
-# ------------------------------------------------------------
-# GET ROOT FOLDER
-# ------------------------------------------------------------
-def get_root_folder(hub_id: str, project_id: str, token: str):
-    url = f"https://developer.api.autodesk.com/project/v1/hubs/{hub_id}/projects/{project_id}/topFolders"
-    headers = {"Authorization": f"Bearer {token}"}
-    r = requests.get(url, headers=headers)
-    r.raise_for_status()
-
-    data = r.json()["data"]
-    pf = next((f for f in data if f["attributes"]["name"].lower() == "project files"), None)
-    folder_id = pf["id"] if pf else data[0]["id"]
-
-    print(f"📦 Root Folder ID → {folder_id}")
-    return folder_id
-
 
 # ------------------------------------------------------------
 # LIST IFC FILES
@@ -185,14 +135,15 @@ def load_asset_names_from_csv(csv_path: Path):
 # MAIN WORKFLOW
 # ------------------------------------------------------------
 def fetch_ifc_metadata(token: str):
-    hubs = list_hubs(token)
-    hub_id = hubs[0]["id"]
+    #hubs = list_hubs(token)
+    #hub_id = hubs[0]["id"]
 
     project_id = config.project_id.strip()
     if not project_id.startswith("b."):
         project_id = f"b.{project_id}"
 
-    root = get_root_folder(hub_id, project_id, token)
+    #root = get_root_folder(hub_id, project_id, token)
+    root = config.root_id
     ifc_files = list_ifc_files(project_id, root, token)
 
     final_ifc = []
@@ -227,3 +178,5 @@ def fetch_ifc_metadata(token: str):
         print("⚠ No matches — filtered JSON not created")
 
     print("\n🎉 Metadata extraction complete!\n")
+
+
