@@ -1055,21 +1055,6 @@ async def one_shot_update_handler(
             status=None,
             error=error_msg,
         )
-        raw_text = text
-        payload_for_site_updates = {
-            "timestamp": msg.date.isoformat(),
-            "chat_id": msg.chat_id,
-            "message_id": msg.message_id,
-            "sender": (
-                f"{msg.from_user.first_name or ''} {msg.from_user.last_name or ''}".strip()
-                if msg.from_user
-                else None
-            ),
-            "sender_id": (msg.from_user.id if msg.from_user else None),
-            "raw_text": raw_text,
-            "parsed": parsed,
-            "nlp_error": error_msg,
-        }
 
         await msg.reply_text(
             "Update logged, but NLP could not determine a valid GUID and status "
@@ -1080,38 +1065,6 @@ async def one_shot_update_handler(
 
     # Overwrite parsed status with NLP status so logs & ACC are consistent
     parsed["status"] = status_value
-
-    # Activity log success entry
-    log_update_status_activity(
-        msg=msg,
-        project_id=project_id,
-        guid=guid,
-        status=status_value,
-        error=None,
-    )
-
-    # Build the payload that we log in site_updates.json
-    raw_text = text
-    payload_for_site_updates = {
-        "timestamp": msg.date.isoformat(),
-        "chat_id": msg.chat_id,
-        "message_id": msg.message_id,
-        "sender": (
-            f"{msg.from_user.first_name or ''} {msg.from_user.last_name or ''}".strip()
-            if msg.from_user
-            else None
-        ),
-        "sender_id": (msg.from_user.id if msg.from_user else None),
-        "raw_text": raw_text,
-        "parsed": parsed,  # now contains NLP status
-    }
-
-    # Log the update with the resolved GUID
-    clean = {
-    "guid": guid,
-    "project_id": project_id,
-    "parsed": parsed,
-    }
 
     # --- Call Flask /update_status via HTTP using NLP status -----------
     payload = {
@@ -1124,7 +1077,18 @@ async def one_shot_update_handler(
     try:
         resp = requests.post(API_URL, json=payload, timeout=15)
     except Exception as e:
+        error_msg = f"Failed to contact ACC server: {str(e)}"
         print("Bot: error calling /update_status:", repr(e))
+
+        # Log with error into activity_log.json
+        log_update_status_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=guid,
+            status=status_value,
+            error=error_msg,
+        )
+
         await msg.reply_text(
             f"Update logged for GUID {guid} (Project: {project_id}), "
             "but failed to contact the ACC server."
@@ -1132,13 +1096,38 @@ async def one_shot_update_handler(
         return
 
     if 200 <= resp.status_code < 300:
+        # ACC success to log with error=None
+        log_update_status_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=guid,
+            status=status_value,
+            error=None,
+        )
+
         await msg.reply_text(
             f"Update logged and ACC updated for GUID {guid} "
             f"(Project: {project_id})."
         )
     else:
-        # Optional: log body for debugging
+        # Build a useful error message
         print("Bot: ACC update failed:", resp.status_code, resp.text[:500])
+        error_msg = f"ACC update failed (HTTP {resp.status_code})"
+        try:
+            error_data = resp.json()
+            error_msg += f": {error_data.get('error', str(error_data))}"
+        except Exception:
+            error_msg += f": {resp.text[:200]}"
+
+        # Log failure with error into activity_log.json
+        log_update_status_activity(
+            msg=msg,
+            project_id=project_id,
+            guid=guid,
+            status=status_value,
+            error=error_msg,
+        )
+
         await msg.reply_text(
             f"Update logged for GUID {guid} (Project: {project_id}), "
             f"but ACC update FAILED (HTTP {resp.status_code})."
