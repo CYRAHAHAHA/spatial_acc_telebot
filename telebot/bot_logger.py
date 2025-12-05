@@ -1018,8 +1018,16 @@ async def one_shot_update_handler(
 
 
     # Parse the message into a structured dict
+
     parsed, errors = _parse_update_text(text, message_dt_iso=msg.date.isoformat())
 
+    # Log the text as-is for debugging, such as
+    print("Bot: received update message:")
+    print(text)
+    print("-----")
+    print("Bot: parsed update:", parsed, "errors:", errors)
+
+    # If any required fields are missing/blank, STOP here
     if errors:
         # Log to activity log with error
         log_update_status_activity(
@@ -1136,9 +1144,20 @@ async def one_shot_update_handler(
 
 # Main bootstrap -------------
 def main() -> None:
-    token = os.environ.get("TELEGRAM_TOKEN")
+    # Use production token if available (Railway), otherwise use local token
+    token = os.environ.get("TELEGRAM_TOKEN_PROD") or os.environ.get("TELEGRAM_TOKEN")
+    
     if not token:
-        raise RuntimeError("Please set TELEGRAM_TOKEN environment variable first")
+        raise RuntimeError(
+            "Please set TELEGRAM_TOKEN (local) or TELEGRAM_TOKEN_PROD (production) environment variable first"
+        )
+    
+    # Log which token type is being used (without revealing the token)
+    if os.environ.get("RAILWAY_ENVIRONMENT"):
+        token_type = "PROD" if os.environ.get("TELEGRAM_TOKEN_PROD") else "DEV"
+        print(f"[BOT] Starting in RAILWAY environment with {token_type} token")
+    else:
+        print("[BOT] Starting in LOCAL environment")
 
     app = Application.builder().token(token).build()
 

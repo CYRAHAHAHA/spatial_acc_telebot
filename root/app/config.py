@@ -41,6 +41,7 @@ class Config:
         self.client_secret = os.getenv("CLIENT_SECRET")
         self.scopes = os.getenv("SCOPES")
         self.project_id = os.getenv("PROJECT_ID")
+        self.root_id = os.getenv("ROOT_FOLDER_ID")
 
         self.openai_api_key = os.getenv("OPENAI_API_KEY")
 
