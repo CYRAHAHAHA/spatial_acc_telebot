@@ -1,4 +1,8 @@
 (async () => {
+  // ========================================
+  // ELEMENT REFERENCES
+  // ========================================
+  
   const el = {
     tokenStatus: document.getElementById("tokenStatus"),
     envList: document.getElementById("envList"),
@@ -16,19 +20,15 @@
     statusSetsLoading: document.getElementById("statusSetsLoading"),
     customFieldsLoading: document.getElementById("customFieldsLoading"),
     categoriesLoading: document.getElementById("categoriesLoading"),
-    // Create Status Set form elements
     createStatusSetForm: document.getElementById("createStatusSetForm"),
     statusSetsTableBody: document.getElementById("statusSetsTableBody"),
     resetStatusSetForm: document.getElementById("resetStatusSetForm"),
-    // Create Custom Fields form elements
     createCustomFieldForm: document.getElementById("createCustomFieldForm"),
     customFieldsTableBody: document.getElementById("customFieldsTableBody"),
     resetCustomFieldForm: document.getElementById("resetCustomFieldForm"),
-    // Create Categories form elements
     createCategoryForm: document.getElementById("createCategoryForm"),
     categoryCardsContainer: document.getElementById("categoryCardsContainer"),
     resetCategoryForm: document.getElementById("resetCategoryForm"),
-    // Config Structure elements
     loadConfigStructureBtn: document.getElementById("loadConfigStructureBtn"),
     downloadConfigJsonBtn: document.getElementById("downloadConfigJsonBtn"),
     copyConfigJsonBtn: document.getElementById("copyConfigJsonBtn"),
@@ -38,16 +38,29 @@
     configSummary: document.getElementById("configSummary"),
     configJsonViewer: document.getElementById("configJsonViewer"),
     configErrorMessage: document.getElementById("configErrorMessage"),
-    // Issue-related form elements
     createIssueForm: document.getElementById("createIssueForm"),
     updateIssueForm: document.getElementById("updateIssueForm"),
     fetchIssuesBtn: document.getElementById("fetchIssuesBtn"),
     issuesLoading: document.getElementById("issuesLoading"),
     issueSubtypesDisplay: document.getElementById("issueSubtypesDisplay"),
     recentIssuesDisplay: document.getElementById("recentIssuesDisplay"),
+    activityLogTableBody: document.getElementById("activityLogTableBody"),
+    activityLogLoading: document.getElementById("activityLogLoading"),
   };
 
-  // Toast notification system
+
+  // ========================================
+  // VIEW MANAGEMENT - Activity Log and Configuration
+  // ========================================
+  
+  // Both views are now always visible, activity log at top, configuration below
+  const activityLogView = document.getElementById('activityLogView');
+  const configurationView = document.getElementById('configurationView');
+
+  // ========================================
+  // TOAST NOTIFICATION SYSTEM
+  // ========================================
+  
   function showToast(type, title, message = '', duration = 5000) {
     const toast = document.createElement('div');
     toast.className = `forge-toast toast-${type}`;
@@ -116,10 +129,220 @@
   }
 
   // ========================================
+  // ACTIVITY LOG FUNCTIONALITY
+  // ========================================
+
+  async function loadActivityLog() {
+    const tableBody = el.activityLogTableBody;
+    const loading = el.activityLogLoading;
+
+    if (!tableBody || !loading) return;
+
+    try {
+      loading.hidden = false;
+
+      const response = await fetch('/fetch_activity_log');
+
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+
+      const result = await response.json();
+      const data = result.logs || result;
+      loading.hidden = true;
+
+      if (!Array.isArray(data) || data.length === 0) {
+        tableBody.innerHTML = `
+          <tr>
+            <td colspan="6" style="text-align: center; padding: 20px;">
+              No activity log entries found
+            </td>
+          </tr>
+        `;
+        return;
+      }
+
+      // Render the table with 6 columns
+      tableBody.innerHTML = data.map(entry => `
+        <tr>
+          <td>${formatActivityTimestamp(entry.timestamp)}</td>
+          <td>${escapeActivityHtml(entry.action_type || 'N/A')}</td>
+          <td>${escapeActivityHtml(entry.username || 'N/A')}</td>
+          <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;" 
+              title="${escapeActivityHtml(entry.raw_message || 'N/A')}">
+            ${escapeActivityHtml(entry.raw_message || 'N/A')}
+          </td>
+          <td>
+            ${entry.error 
+              ? '<span class="error-badge">Error</span>' 
+              : '<span class="success-badge">Success</span>'}
+          </td>
+          <td>
+            <button class="forge-btn" onclick="window.showActivityLogDetails('${entry.id}')">View</button>
+          </td>
+        </tr>
+      `).join('');
+
+      console.log(`✓ Successfully loaded ${data.length} activity log entries`);
+      showToast('success', 'Activity Log Loaded', `${data.length} entries loaded`);
+
+    } catch (error) {
+      console.error('Error loading activity log:', error);
+      loading.hidden = true;
+
+      tableBody.innerHTML = `
+        <tr>
+          <td colspan="6" style="text-align: center; padding: 20px;">
+            <div style="color: var(--forge-error); margin-bottom: 12px;">
+              <strong>⚠️ Error Loading Activity Log</strong>
+            </div>
+            <div style="color: var(--forge-text-muted); font-size: 0.875rem; margin-bottom: 8px;">
+              ${escapeActivityHtml(error.message)}
+            </div>
+            <div style="color: var(--forge-text-muted); font-size: 0.75rem;">
+              <strong>Check:</strong><br>
+              1. Server is running (python main.py)<br>
+              2. Activity log file exists at data/activity_log.json<br>
+              3. Browser console for detailed errors
+            </div>
+          </td>
+        </tr>
+      `;
+    }
+  }
+
+  function formatActivityTimestamp(timestamp) {
+    if (!timestamp) return 'N/A';
+    try {
+      // Handle custom format: "2025-12-05 (10:46:48)"
+      if (timestamp.includes('(') && timestamp.includes(')')) {
+        // Extract the date part and time part
+        const match = timestamp.match(/^(\d{4})-(\d{2})-(\d{2})\s*\((\d{2}):(\d{2}):(\d{2})\)$/);
+        if (match) {
+          const [, year, month, day, hour, minute] = match;
+          // Format as: MM/DD/YYYY, HH:MM AM/PM
+          const date = new Date(year, month - 1, day, hour, minute);
+          const dateStr = date.toLocaleDateString();
+          const timeStr = date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          return `${dateStr}, ${timeStr}`;
+        }
+      }
+      // Fallback: try standard date parsing
+      const date = new Date(timestamp);
+      if (!isNaN(date.getTime())) {
+        return date.toLocaleString();
+      }
+      return timestamp; // Return original if parsing fails
+    } catch (e) {
+      return timestamp; // Return original on error
+    }
+  }
+
+  function escapeActivityHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
+  }
+
+  window.showActivityLogDetails = async function(entryId) {
+    try {
+      const response = await fetch('/fetch_activity_log');
+      const result = await response.json();
+      const data = result.logs || result;
+      const entry = data.find(e => e.id === entryId);
+
+      if (!entry) {
+        showToast('error', 'Entry not found', 'Could not find the selected activity log entry');
+        return;
+      }
+
+      displayActivityLogModal(entry);
+    } catch (error) {
+      console.error('Error fetching details:', error);
+      showToast('error', 'Failed to load details', error.message);
+    }
+  };
+
+  function displayActivityLogModal(entry) {
+    const modal = document.createElement('div');
+    modal.className = 'activity-log-modal';
+    modal.style.cssText = `
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10000;
+    `;
+
+    const errorSection = entry.error
+      ? `<div style="padding: 12px; background: rgba(234, 67, 53, 0.1); border-left: 4px solid #ea4335; margin-bottom: 16px; border-radius: 4px;">
+          <strong style="color: #c5221f;">Error:</strong>
+          <p style="margin: 4px 0 0 0; color: #c5221f;">${escapeActivityHtml(entry.error)}</p>
+        </div>`
+      : `<div style="padding: 12px; background: rgba(52, 168, 83, 0.1); border-left: 4px solid #34a853; margin-bottom: 16px; border-radius: 4px;">
+          <strong style="color: #188038;">Status:</strong>
+          <p style="margin: 4px 0 0 0; color: #188038;">Success</p>
+        </div>`;
+
+    const payloadSection = entry.payload
+      ? `<div style="margin-top: 16px; padding: 12px; background: rgba(255, 255, 255, 0.05); border-radius: 4px; border: 1px solid var(--forge-border);">
+          <h4 style="margin: 0 0 8px 0; color: var(--forge-text);">Payload:</h4>
+          <pre style="margin: 0; overflow-x: auto; font-size: 0.875rem; white-space: pre-wrap; word-wrap: break-word; color: var(--forge-text); font-family: monospace;">${escapeActivityHtml(JSON.stringify(entry.payload, null, 2))}</pre>
+        </div>`
+      : '';
+
+    modal.innerHTML = `
+      <div style="background: var(--forge-surface); border-radius: 8px; padding: 24px; max-width: 700px; max-height: 80vh; overflow-y: auto; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3); border: 1px solid var(--forge-border);">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px;">
+          <h3 style="margin: 0; color: var(--forge-text);">${escapeActivityHtml(entry.action_type)}</h3>
+          <button onclick="this.closest('.activity-log-modal').remove()" style="background: none; border: none; cursor: pointer; font-size: 24px; color: var(--forge-text-muted);">&times;</button>
+        </div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 16px;">
+          <div>
+            <label style="display: block; font-size: 0.875rem; color: var(--forge-text-muted); margin-bottom: 4px;">ID</label>
+            <div style="font-family: monospace; font-size: 0.875rem; color: var(--forge-text);">${escapeActivityHtml(entry.id)}</div>
+          </div>
+          <div>
+            <label style="display: block; font-size: 0.875rem; color: var(--forge-text-muted); margin-bottom: 4px;">Timestamp</label>
+            <div style="font-size: 0.875rem; color: var(--forge-text);">${formatActivityTimestamp(entry.timestamp)}</div>
+          </div>
+          <div style="grid-column: 1 / -1;">
+            <label style="display: block; font-size: 0.875rem; color: var(--forge-text-muted); margin-bottom: 4px;">Username</label>
+            <div style="font-size: 0.875rem; color: var(--forge-text);">${escapeActivityHtml(entry.username)}</div>
+          </div>
+        </div>
+        <div style="margin-bottom: 16px;">
+          <label style="display: block; font-size: 0.875rem; color: var(--forge-text-muted); margin-bottom: 4px;">Raw Message</label>
+          <div style="padding: 8px; background: rgba(255, 255, 255, 0.05); border-radius: 4px; font-size: 0.875rem; border: 1px solid var(--forge-border); color: var(--forge-text);">${escapeActivityHtml(entry.raw_message)}</div>
+        </div>
+        ${errorSection}
+        ${payloadSection}
+        <div style="display: flex; gap: 8px; margin-top: 20px;">
+          <button onclick="this.closest('.activity-log-modal').remove()" class="forge-btn" style="flex: 1;">Close</button>
+        </div>
+      </div>
+    `;
+
+    modal.addEventListener('click', (e) => {
+      if (e.target === modal) {
+        modal.remove();
+      }
+    });
+
+    document.body.appendChild(modal);
+  }
+
+
+  // ========================================
   // DYNAMIC STATUS SET FORM (TABLE FORMAT)
   // ========================================
 
-  // Autodesk color mapping with RGB values for visualization
   const AUTODESK_COLOR_MAP = {
     'adsk-charcoal-500': { rgb: '94, 94, 94', label: 'Charcoal' },
     'adsk-blue-500': { rgb: '0, 103, 220', label: 'Blue' },
@@ -135,27 +358,9 @@
     'adsk-brown-500': { rgb: '139, 90, 43', label: 'Brown' }
   };
 
-  const AUTODESK_COLORS = [
-    'adsk-black', 'adsk-white', 
-    'adsk-charcoal-900', 'adsk-charcoal-800', 'adsk-charcoal-700', 'adsk-charcoal-600', 
-    'adsk-charcoal-500', 'adsk-charcoal-400', 'adsk-charcoal-300', 'adsk-charcoal-200', 
-    'adsk-charcoal-100', 'adsk-charcoal-050',
-    'adsk-blue-700', 'adsk-blue-500', 'adsk-blue-300', 'adsk-blue-100',
-    'adsk-red-700', 'adsk-red-500', 'adsk-red-300',
-    'adsk-green-700', 'adsk-green-500', 'adsk-green-300',
-    'adsk-yellow-orange-700', 'adsk-yellow-orange-500', 'adsk-yellow-orange-300',
-    'adsk-dark-blue-700', 'adsk-dark-blue-500', 'adsk-dark-blue-300',
-    'adsk-pink-700', 'adsk-pink-500', 'adsk-pink-300',
-    'adsk-turquoise-700', 'adsk-turquoise-500', 'adsk-turquoise-300',
-    'adsk-purple-700', 'adsk-purple-500', 'adsk-purple-300',
-    'adsk-salmon-700', 'adsk-salmon-500', 'adsk-salmon-300',
-    'adsk-brown-700', 'adsk-brown-500', 'adsk-brown-300'
-  ];
-
   let statusSetRowCounter = 0;
   let statusValueRowCounter = 0;
 
-  // Create a status value row for nested table
   function createStatusValueRow(parentSetId) {
     statusValueRowCounter++;
     const valueId = `status-value-${statusValueRowCounter}`;
@@ -164,7 +369,6 @@
     tr.className = 'status-value-row';
     tr.dataset.valueId = valueId;
     
-    // Status Label cell
     const labelCell = document.createElement('td');
     labelCell.innerHTML = `
       <input 
@@ -175,7 +379,6 @@
       />
     `;
     
-    // Description cell
     const descCell = document.createElement('td');
     descCell.innerHTML = `
       <input 
@@ -186,7 +389,6 @@
       />
     `;
     
-    // Color cell with dropdown and preview circle
     const colorCell = document.createElement('td');
     const colorOptions = Object.keys(AUTODESK_COLOR_MAP).map(colorKey => {
       const { rgb, label } = AUTODESK_COLOR_MAP[colorKey];
@@ -202,7 +404,6 @@
       </div>
     `;
     
-    // Remove button cell
     const removeCell = document.createElement('td');
     removeCell.style.textAlign = 'center';
     removeCell.innerHTML = `
@@ -219,7 +420,6 @@
     tr.appendChild(colorCell);
     tr.appendChild(removeCell);
     
-    // Color change handler - update preview circle
     const colorSelect = colorCell.querySelector('.sv-color-select');
     const previewCircle = colorCell.querySelector('.color-preview-circle');
     
@@ -229,13 +429,11 @@
       previewCircle.style.backgroundColor = `rgb(${rgb})`;
     });
     
-    // Remove button handler
     const removeBtn = removeCell.querySelector('.remove-status-value-btn');
     removeBtn.addEventListener('click', () => {
       const statusValuesTable = tr.closest('.status-values-nested-table');
       const tbody = statusValuesTable.querySelector('tbody');
       
-      // Only remove if more than 1 row exists
       if (tbody.querySelectorAll('.status-value-row').length > 1) {
         tr.remove();
       } else {
@@ -246,7 +444,6 @@
     return tr;
   }
 
-  // Create "Add Status Value" button row for nested table
   function createAddStatusValueButton(parentSetId) {
     const tr = document.createElement('tr');
     tr.className = 'add-status-value-tr';
@@ -264,19 +461,17 @@
     
     tr.appendChild(td);
     
-    // Button click handler
     const btn = td.querySelector('.add-status-value-btn');
     btn.addEventListener('click', () => {
       const statusValuesTable = tr.closest('.status-values-nested-table');
       const tbody = statusValuesTable.querySelector('tbody');
       const newRow = createStatusValueRow(parentSetId);
-      tbody.insertBefore(newRow, tr); // Insert before the add button row
+      tbody.insertBefore(newRow, tr);
     });
     
     return tr;
   }
 
-  // Create main status set row
   function createStatusSetRow() {
     statusSetRowCounter++;
     const setId = `status-set-${statusSetRowCounter}`;
@@ -285,7 +480,6 @@
     tr.className = 'status-set-row';
     tr.dataset.setId = setId;
     
-    // Status Set Name cell
     const nameCell = document.createElement('td');
     nameCell.innerHTML = `
       <input 
@@ -296,7 +490,6 @@
       />
     `;
     
-    // Description cell
     const descCell = document.createElement('td');
     descCell.innerHTML = `
       <input 
@@ -307,7 +500,6 @@
       />
     `;
     
-    // Status Values cell (contains nested table)
     const valuesCell = document.createElement('td');
     valuesCell.innerHTML = `
       <div class="status-values-container">
@@ -321,18 +513,15 @@
             </tr>
           </thead>
           <tbody>
-            <!-- Status value rows will be added here -->
           </tbody>
         </table>
       </div>
     `;
     
-    // Add initial status value row and add button
     const tbody = valuesCell.querySelector('tbody');
     tbody.appendChild(createStatusValueRow(setId));
     tbody.appendChild(createAddStatusValueButton(setId));
     
-    // Remove button cell
     const removeCell = document.createElement('td');
     removeCell.style.textAlign = 'center';
     removeCell.innerHTML = `
@@ -349,12 +538,10 @@
     tr.appendChild(valuesCell);
     tr.appendChild(removeCell);
     
-    // Remove button handler
     const removeBtn = removeCell.querySelector('.remove-status-set-btn');
     removeBtn.addEventListener('click', () => {
       const tbody = tr.parentElement;
       
-      // Only remove if more than 1 row exists (excluding add button row)
       if (tbody.querySelectorAll('.status-set-row').length > 1) {
         tr.remove();
       } else {
@@ -365,7 +552,6 @@
     return tr;
   }
 
-  // Create "Add Status Set" button row for main table
   function createAddStatusSetButton() {
     const tr = document.createElement('tr');
     tr.className = 'add-row-tr';
@@ -383,17 +569,15 @@
     
     tr.appendChild(td);
     
-    // Button click handler
     const btn = td.querySelector('.add-row-btn');
     btn.addEventListener('click', () => {
       const newRow = createStatusSetRow();
-      el.statusSetsTableBody.insertBefore(newRow, tr); // Insert before add button row
+      el.statusSetsTableBody.insertBefore(newRow, tr);
     });
     
     return tr;
   }
 
-  // Collect all status sets data from table
   function collectStatusSetsTableData() {
     const statusSetRows = el.statusSetsTableBody.querySelectorAll('.status-set-row');
     
@@ -413,7 +597,6 @@
         return null;
       }
       
-      // Get all status values for this set
       const statusValueRows = row.querySelectorAll('.status-value-row');
       
       if (statusValueRows.length === 0) {
@@ -452,24 +635,21 @@
     return statusSets;
   }
 
-  // Reset status set form
   function resetStatusSetForm() {
     el.statusSetsTableBody.innerHTML = '';
-    // Add one initial row
     el.statusSetsTableBody.appendChild(createStatusSetRow());
-    // Add the "Add Status Set" button
     el.statusSetsTableBody.appendChild(createAddStatusSetButton());
   }
-
-  // ========================================
-  // END DYNAMIC STATUS VALUE FORM
-  // ========================================
 
   // ========================================
   // DYNAMIC CUSTOM FIELDS FORM (TABLE FORMAT)
   // ========================================
 
   let customFieldRowCounter = 0;
+  let availableStatusSets = [];
+  let availableCustomFields = [];
+  let availableCategories = [];
+  let categoryCardCounter = 0;
 
   function createCustomFieldRow() {
     customFieldRowCounter++;
@@ -531,21 +711,17 @@
       </td>
     `;
     
-    // Add event listeners for this row
     const dataTypeSelect = row.querySelector('.cf-data-type');
     const enumValuesInput = row.querySelector('.cf-enum-values');
     const defaultValueInput = row.querySelector('.cf-default-value');
     const removeBtn = row.querySelector('.remove-row-btn');
     
-    // Handle data type change
     dataTypeSelect.addEventListener('change', () => {
       const dataType = dataTypeSelect.value;
       
-      // Reset enum values field
       enumValuesInput.disabled = true;
       enumValuesInput.value = '';
       
-      // Show enum values for select/multi_select
       if (dataType === 'select' || dataType === 'multi_select') {
         enumValuesInput.disabled = false;
         enumValuesInput.required = true;
@@ -553,7 +729,6 @@
         enumValuesInput.required = false;
       }
       
-      // Update default value input type
       if (dataType === 'date') {
         defaultValueInput.type = 'date';
         defaultValueInput.placeholder = '';
@@ -561,7 +736,6 @@
         defaultValueInput.type = 'number';
         defaultValueInput.placeholder = '0';
       } else if (dataType === 'boolean') {
-        // Replace with select for boolean
         const boolSelect = document.createElement('select');
         boolSelect.className = 'cf-default-value';
         boolSelect.innerHTML = `
@@ -584,9 +758,7 @@
       }
     });
     
-    // Remove row handler
     removeBtn.addEventListener('click', () => {
-      // Don't remove if it's the last row
       const tbody = row.closest('tbody');
       const dataRows = tbody.querySelectorAll('tr:not(.add-row-tr)');
       if (dataRows.length > 1) {
@@ -657,7 +829,6 @@
         defaultValue: null
       };
       
-      // Handle enum values for select/multi_select (comma-separated)
       if (dataType === 'select' || dataType === 'multi_select') {
         if (!enumValuesInput) {
           showToast('error', 'Validation Error', `Row ${i + 1}: Enum values are required for select/multi_select`);
@@ -674,12 +845,10 @@
         fieldData.enumValues = enumValues;
       }
       
-      // Default max length to 50 for text type
       if (dataType === 'text') {
         fieldData.maxLengthOnIngress = 50;
       }
       
-      // Handle default value
       const defaultValueEl = row.querySelector('.cf-default-value');
       if (defaultValueEl && defaultValueEl.value) {
         if (dataType === 'boolean') {
@@ -700,26 +869,13 @@
   function resetCustomFieldForm() {
     const tbody = document.getElementById('customFieldsTableBody');
     tbody.innerHTML = '';
-    // Add one initial row
     tbody.appendChild(createCustomFieldRow());
-    // Add the "Add Row" button row
     tbody.appendChild(createAddRowButton());
   }
 
   // ========================================
-  // END DYNAMIC CUSTOM FIELDS FORM
-  // ========================================
-
-  // ========================================
   // DYNAMIC CATEGORY CARDS FORM
   // ========================================
-
-  // Store loaded data for dropdowns
-  let availableStatusSets = [];
-  let availableCustomFields = [];
-  let availableCategories = [];
-  
-  let categoryCardCounter = 0;
 
   function createCategoryCard() {
     categoryCardCounter++;
@@ -740,7 +896,6 @@
       </div>
       
       <div class="category-card-body">
-        <!-- Four-column row for Category Name, Description, Parent Category, and Status Set -->
         <div class="category-form-row-main">
           <div class="category-form-group">
             <label>Category Name *</label>
@@ -788,7 +943,6 @@
           </div>
         </div>
         
-        <!-- Custom Attributes full-width -->
         <div class="category-form-group cat-customfields-group">
           <div style="display: flex; align-items: center; gap: 8px;">
             <svg width="16" height="16" fill="var(--forge-warning)">
@@ -801,7 +955,6 @@
               <span class="placeholder-text">Click to select custom fields...</span>
             </div>
             <div class="custom-fields-dropdown" style="display: none;">
-              <!-- Checkboxes will be populated here -->
             </div>
           </div>
           <div class="inheritance-warning" style="display: none;">
@@ -816,7 +969,6 @@
       </div>
     `;
     
-    // Populate parent category dropdown
     const parentSelect = card.querySelector('.cat-parent-select');
     availableCategories.forEach(cat => {
       const option = document.createElement('option');
@@ -826,7 +978,6 @@
       parentSelect.appendChild(option);
     });
     
-    // Populate status set dropdown
     const statusSetSelect = card.querySelector('.cat-statusset-select');
     const uniqueStatusSets = [...new Set(availableStatusSets.map(ss => ss.status_set_name))];
     uniqueStatusSets.forEach(ssName => {
@@ -836,12 +987,10 @@
       statusSetSelect.appendChild(option);
     });
     
-    // Default to "Default" status set
     if (uniqueStatusSets.includes('Default')) {
       statusSetSelect.value = 'Default';
     }
     
-    // Populate custom fields checkboxes
     const customFieldsDropdown = card.querySelector('.custom-fields-dropdown');
     availableCustomFields.forEach(cf => {
       const label = document.createElement('label');
@@ -853,14 +1002,12 @@
       customFieldsDropdown.appendChild(label);
     });
     
-    // Custom fields selector toggle
     const selectedFieldsDisplay = card.querySelector('.selected-fields-display');
     selectedFieldsDisplay.addEventListener('click', () => {
       const dropdown = card.querySelector('.custom-fields-dropdown');
       dropdown.style.display = dropdown.style.display === 'none' ? 'block' : 'none';
     });
     
-    // Update selected fields display when checkboxes change
     const checkboxes = card.querySelectorAll('.custom-fields-dropdown input[type="checkbox"]');
     checkboxes.forEach(checkbox => {
       checkbox.addEventListener('change', () => {
@@ -868,7 +1015,6 @@
       });
     });
     
-    // Close dropdown when clicking outside
     document.addEventListener('click', (e) => {
       if (!card.contains(e.target)) {
         const dropdown = card.querySelector('.custom-fields-dropdown');
@@ -876,11 +1022,9 @@
       }
     });
     
-    // Parent category change handler - check inheritance rules
     parentSelect.addEventListener('change', () => {
       const selectedOption = parentSelect.options[parentSelect.selectedIndex];
       if (!selectedOption.value) {
-        // No parent selected, enable everything
         enableStatusSetAndCustomFields(card);
         return;
       }
@@ -888,18 +1032,13 @@
       const parentId = selectedOption.value;
       const grandParentId = selectedOption.dataset.parentId;
       
-      // Allow customization if:
-      // 1. Parent is ROOT (ID = 1), OR
-      // 2. Parent's parent is ROOT (grandParentId = 1)
       if (parentId === '1' || grandParentId === '1') {
         enableStatusSetAndCustomFields(card);
       } else {
-        // Parent is a sub-category (grandparent is not ROOT)
         disableStatusSetAndCustomFields(card);
       }
     });
     
-    // Remove button handler
     const removeBtn = card.querySelector('.remove-category-btn');
     removeBtn.addEventListener('click', () => {
       const container = card.closest('#categoryCardsContainer');
@@ -942,19 +1081,16 @@
     const statusSetSelect = card.querySelector('.cat-statusset-select');
     const customFieldsSelector = card.querySelector('.custom-fields-selector');
     
-    // Disable and clear selections
     statusSetSelect.disabled = true;
     statusSetSelect.value = '';
     customFieldsSelector.style.pointerEvents = 'none';
     customFieldsSelector.style.opacity = '0.5';
     
-    // Uncheck all custom field checkboxes
     card.querySelectorAll('.custom-fields-dropdown input[type="checkbox"]').forEach(cb => {
       cb.checked = false;
     });
     updateSelectedFieldsDisplay(card);
     
-    // Show warnings
     statusSetGroup.querySelector('.inheritance-warning').style.display = 'flex';
     customFieldsGroup.querySelector('.inheritance-warning').style.display = 'flex';
   }
@@ -966,10 +1102,8 @@
     const statusSetSelect = card.querySelector('.cat-statusset-select');
     const customFieldsSelector = card.querySelector('.custom-fields-selector');
     
-    // Enable selections
     statusSetSelect.disabled = false;
     
-    // Reset to Default if available
     const uniqueStatusSets = [...new Set(availableStatusSets.map(ss => ss.status_set_name))];
     if (uniqueStatusSets.includes('Default')) {
       statusSetSelect.value = 'Default';
@@ -978,7 +1112,6 @@
     customFieldsSelector.style.pointerEvents = '';
     customFieldsSelector.style.opacity = '';
     
-    // Hide warnings
     statusSetGroup.querySelector('.inheritance-warning').style.display = 'none';
     customFieldsGroup.querySelector('.inheritance-warning').style.display = 'none';
   }
@@ -999,7 +1132,6 @@
     addBtn.addEventListener('click', () => {
       const container = document.getElementById('categoryCardsContainer');
       const newCard = createCategoryCard();
-      // Insert before the button container
       container.insertBefore(newCard, buttonContainer);
     });
     
@@ -1037,19 +1169,15 @@
       const parentName = selectedParentOption.textContent.split(' (ID:')[0];
       const grandParentId = selectedParentOption.dataset.parentId;
       
-      // Get selected custom fields
       const selectedFields = [];
       card.querySelectorAll('.custom-fields-dropdown input[type="checkbox"]:checked').forEach(cb => {
         selectedFields.push(cb.value);
       });
       
-      // Determine if status set and custom fields should be included based on inheritance
-      // Allow customization if parent is ROOT (ID=1) OR parent's parent is ROOT (grandParentId=1)
       let statusSetName = '';
       let customFields = [];
       
       if (parentId === 1 || grandParentId === '1') {
-        // Direct child of ROOT or grandchild of ROOT - use selections
         if (!statusSetSelect.value) {
           showToast('error', 'Validation Error', `Status set is required for "${name}"`);
           return null;
@@ -1057,7 +1185,6 @@
         statusSetName = statusSetSelect.value;
         customFields = selectedFields;
       } else {
-        // Deeper nesting - inherited from parent, leave empty
         statusSetName = '';
         customFields = [];
       }
@@ -1077,14 +1204,12 @@
 
   function resetCategoryForm() {
     el.categoryCardsContainer.innerHTML = '';
-    // Add one initial card
     el.categoryCardsContainer.appendChild(createCategoryCard());
-    // Add the "Add Category" button
     el.categoryCardsContainer.appendChild(createAddCategoryButton());
   }
 
   // ========================================
-  // END DYNAMIC CATEGORY CARDS FORM
+  // CATEGORY TREE RENDERING
   // ========================================
 
   function renderEnv(env) {
@@ -1121,7 +1246,6 @@
     const card = document.createElement("div");
     card.className = "category-card";
     
-    // Header with icon, name, and ID
     const header = document.createElement("div");
     header.className = "category-card-header";
     
@@ -1145,11 +1269,9 @@
     header.appendChild(name);
     header.appendChild(id);
     
-    // Details section
     const details = document.createElement("div");
     details.className = "category-details";
     
-    // Status Set
     const statusSet = document.createElement("div");
     statusSet.className = "category-status-set";
     statusSet.innerHTML = `
@@ -1163,7 +1285,6 @@
     
     details.appendChild(statusSet);
     
-    // Custom Attributes - display inline, no tooltip
     if (node.customAttributes && node.customAttributes.length > 0) {
       const attrsContainer = document.createElement("div");
       attrsContainer.className = "category-attributes-inline";
@@ -1182,7 +1303,6 @@
     card.appendChild(details);
     nodeDiv.appendChild(card);
     
-    // Render children recursively
     if (node.children && node.children.length > 0) {
       const childrenContainer = document.createElement("div");
       childrenContainer.className = "category-children";
@@ -1203,7 +1323,6 @@
       const res = await fetch("/api/categories", { credentials: "include" });
       const data = await res.json();
       
-      // Store categories data for category creation (flatten the tree into a list)
       availableCategories = [];
       const flattenCategories = (nodes, parentId = null) => {
         (nodes || []).forEach(node => {
@@ -1230,7 +1349,6 @@
       if (data.tree && data.tree.length > 0) {
         el.categoryTree.appendChild(buildTreeUL(data.tree));
       } else if (data.count > 0) {
-        // Has categories but no tree structure
         el.categoryTree.innerHTML = `
           <div class="category-empty">
             <svg viewBox="0 0 24 24" fill="currentColor">
@@ -1278,12 +1396,10 @@
     }
   }
 
-  // Toggle environment panel
   el.toggleEnvBtn?.addEventListener("click", () => {
     el.envPanel.hidden = !el.envPanel.hidden;
   });
 
-  // CSV previews
   async function renderStatusSetsPreview() {
     try {
       showLoading(el.statusSetsLoading);
@@ -1295,7 +1411,6 @@
       const { items = [] } = await res.json();
       console.log("Status Sets Preview Items:", items);
       
-      // Store status sets data for category creation
       availableStatusSets = items.flatMap(item => 
         (item.statuses || []).map(status => ({
           status_set_name: item.name,
@@ -1365,7 +1480,6 @@
       const { items = [] } = await res.json();
       console.log("Custom Fields Preview Items:", items);
       
-      // Store custom fields data for category creation
       availableCustomFields = items.map(item => ({
         name: item.name || '',
         display_name: item.displayName || '',
@@ -1421,7 +1535,10 @@
     }
   }
 
-  // Button handlers
+  // ========================================
+  // BUTTON HANDLERS
+  // ========================================
+
   el.authorizeBtn?.addEventListener("click", () => {
     window.location.href = "/authorize";
   });
@@ -1461,7 +1578,6 @@
       
       showToast("success", "Default configuration created", "Refreshing data...");
       
-      // Refresh all the data
       await loadCategories();
       await renderStatusSetsPreview();
       await renderCustomFieldsPreview();
@@ -1473,7 +1589,6 @@
     }
   });
 
-  // Handle Update Asset Status form
   document.getElementById("updateAssetForm")?.addEventListener("submit", async (e) => {
     e.preventDefault();
     const assetGuid = document.getElementById("assetGuid")?.value.trim();
@@ -1505,7 +1620,6 @@
     }
   });
 
-  // Handle Create Status Set form
   el.resetStatusSetForm?.addEventListener('click', () => {
     if (confirm('Are you sure you want to clear all status sets? All entered data will be lost.')) {
       resetStatusSetForm();
@@ -1518,7 +1632,7 @@
     
     const statusSetsData = collectStatusSetsTableData();
     if (!statusSetsData) {
-      return; // Validation error already shown
+      return;
     }
     
     try {
@@ -1541,11 +1655,9 @@
         const totalStatusValues = statusSetsData.reduce((sum, set) => sum + set.status_label.length, 0);
         showToast('success', 'Status sets created', `${statusSetsData.length} status set(s) created successfully with ${totalStatusValues} total status values.`);
         
-        // Reset form and refresh preview
         resetStatusSetForm();
         await renderStatusSetsPreview();
         
-        // Optionally switch to Status Sets tab to see the result
         const statusSetsTab = document.querySelector('.forge-tab[data-tab="status-sets"]');
         if (statusSetsTab) {
           statusSetsTab.click();
@@ -1560,7 +1672,6 @@
     }
   });
 
-  // Custom Field Form Event Listeners
   el.resetCustomFieldForm?.addEventListener('click', (e) => {
     e.preventDefault();
     if (confirm('Are you sure you want to clear all rows? All data will be lost.')) {
@@ -1574,7 +1685,7 @@
     
     const fieldsData = collectCustomFieldsTableData();
     if (!fieldsData) {
-      return; // Validation error already shown
+      return;
     }
     
     try {
@@ -1596,11 +1707,9 @@
         const data = await resp.json().catch(() => ({}));
         showToast('success', 'Custom fields created', `Successfully created ${fieldsData.length} custom field(s).`);
         
-        // Reset form and refresh preview
         resetCustomFieldForm();
         await renderCustomFieldsPreview();
         
-        // Switch to Custom Fields tab to see the result
         const customFieldsTab = document.querySelector('.forge-tab[data-tab="custom-fields"]');
         if (customFieldsTab) {
           customFieldsTab.click();
@@ -1615,16 +1724,9 @@
     }
   });
 
-  // Categories Form Event Listeners
-  el.resetCategoryForm?.addEventListener('click', (e) => {
-    e.preventDefault();
-    if (confirm('Are you sure you want to reset the form? All data will be lost.')) {
-      el.categoryName.value = '';
-      el.categoryDescription.value = '';
-      if (parentCategoryAutocomplete) parentCategoryAutocomplete.reset();
-      if (statusSetAutocomplete) statusSetAutocomplete.reset();
-      if (customFieldsAutocomplete) customFieldsAutocomplete.reset();
-      showToast('success', 'Form reset', 'The form has been cleared.');
+  el.resetCategoryForm?.addEventListener('click', () => {
+    if (confirm('Are you sure you want to clear all category cards?')) {
+      resetCategoryForm();
     }
   });
 
@@ -1633,7 +1735,7 @@
     
     const categoriesData = collectCategoriesData();
     if (!categoriesData) {
-      return; // Validation errors already shown in collectCategoriesData
+      return;
     }
     
     try {
@@ -1655,11 +1757,9 @@
         const data = await resp.json().catch(() => ({}));
         showToast('success', 'Categories created', `${categoriesData.length} ${categoriesData.length === 1 ? 'category' : 'categories'} created successfully.`);
         
-        // Reset form and refresh preview
         resetCategoryForm();
         await loadCategories();
         
-        // Switch to Categories tab to see the result
         const categoriesTab = document.querySelector('.forge-tab[data-tab="categories"]');
         if (categoriesTab) {
           categoriesTab.click();
@@ -1674,13 +1774,6 @@
     }
   });
 
-  // Reset category form handler
-  el.resetCategoryForm?.addEventListener('click', () => {
-    if (confirm('Are you sure you want to clear all category cards?')) {
-      resetCategoryForm();
-    }
-  });
-
   // ========================================
   // CATEGORY STATUS DEFAULT TAB
   // ========================================
@@ -1689,7 +1782,6 @@
 
   async function loadCategoryStatusDefault() {
     try {
-      // Show loading state
       if (el.configStructureLoading) el.configStructureLoading.hidden = false;
       if (el.configStructureContent) el.configStructureContent.style.display = 'none';
       if (el.configStructureError) el.configStructureError.style.display = 'none';
@@ -1702,19 +1794,15 @@
 
       categoryStatusDefaultData = await resp.json();
 
-      // Hide loading, show content
       if (el.configStructureLoading) el.configStructureLoading.hidden = true;
       if (el.configStructureContent) el.configStructureContent.style.display = 'block';
 
-      // Render summary
       renderCategoryStatusDefaultSummary(categoryStatusDefaultData);
 
-      // Render JSON viewer
       if (el.configJsonViewer) {
         el.configJsonViewer.textContent = JSON.stringify(categoryStatusDefaultData, null, 2);
       }
 
-      // Enable download button
       if (el.downloadConfigJsonBtn) el.downloadConfigJsonBtn.disabled = false;
 
       showToast('success', 'Category Status Default Loaded', `Loaded ${categoryStatusDefaultData.length || 0} category default status mappings`);
@@ -1774,7 +1862,6 @@
     `).join('');
   }
 
-  // Category Status Default button handlers
   el.loadConfigStructureBtn?.addEventListener('click', async () => {
     await loadCategoryStatusDefault();
   });
@@ -1813,10 +1900,9 @@
   });
 
   // ========================================
-  // END CATEGORY STATUS DEFAULT TAB
+  // ISSUES HANDLING
   // ========================================
 
-  // Handle Create Issue form
   el.createIssueForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -1848,23 +1934,22 @@
       } else {
         const text = await response.text();
         console.error('Non-JSON response:', text.substring(0, 200));
-        showToast('error', '❌ Server Error', 'Server returned an error page. Check authentication or server logs.');
+        showToast('error', 'Server Error', 'Server returned an error page. Check authentication or server logs.');
         return;
       }
 
       if (response.ok) {
-        showToast('success', '✅ Issue Created', `Issue ID: ${data.id}`);
+        showToast('success', 'Issue Created', `Issue ID: ${data.id}`);
         el.createIssueForm.reset();
       } else {
-        showToast('error', '❌ Creation Failed', data.error || 'Unknown error');
+        showToast('error', 'Creation Failed', data.error || 'Unknown error');
       }
     } catch (err) {
-      showToast('error', '⚠️ Request Error', err.message);
+      showToast('error', 'Request Error', err.message);
       console.error('Create issue error:', err);
     }
   });
 
-  // Handle Update Issue Status form
   el.updateIssueForm?.addEventListener('submit', async (e) => {
     e.preventDefault();
     
@@ -1893,23 +1978,22 @@
       } else {
         const text = await response.text();
         console.error('Non-JSON response:', text.substring(0, 200));
-        showToast('error', '❌ Server Error', 'Server returned an error page. Check authentication or server logs.');
+        showToast('error', 'Server Error', 'Server returned an error page. Check authentication or server logs.');
         return;
       }
 
       if (response.ok) {
-        showToast('success', '✅ Status Updated', `Issue status changed to ${formData.status_value}`);
+        showToast('success', 'Status Updated', `Issue status changed to ${formData.status_value}`);
         el.updateIssueForm.reset();
       } else {
-        showToast('error', '❌ Update Failed', data.error || 'Unknown error');
+        showToast('error', 'Update Failed', data.error || 'Unknown error');
       }
     } catch (err) {
-      showToast('error', '⚠️ Request Error', err.message);
+      showToast('error', 'Request Error', err.message);
       console.error('Update issue error:', err);
     }
   });
 
-  // Handle Fetch Issues button
   el.fetchIssuesBtn?.addEventListener('click', async () => {
     showLoading(el.issuesLoading);
     
@@ -1930,13 +2014,12 @@
       } else {
         const text = await response.text();
         console.error('Non-JSON response:', text.substring(0, 200));
-        showToast('error', '❌ Server Error', 'Server returned an error page. Check authentication or server logs.');
+        showToast('error', 'Server Error', 'Server returned an error page. Check authentication or server logs.');
         hideLoading(el.issuesLoading);
         return;
       }
 
       if (data.success) {
-        // Display issue subtypes grouped by type
         let subtypesHtml = '<h3>Issue Types & Subtypes</h3>';
         subtypesHtml += '<div class="issues-table-wrapper"><table class="issues-table"><thead><tr><th>Type</th><th>Subtype</th><th>ID</th><th>Source</th></tr></thead><tbody>';
         
@@ -1956,7 +2039,6 @@
         subtypesHtml += '</tbody></table></div>';
         el.issueSubtypesDisplay.innerHTML = subtypesHtml;
 
-        // Display recent issues
         if (data.recent_issues && data.recent_issues.length > 0) {
           let issuesHtml = '<h3>Recent Issues</h3>';
           issuesHtml += '<div class="issues-table-wrapper"><table class="issues-table"><thead><tr><th>Issue ID</th><th>Title</th><th>Status</th><th>Type</th></tr></thead><tbody>';
@@ -1976,24 +2058,26 @@
           el.recentIssuesDisplay.innerHTML = issuesHtml;
         }
 
-        showToast('success', '✅ Issues Loaded', `Found ${data.total_count} subtypes`);
+        showToast('success', 'Issues Loaded', `Found ${data.total_count} subtypes`);
       } else {
-        showToast('error', '❌ Load Failed', data.error || 'Unknown error');
+        showToast('error', 'Load Failed', data.error || 'Unknown error');
       }
     } catch (err) {
-      showToast('error', '⚠️ Request Error', err.message);
+      showToast('error', 'Request Error', err.message);
       console.error('Fetch issues error:', err);
     } finally {
       hideLoading(el.issuesLoading);
     }
   });
 
-  // Tab switching
+  // ========================================
+  // TAB SWITCHING
+  // ========================================
+
   document.querySelectorAll('.forge-tab').forEach(tab => {
     tab.addEventListener('click', () => {
       const tabName = tab.dataset.tab;
       
-      // Update tab buttons
       document.querySelectorAll('.forge-tab').forEach(t => {
         if (t === tab) {
           t.classList.add('active');
@@ -2001,43 +2085,41 @@
         } else {
           t.classList.remove('active');
           t.setAttribute('aria-selected', 'false');
-        }
-      });
-      
-      // Update tab panels
-      document.querySelectorAll('.forge-tab-panel').forEach(panel => {
-        if (panel.id === `tab-${tabName}`) {
-          panel.classList.add('active');
-          panel.hidden = false;
-        } else {
-          panel.classList.remove('active');
-          panel.hidden = true;
-        }
-      });
-    });
+    }
   });
+  
+  document.querySelectorAll('.forge-tab-panel').forEach(panel => {
+    if (panel.id === `tab-${tabName}`) {
+      panel.classList.add('active');
+      panel.hidden = false;
+    } else {
+      panel.classList.remove('active');
+      panel.hidden = true;
+    }
+  });
+});
+});
+// ========================================
+// INITIAL LOAD
+// ========================================
+await loadStatus();
+await loadCategories();
+await renderStatusSetsPreview();
+await renderCustomFieldsPreview();
 
-  // Initial load
-  await loadStatus();
-  await loadCategories();
-  await renderStatusSetsPreview();
-  await renderCustomFieldsPreview();
-  
-  // Initialize create status sets form with one row and Add Row button
-  if (el.statusSetsTableBody) {
-    el.statusSetsTableBody.appendChild(createStatusSetRow());
-    el.statusSetsTableBody.appendChild(createAddStatusSetButton());
-  }
-  
-  // Initialize create custom fields form with one row and Add Row button
-  if (el.customFieldsTableBody) {
-    el.customFieldsTableBody.appendChild(createCustomFieldRow());
-    el.customFieldsTableBody.appendChild(createAddRowButton());
-  }
-  
-  // Initialize create categories form with one card and Add Category button
-  if (el.categoryCardsContainer) {
-    el.categoryCardsContainer.appendChild(createCategoryCard());
-    el.categoryCardsContainer.appendChild(createAddCategoryButton());
-  }
+// Load activity log immediately (since it's the front page)
+await loadActivityLog();
+
+if (el.statusSetsTableBody) {
+  el.statusSetsTableBody.appendChild(createStatusSetRow());
+  el.statusSetsTableBody.appendChild(createAddStatusSetButton());
+}
+if (el.customFieldsTableBody) {
+  el.customFieldsTableBody.appendChild(createCustomFieldRow());
+  el.customFieldsTableBody.appendChild(createAddRowButton());
+}
+if (el.categoryCardsContainer) {
+  el.categoryCardsContainer.appendChild(createCategoryCard());
+  el.categoryCardsContainer.appendChild(createAddCategoryButton());
+}
 })();

@@ -5,18 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>Autodesk Construction Cloud - Asset Manager</title>
     <link href="/styles.css" rel="stylesheet" />
-    <!-- 
-      QA CHECKLIST:
-      ✓ Project Info loads on page load
-      ✓ Tab navigation switches content correctly
-      ✓ Forms open/close properly
-      ✓ API calls succeed with valid tokens
-      ✓ Error toast messages appear on failures
-      ✓ Loading indicators show during async operations
-      ✓ Responsive layout works on mobile/tablet/desktop
-    -->
   </head>
   <body>
+
     <!-- ========== HEADER ========== -->
     <header class="forge-header">
       <div class="forge-container">
@@ -51,769 +42,805 @@
     <!-- ========== MAIN CONTENT ========== -->
     <main class="forge-main">
       <div class="forge-container">
-        <!-- ========== STATUS BANNER ========== -->
-        <section class="forge-status-banner">
-          <div class="status-item">
-            <svg width="20" height="20" fill="currentColor">
-              <circle cx="10" cy="10" r="4" />
-            </svg>
-            <div>
-              <div class="status-label">Token Status</div>
-              <div id="tokenStatus" class="status-value">Loading...</div>
-            </div>
+        
+        <!-- ========== ACTIVITY LOG VIEW (ALWAYS VISIBLE AT TOP) ========== -->
+        <section id="activityLogView" class="forge-panel">
+          <div class="forge-panel-header">
+            <h2>Activity Log</h2>
           </div>
-          <div class="status-item">
-            <svg width="20" height="20" fill="currentColor">
-              <path
-                d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 12H9v-2h2v2zm0-4H9V6h2v4z"
-              />
-            </svg>
-            <div>
-              <div class="status-label">Environment</div>
-              <div class="status-value">
-                <button id="toggleEnvBtn" class="forge-link-btn">
-                  View Details
-                </button>
-              </div>
+          <div class="forge-panel-body">
+            <div id="activityLogLoading" class="forge-spinner" hidden>
+              <div class="spinner"></div>
+              <p>Loading activity log...</p>
+            </div>
+            <div class="activity-log-table-wrapper">
+              <table class="activity-log-table">
+                <thead>
+                  <tr>
+                    <th style="width: 12%">Timestamp</th>
+                    <th style="width: 14%">Action Type</th>
+                    <th style="width: 18%">Username</th>
+                    <th style="width: 30%">Raw Message</th>
+                    <th style="width: 10%">Status</th>
+                    <th style="width: 16%">Details</th>
+                  </tr>
+                </thead>
+                <tbody id="activityLogTableBody">
+                  <!-- Rows will be added dynamically -->
+                </tbody>
+              </table>
             </div>
           </div>
         </section>
 
-        <!-- Environment Details Panel (Collapsible) -->
-        <div id="envPanel" class="forge-panel" hidden>
-          <h3>Environment Configuration</h3>
-          <ul id="envList" class="env-list"></ul>
-        </div>
-
-        <!-- ========== ACTIONS TOOLBAR ========== -->
-        <section class="forge-toolbar">
-          <button id="fetchConfigBtn" class="forge-btn">
-            <svg width="16" height="16" fill="currentColor">
-              <path
-                d="M13.5 2h-11A1.5 1.5 0 001 3.5v9A1.5 1.5 0 002.5 14h11a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0013.5 2zM8 11.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z"
-              />
-            </svg>
-            Fetch Assets Config
-          </button>
-          <button id="fetchAssetsInfo" class="forge-btn">
-            <svg width="16" height="16" fill="currentColor">
-              <path d="M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h12v2H2v-2z" />
-            </svg>
-            Fetch All Assets
-          </button>
-          <button
-            id="setupDefaultConfigBtn"
-            class="forge-btn forge-btn-primary"
-          >
-            <svg width="16" height="16" fill="currentColor">
-              <path
-                d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"
-              />
-            </svg>
-            Set Up Default Config
-          </button>
-        </section>
-
-        <!-- ========== TABBED INTERFACE ========== -->
-        <nav class="forge-tabs" role="tablist">
-          <button
-            class="forge-tab active"
-            data-tab="status-sets"
-            role="tab"
-            aria-selected="true"
-          >
-            Status Sets
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="custom-fields"
-            role="tab"
-            aria-selected="false"
-          >
-            Custom Fields
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="categories"
-            role="tab"
-            aria-selected="false"
-          >
-            Categories
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="create-status-set"
-            role="tab"
-            aria-selected="false"
-          >
-            Create Status Set
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="create-custom-fields"
-            role="tab"
-            aria-selected="false"
-          >
-            Create Custom Fields
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="create-categories"
-            role="tab"
-            aria-selected="false"
-          >
-            Create Categories
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="update-asset"
-            role="tab"
-            aria-selected="false"
-          >
-            Update Asset
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="config-structure"
-            role="tab"
-            aria-selected="false"
-          >
-            Category Status Default
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="create-issue"
-            role="tab"
-            aria-selected="false"
-          >
-            Create Issue
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="update-issue"
-            role="tab"
-            aria-selected="false"
-          >
-            Update Issue Status
-          </button>
-          <button
-            class="forge-tab"
-            data-tab="fetch-issues"
-            role="tab"
-            aria-selected="false"
-          >
-            Fetch Issues Info
-          </button>
-        </nav>
-
-        <!-- ========== TAB PANELS ========== -->
-        <div class="forge-tab-content">
-          <!-- STATUS SETS TAB -->
-          <section
-            id="tab-status-sets"
-            class="forge-tab-panel active"
-            role="tabpanel"
-          >
-            <div class="forge-panel-header">
-              <h2>Status Sets</h2>
-            </div>
-            <div class="forge-panel-body">
-              <div id="statusSetsLoading" class="forge-spinner" hidden>
-                <div class="spinner"></div>
-                <p>Loading status sets...</p>
+        <!-- ========== CONFIGURATION VIEW (ALWAYS VISIBLE BELOW) ========== -->
+        <div id="configurationView">
+          
+          <!-- ========== STATUS BANNER ========== -->
+          <section class="forge-status-banner">
+            <div class="status-item">
+              <svg width="20" height="20" fill="currentColor">
+                <circle cx="10" cy="10" r="4" />
+              </svg>
+              <div>
+                <div class="status-label">Token Status</div>
+                <div id="tokenStatus" class="status-value">Loading...</div>
               </div>
-              <div id="StatusSets"></div>
+            </div>
+            <div class="status-item">
+              <svg width="20" height="20" fill="currentColor">
+                <path
+                  d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 12H9v-2h2v2zm0-4H9V6h2v4z"
+                />
+              </svg>
+              <div>
+                <div class="status-label">Environment</div>
+                <div class="status-value">
+                  <button id="toggleEnvBtn" class="forge-link-btn">
+                    View Details
+                  </button>
+                </div>
+              </div>
             </div>
           </section>
 
-          <!-- CUSTOM FIELDS TAB -->
-          <section
-            id="tab-custom-fields"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Custom Fields</h2>
-            </div>
-            <div class="forge-panel-body">
-              <div id="customFieldsLoading" class="forge-spinner" hidden>
-                <div class="spinner"></div>
-                <p>Loading custom fields...</p>
-              </div>
-              <div id="CustomFields"></div>
-            </div>
+          <!-- Environment Details Panel (Collapsible) -->
+          <div id="envPanel" class="forge-panel" hidden>
+            <h3>Environment Configuration</h3>
+            <ul id="envList" class="env-list"></ul>
+          </div>
+
+          <!-- ========== ACTIONS TOOLBAR ========== -->
+          <section class="forge-toolbar">
+            <button id="fetchConfigBtn" class="forge-btn">
+              <svg width="16" height="16" fill="currentColor">
+                <path
+                  d="M13.5 2h-11A1.5 1.5 0 001 3.5v9A1.5 1.5 0 002.5 14h11a1.5 1.5 0 001.5-1.5v-9A1.5 1.5 0 0013.5 2zM8 11.5a3.5 3.5 0 110-7 3.5 3.5 0 010 7z"
+                />
+              </svg>
+              Fetch Assets Config
+            </button>
+            <button id="fetchAssetsInfo" class="forge-btn">
+              <svg width="16" height="16" fill="currentColor">
+                <path d="M2 3h12v2H2V3zm0 4h12v2H2V7zm0 4h12v2H2v-2z" />
+              </svg>
+              Fetch All Assets
+            </button>
+            <button
+              id="setupDefaultConfigBtn"
+              class="forge-btn forge-btn-primary"
+            >
+              <svg width="16" height="16" fill="currentColor">
+                <path
+                  d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"
+                />
+              </svg>
+              Set Up Default Config
+            </button>
           </section>
 
-          <!-- CATEGORIES TAB -->
-          <section
-            id="tab-categories"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Categories & Hierarchy</h2>
-            </div>
-            <div class="forge-panel-body">
-              <div id="categoriesLoading" class="forge-spinner" hidden>
-                <div class="spinner"></div>
-                <p>Loading categories...</p>
+          <!-- ========== TABBED INTERFACE ========== -->
+          <nav class="forge-tabs" role="tablist">
+            <button
+              class="forge-tab active"
+              data-tab="status-sets"
+              role="tab"
+              aria-selected="true"
+            >
+              Status Sets
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="custom-fields"
+              role="tab"
+              aria-selected="false"
+            >
+              Custom Fields
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="categories"
+              role="tab"
+              aria-selected="false"
+            >
+              Categories
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="create-status-set"
+              role="tab"
+              aria-selected="false"
+            >
+              Create Status Set
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="create-custom-fields"
+              role="tab"
+              aria-selected="false"
+            >
+              Create Custom Fields
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="create-categories"
+              role="tab"
+              aria-selected="false"
+            >
+              Create Categories
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="update-asset"
+              role="tab"
+              aria-selected="false"
+            >
+              Update Asset
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="config-structure"
+              role="tab"
+              aria-selected="false"
+            >
+              Category Status Default
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="create-issue"
+              role="tab"
+              aria-selected="false"
+            >
+              Create Issue
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="update-issue"
+              role="tab"
+              aria-selected="false"
+            >
+              Update Issue Status
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="fetch-issues"
+              role="tab"
+              aria-selected="false"
+            >
+              Fetch Issues Info
+            </button>
+          </nav>
+
+          <!-- ========== TAB PANELS ========== -->
+          <div class="forge-tab-content">
+            <!-- STATUS SETS TAB -->
+            <section
+              id="tab-status-sets"
+              class="forge-tab-panel active"
+              role="tabpanel"
+            >
+              <div class="forge-panel-header">
+                <h2>Status Sets</h2>
               </div>
-              <div id="categorySummary" class="forge-summary"></div>
-
-              <!-- Legend -->
-              <div class="category-legend">
-                <div class="legend-item">
-                  <svg width="16" height="16" fill="var(--forge-primary)">
-                    <rect x="2" y="2" width="12" height="12" rx="2" />
-                  </svg>
-                  <span>Category</span>
+              <div class="forge-panel-body">
+                <div id="statusSetsLoading" class="forge-spinner" hidden>
+                  <div class="spinner"></div>
+                  <p>Loading status sets...</p>
                 </div>
-                <div class="legend-item">
-                  <svg width="16" height="16" fill="var(--forge-success)">
-                    <circle cx="8" cy="8" r="6" />
-                  </svg>
-                  <span>Status Set</span>
-                </div>
-                <div class="legend-item">
-                  <svg width="16" height="16" fill="var(--forge-warning)">
-                    <rect x="2" y="4" width="12" height="8" rx="2" />
-                  </svg>
-                  <span>Custom Attributes</span>
-                </div>
+                <div id="StatusSets"></div>
               </div>
+            </section>
 
-              <div id="categoryTree" class="category-tree-container"></div>
-            </div>
-          </section>
-
-          <!-- CREATE STATUS SET TAB -->
-          <section
-            id="tab-create-status-set"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Create Status Sets</h2>
-              <p
-                style="
-                  margin: 8px 0;
-                  color: var(--forge-text-muted);
-                  font-size: 0.875rem;
-                "
-              >
-                Create multiple status sets at once using the table below
-              </p>
-            </div>
-            <div class="forge-panel-body">
-              <form id="createStatusSetForm" class="forge-form">
-                <div class="status-sets-table-wrapper">
-                  <table class="status-sets-table">
-                    <thead>
-                      <tr>
-                        <th style="width: 20%">Status Set Name *</th>
-                        <th style="width: 25%">Description *</th>
-                        <th style="width: 50%">Status Values</th>
-                        <th style="width: 50px"></th>
-                      </tr>
-                    </thead>
-                    <tbody id="statusSetsTableBody">
-                      <!-- Rows will be added dynamically -->
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="forge-form-actions" style="margin-top: 16px">
-                  <button type="submit" class="forge-btn forge-btn-primary">
-                    Create All Status Sets
-                  </button>
-                  <button
-                    type="button"
-                    id="resetStatusSetForm"
-                    class="forge-btn"
-                  >
-                    Clear All
-                  </button>
-                </div>
-              </form>
-            </div>
-          </section>
-
-          <!-- CREATE CUSTOM FIELDS TAB -->
-          <section
-            id="tab-create-custom-fields"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Create Custom Fields</h2>
-              <p
-                style="
-                  margin: 8px 0;
-                  color: var(--forge-text-muted);
-                  font-size: 0.875rem;
-                "
-              >
-                Add multiple custom fields at once using the table below
-              </p>
-            </div>
-            <div class="forge-panel-body">
-              <form id="createCustomFieldForm" class="forge-form">
-                <div class="custom-fields-table-wrapper">
-                  <table class="custom-fields-table">
-                    <thead>
-                      <tr>
-                        <th style="width: 20%">Display Name *</th>
-                        <th style="width: 25%">Description</th>
-                        <th style="width: 15%">Data Type *</th>
-                        <th style="width: 8%; text-align: center">Required</th>
-                        <th style="width: 22%">
-                          Enum Values (comma-separated)
-                        </th>
-                        <th style="width: 15%">Default Value</th>
-                        <th style="width: 50px"></th>
-                      </tr>
-                    </thead>
-                    <tbody id="customFieldsTableBody">
-                      <!-- Rows will be added dynamically -->
-                    </tbody>
-                  </table>
-                </div>
-
-                <div class="forge-form-actions" style="margin-top: 16px">
-                  <button type="submit" class="forge-btn forge-btn-primary">
-                    Create All Custom Fields
-                  </button>
-                  <button
-                    type="button"
-                    id="resetCustomFieldForm"
-                    class="forge-btn"
-                  >
-                    Clear All
-                  </button>
-                </div>
-              </form>
-            </div>
-          </section>
-
-          <!-- CREATE CATEGORIES TAB -->
-          <section
-            id="tab-create-categories"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Create Categories</h2>
-              <p
-                style="
-                  margin: 8px 0;
-                  color: var(--forge-text-muted);
-                  font-size: 0.875rem;
-                "
-              >
-                Create multiple categories at once using cards below
-              </p>
-            </div>
-            <div class="forge-panel-body">
-              <!-- Legend -->
-              <div class="category-legend" style="margin-bottom: 16px">
-                <div class="legend-item">
-                  <svg width="16" height="16" fill="var(--forge-primary)">
-                    <rect x="2" y="2" width="12" height="12" rx="2" />
-                  </svg>
-                  <span>Category</span>
-                </div>
-                <div class="legend-item">
-                  <svg width="16" height="16" fill="var(--forge-success)">
-                    <circle cx="8" cy="8" r="6" />
-                  </svg>
-                  <span>Status Set</span>
-                </div>
-                <div class="legend-item">
-                  <svg width="16" height="16" fill="var(--forge-warning)">
-                    <rect x="2" y="4" width="12" height="8" rx="2" />
-                  </svg>
-                  <span>Custom Attributes</span>
-                </div>
+            <!-- CUSTOM FIELDS TAB -->
+            <section
+              id="tab-custom-fields"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Custom Fields</h2>
               </div>
-
-              <form id="createCategoryForm" class="forge-form">
-                <div
-                  id="categoryCardsContainer"
-                  class="category-cards-container"
-                >
-                  <!-- Category cards will be added here dynamically -->
+              <div class="forge-panel-body">
+                <div id="customFieldsLoading" class="forge-spinner" hidden>
+                  <div class="spinner"></div>
+                  <p>Loading custom fields...</p>
                 </div>
-
-                <div class="forge-form-actions" style="margin-top: 16px">
-                  <button type="submit" class="forge-btn forge-btn-primary">
-                    Create All Categories
-                  </button>
-                  <button
-                    type="button"
-                    id="resetCategoryForm"
-                    class="forge-btn"
-                  >
-                    Clear All
-                  </button>
-                </div>
-              </form>
-            </div>
-          </section>
-
-          <!-- UPDATE ASSET TAB -->
-          <section
-            id="tab-update-asset"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Update Asset Status</h2>
-            </div>
-            <div class="forge-panel-body">
-              <form id="updateAssetForm" class="forge-form">
-                <div class="forge-form-group">
-                  <label for="assetGuid" class="forge-label"
-                    >Asset GUID *</label
-                  >
-                  <input
-                    type="text"
-                    id="assetGuid"
-                    name="assetGuid"
-                    class="forge-input"
-                    placeholder="e.g., 2f845f53-d5d1-4e1b-a5f0-1234567890ab"
-                    required
-                  />
-                  <small class="forge-help-text"
-                    >Enter the unique identifier for the asset</small
-                  >
-                </div>
-                <div class="forge-form-group">
-                  <label for="assetStatus" class="forge-label"
-                    >New Status *</label
-                  >
-                  <input
-                    type="text"
-                    id="assetStatus"
-                    name="assetStatus"
-                    class="forge-input"
-                    placeholder="e.g., Specified"
-                    required
-                  />
-                  <small class="forge-help-text"
-                    >Status label must match a value from status_sets.csv</small
-                  >
-                </div>
-                <div class="forge-form-actions">
-                  <button type="submit" class="forge-btn forge-btn-primary">
-                    Update Status
-                  </button>
-                </div>
-              </form>
-            </div>
-          </section>
-
-          <!-- CONFIG STRUCTURE TAB -->
-          <section
-            id="tab-config-structure"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Category Status Default</h2>
-              <p
-                style="
-                  margin: 8px 0;
-                  color: var(--forge-text-muted);
-                  font-size: 0.875rem;
-                "
-              >
-                Default status mappings for each category with IFC Global ID
-                reference
-              </p>
-            </div>
-            <div class="forge-panel-body">
-              <div class="forge-form-actions" style="margin-bottom: 16px">
-                <button
-                  id="loadConfigStructureBtn"
-                  class="forge-btn forge-btn-primary"
-                >
-                  <svg width="16" height="16" fill="currentColor">
-                    <path
-                      d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"
-                    />
-                  </svg>
-                  Load Category Status Default
-                </button>
-                <button id="downloadConfigJsonBtn" class="forge-btn" disabled>
-                  <svg width="16" height="16" fill="currentColor">
-                    <path
-                      d="M8 2v8m0 0l3-3m-3 3L5 7m-3 7h12a2 2 0 002-2v-2a2 2 0 00-2-2H4a2 2 0 00-2 2v2a2 2 0 002 2z"
-                    />
-                  </svg>
-                  Download JSON
-                </button>
+                <div id="CustomFields"></div>
               </div>
+            </section>
 
-              <div id="configStructureLoading" class="forge-spinner" hidden>
-                <div class="spinner"></div>
-                <p>Loading configuration structure...</p>
+            <!-- CATEGORIES TAB -->
+            <section
+              id="tab-categories"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Categories & Hierarchy</h2>
               </div>
+              <div class="forge-panel-body">
+                <div id="categoriesLoading" class="forge-spinner" hidden>
+                  <div class="spinner"></div>
+                  <p>Loading categories...</p>
+                </div>
+                <div id="categorySummary" class="forge-summary"></div>
 
-              <div id="configStructureContent" style="display: none">
-                <!-- Summary Stats -->
-                <div
-                  id="configSummary"
+                <!-- Legend -->
+                <div class="category-legend">
+                  <div class="legend-item">
+                    <svg width="16" height="16" fill="var(--forge-primary)">
+                      <rect x="2" y="2" width="12" height="12" rx="2" />
+                    </svg>
+                    <span>Category</span>
+                  </div>
+                  <div class="legend-item">
+                    <svg width="16" height="16" fill="var(--forge-success)">
+                      <circle cx="8" cy="8" r="6" />
+                    </svg>
+                    <span>Status Set</span>
+                  </div>
+                  <div class="legend-item">
+                    <svg width="16" height="16" fill="var(--forge-warning)">
+                      <rect x="2" y="4" width="12" height="8" rx="2" />
+                    </svg>
+                    <span>Custom Attributes</span>
+                  </div>
+                </div>
+
+                <div id="categoryTree" class="category-tree-container"></div>
+              </div>
+            </section>
+
+            <!-- CREATE STATUS SET TAB -->
+            <section
+              id="tab-create-status-set"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Create Status Sets</h2>
+                <p
                   style="
-                    display: grid;
-                    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-                    gap: 16px;
-                    margin-bottom: 24px;
+                    margin: 8px 0;
+                    color: var(--forge-text-muted);
+                    font-size: 0.875rem;
                   "
                 >
-                  <!-- Summary cards will be inserted here -->
-                </div>
+                  Create multiple status sets at once using the table below
+                </p>
+              </div>
+              <div class="forge-panel-body">
+                <form id="createStatusSetForm" class="forge-form">
+                  <div class="status-sets-table-wrapper">
+                    <table class="status-sets-table">
+                      <thead>
+                        <tr>
+                          <th style="width: 20%">Status Set Name *</th>
+                          <th style="width: 25%">Description *</th>
+                          <th style="width: 50%">Status Values</th>
+                          <th style="width: 50px"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="statusSetsTableBody">
+                        <!-- Rows will be added dynamically -->
+                      </tbody>
+                    </table>
+                  </div>
 
-                <!-- JSON Viewer -->
-                <div
-                  style="
-                    background: var(--forge-bg-secondary);
-                    border-radius: 8px;
-                    padding: 16px;
-                    border: 1px solid var(--forge-border);
-                  "
-                >
-                  <div
-                    style="
-                      display: flex;
-                      justify-content: space-between;
-                      align-items: center;
-                      margin-bottom: 12px;
-                    "
-                  >
-                    <h3 style="margin: 0; font-size: 1rem; font-weight: 600">
-                      JSON Structure
-                    </h3>
+                  <div class="forge-form-actions" style="margin-top: 16px">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Create All Status Sets
+                    </button>
                     <button
-                      id="copyConfigJsonBtn"
+                      type="button"
+                      id="resetStatusSetForm"
                       class="forge-btn"
-                      style="padding: 4px 12px; font-size: 0.875rem"
                     >
-                      <svg width="14" height="14" fill="currentColor">
-                        <path
-                          d="M4 2a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h8v8H4V4z"
-                        />
-                        <path
-                          d="M0 6a2 2 0 012-2h2v2H2v8h8v-2h2v2a2 2 0 01-2 2H2a2 2 0 01-2-2V6z"
-                        />
-                      </svg>
-                      Copy
+                      Clear All
                     </button>
                   </div>
-                  <pre
-                    id="configJsonViewer"
+                </form>
+              </div>
+            </section>
+
+            <!-- CREATE CUSTOM FIELDS TAB -->
+            <section
+              id="tab-create-custom-fields"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Create Custom Fields</h2>
+                <p
+                  style="
+                    margin: 8px 0;
+                    color: var(--forge-text-muted);
+                    font-size: 0.875rem;
+                  "
+                >
+                  Add multiple custom fields at once using the table below
+                </p>
+              </div>
+              <div class="forge-panel-body">
+                <form id="createCustomFieldForm" class="forge-form">
+                  <div class="custom-fields-table-wrapper">
+                    <table class="custom-fields-table">
+                      <thead>
+                        <tr>
+                          <th style="width: 20%">Display Name *</th>
+                          <th style="width: 25%">Description</th>
+                          <th style="width: 15%">Data Type *</th>
+                          <th style="width: 8%; text-align: center">Required</th>
+                          <th style="width: 22%">
+                            Enum Values (comma-separated)
+                          </th>
+                          <th style="width: 15%">Default Value</th>
+                          <th style="width: 50px"></th>
+                        </tr>
+                      </thead>
+                      <tbody id="customFieldsTableBody">
+                        <!-- Rows will be added dynamically -->
+                      </tbody>
+                    </table>
+                  </div>
+
+                  <div class="forge-form-actions" style="margin-top: 16px">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Create All Custom Fields
+                    </button>
+                    <button
+                      type="button"
+                      id="resetCustomFieldForm"
+                      class="forge-btn"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- CREATE CATEGORIES TAB -->
+            <section
+              id="tab-create-categories"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Create Categories</h2>
+                <p
+                  style="
+                    margin: 8px 0;
+                    color: var(--forge-text-muted);
+                    font-size: 0.875rem;
+                  "
+                >
+                  Create multiple categories at once using cards below
+                </p>
+              </div>
+              <div class="forge-panel-body">
+                <!-- Legend -->
+                <div class="category-legend" style="margin-bottom: 16px">
+                  <div class="legend-item">
+                    <svg width="16" height="16" fill="var(--forge-primary)">
+                      <rect x="2" y="2" width="12" height="12" rx="2" />
+                    </svg>
+                    <span>Category</span>
+                  </div>
+                  <div class="legend-item">
+                    <svg width="16" height="16" fill="var(--forge-success)">
+                      <circle cx="8" cy="8" r="6" />
+                    </svg>
+                    <span>Status Set</span>
+                  </div>
+                  <div class="legend-item">
+                    <svg width="16" height="16" fill="var(--forge-warning)">
+                      <rect x="2" y="4" width="12" height="8" rx="2" />
+                    </svg>
+                    <span>Custom Attributes</span>
+                  </div>
+                </div>
+
+                <form id="createCategoryForm" class="forge-form">
+                  <div
+                    id="categoryCardsContainer"
+                    class="category-cards-container"
+                  >
+                    <!-- Category cards will be added here dynamically -->
+                  </div>
+
+                  <div class="forge-form-actions" style="margin-top: 16px">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Create All Categories
+                    </button>
+                    <button
+                      type="button"
+                      id="resetCategoryForm"
+                      class="forge-btn"
+                    >
+                      Clear All
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- UPDATE ASSET TAB -->
+            <section
+              id="tab-update-asset"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Update Asset Status</h2>
+              </div>
+              <div class="forge-panel-body">
+                <form id="updateAssetForm" class="forge-form">
+                  <div class="forge-form-group">
+                    <label for="assetGuid" class="forge-label"
+                      >Asset GUID *</label
+                    >
+                    <input
+                      type="text"
+                      id="assetGuid"
+                      name="assetGuid"
+                      class="forge-input"
+                      placeholder="e.g., 2f845f53-d5d1-4e1b-a5f0-1234567890ab"
+                      required
+                    />
+                    <small class="forge-help-text"
+                      >Enter the unique identifier for the asset</small
+                    >
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="assetStatus" class="forge-label"
+                      >New Status *</label
+                    >
+                    <input
+                      type="text"
+                      id="assetStatus"
+                      name="assetStatus"
+                      class="forge-input"
+                      placeholder="e.g., Specified"
+                      required
+                    />
+                    <small class="forge-help-text"
+                      >Status label must match a value from status_sets.csv</small
+                    >
+                  </div>
+                  <div class="forge-form-actions">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Update Status
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- CONFIG STRUCTURE TAB -->
+            <section
+              id="tab-config-structure"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Category Status Default</h2>
+                <p
+                  style="
+                    margin: 8px 0;
+                    color: var(--forge-text-muted);
+                    font-size: 0.875rem;
+                  "
+                >
+                  Default status mappings for each category with IFC Global ID
+                  reference
+                </p>
+              </div>
+              <div class="forge-panel-body">
+                <div class="forge-form-actions" style="margin-bottom: 16px">
+                  <button
+                    id="loadConfigStructureBtn"
+                    class="forge-btn forge-btn-primary"
+                  >
+                    <svg width="16" height="16" fill="currentColor">
+                      <path
+                        d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2h-4v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"
+                      />
+                    </svg>
+                    Load Category Status Default
+                  </button>
+                  <button id="downloadConfigJsonBtn" class="forge-btn" disabled>
+                    <svg width="16" height="16" fill="currentColor">
+                      <path
+                        d="M8 2v8m0 0l3-3m-3 3L5 7m-3 7h12a2 2 0 002-2v-2a2 2 0 00-2-2H4a2 2 0 00-2 2v2a2 2 0 002 2z"
+                      />
+                    </svg>
+                    Download JSON
+                  </button>
+                </div>
+
+                <div id="configStructureLoading" class="forge-spinner" hidden>
+                  <div class="spinner"></div>
+                  <p>Loading configuration structure...</p>
+                </div>
+
+                <div id="configStructureContent" style="display: none">
+                  <!-- Summary Stats -->
+                  <div
+                    id="configSummary"
                     style="
-                      margin: 0;
+                      display: grid;
+                      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+                      gap: 16px;
+                      margin-bottom: 24px;
+                    "
+                  >
+                    <!-- Summary cards will be inserted here -->
+                  </div>
+
+                  <!-- JSON Viewer -->
+                  <div
+                    style="
+                      background: var(--forge-bg-secondary);
+                      border-radius: 8px;
                       padding: 16px;
-                      background: var(--forge-bg);
-                      border-radius: 4px;
-                      overflow-x: auto;
-                      max-height: 600px;
-                      font-size: 0.875rem;
-                      line-height: 1.5;
                       border: 1px solid var(--forge-border);
                     "
-                  ></pre>
+                  >
+                    <div
+                      style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        margin-bottom: 12px;
+                      "
+                    >
+                      <h3 style="margin: 0; font-size: 1rem; font-weight: 600">
+                        JSON Structure
+                      </h3>
+                      <button
+                        id="copyConfigJsonBtn"
+                        class="forge-btn"
+                        style="padding: 4px 12px; font-size: 0.875rem"
+                      >
+                        <svg width="14" height="14" fill="currentColor">
+                          <path
+                            d="M4 2a2 2 0 00-2 2v8a2 2 0 002 2h8a2 2 0 002-2V4a2 2 0 00-2-2H4zm0 2h8v8H4V4z"
+                          />
+                          <path
+                            d="M0 6a2 2 0 012-2h2v2H2v8h8v-2h2v2a2 2 0 01-2 2H2a2 2 0 01-2-2V6z"
+                          />
+                        </svg>
+                        Copy
+                      </button>
+                    </div>
+                    <pre
+                      id="configJsonViewer"
+                      style="
+                        margin: 0;
+                        padding: 16px;
+                        background: var(--forge-bg);
+                        border-radius: 4px;
+                        overflow-x: auto;
+                        max-height: 600px;
+                        font-size: 0.875rem;
+                        line-height: 1.5;
+                        border: 1px solid var(--forge-border);
+                      "
+                    ></pre>
+                  </div>
+                </div>
+
+                <div
+                  id="configStructureError"
+                  style="
+                    display: none;
+                    padding: 16px;
+                    background: var(--forge-error-light);
+                    border: 1px solid var(--forge-error);
+                    border-radius: 8px;
+                    color: var(--forge-error-dark);
+                  "
+                >
+                  <strong>Error:</strong> <span id="configErrorMessage"></span>
                 </div>
               </div>
+            </section>
 
-              <div
-                id="configStructureError"
-                style="
-                  display: none;
-                  padding: 16px;
-                  background: var(--forge-error-light);
-                  border: 1px solid var(--forge-error);
-                  border-radius: 8px;
-                  color: var(--forge-error-dark);
-                "
-              >
-                <strong>Error:</strong> <span id="configErrorMessage"></span>
+            <!-- CREATE ISSUE TAB -->
+            <section
+              id="tab-create-issue"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Create Issue</h2>
               </div>
-            </div>
-          </section>
+              <div class="forge-panel-body">
+                <form id="createIssueForm" class="forge-form">
+                  <div class="forge-form-group">
+                    <label for="issueTitle" class="forge-label">Title *</label>
+                    <input
+                      type="text"
+                      id="issueTitle"
+                      name="issueTitle"
+                      class="forge-input"
+                      placeholder="e.g., Water leakage at Level 3"
+                      required
+                    />
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="issueStatus" class="forge-label">Status *</label>
+                    <select
+                      id="issueStatus"
+                      name="issueStatus"
+                      class="forge-input"
+                      required
+                    >
+                      <option value="">Select status...</option>
+                      <option value="open">Open</option>
+                      <option value="pending">Pending</option>
+                      <option value="in_review">In Review</option>
+                      <option value="closed">Closed</option>
+                    </select>
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="issueSubtypeId" class="forge-label"
+                      >Issue Subtype ID *</label
+                    >
+                    <input
+                      type="text"
+                      id="issueSubtypeId"
+                      name="issueSubtypeId"
+                      class="forge-input"
+                      placeholder="e.g., 06e9ad10-7a05-43e8-9e27-38fb455dd50f"
+                      required
+                    />
+                    <small class="forge-help-text"
+                      >Get IDs from the "Fetch Issues Info" tab</small
+                    >
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="issueDescription" class="forge-label"
+                      >Description</label
+                    >
+                    <textarea
+                      id="issueDescription"
+                      name="issueDescription"
+                      class="forge-input"
+                      placeholder="Optional: describe the issue"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="issueLocation" class="forge-label"
+                      >Location</label
+                    >
+                    <input
+                      type="text"
+                      id="issueLocation"
+                      name="issueLocation"
+                      class="forge-input"
+                      placeholder="Optional: e.g., Building A, Level 3"
+                    />
+                  </div>
+                  <div class="forge-form-actions">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Create Issue
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
 
-          <!-- CREATE ISSUE TAB -->
-          <section
-            id="tab-create-issue"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Create Issue</h2>
-            </div>
-            <div class="forge-panel-body">
-              <form id="createIssueForm" class="forge-form">
-                <div class="forge-form-group">
-                  <label for="issueTitle" class="forge-label">Title *</label>
-                  <input
-                    type="text"
-                    id="issueTitle"
-                    name="issueTitle"
-                    class="forge-input"
-                    placeholder="e.g., Water leakage at Level 3"
-                    required
-                  />
-                </div>
-                <div class="forge-form-group">
-                  <label for="issueStatus" class="forge-label">Status *</label>
-                  <select
-                    id="issueStatus"
-                    name="issueStatus"
-                    class="forge-input"
-                    required
-                  >
-                    <option value="">Select status...</option>
-                    <option value="open">Open</option>
-                    <option value="pending">Pending</option>
-                    <option value="in_review">In Review</option>
-                    <option value="closed">Closed</option>
-                  </select>
-                </div>
-                <div class="forge-form-group">
-                  <label for="issueSubtypeId" class="forge-label"
-                    >Issue Subtype ID *</label
-                  >
-                  <input
-                    type="text"
-                    id="issueSubtypeId"
-                    name="issueSubtypeId"
-                    class="forge-input"
-                    placeholder="e.g., 06e9ad10-7a05-43e8-9e27-38fb455dd50f"
-                    required
-                  />
-                  <small class="forge-help-text"
-                    >Get IDs from the "Fetch Issues Info" tab</small
-                  >
-                </div>
-                <div class="forge-form-group">
-                  <label for="issueDescription" class="forge-label"
-                    >Description</label
-                  >
-                  <textarea
-                    id="issueDescription"
-                    name="issueDescription"
-                    class="forge-input"
-                    placeholder="Optional: describe the issue"
-                    rows="3"
-                  ></textarea>
-                </div>
-                <div class="forge-form-group">
-                  <label for="issueLocation" class="forge-label"
-                    >Location</label
-                  >
-                  <input
-                    type="text"
-                    id="issueLocation"
-                    name="issueLocation"
-                    class="forge-input"
-                    placeholder="Optional: e.g., Building A, Level 3"
-                  />
-                </div>
-                <div class="forge-form-actions">
-                  <button type="submit" class="forge-btn forge-btn-primary">
-                    Create Issue
+            <!-- UPDATE ISSUE STATUS TAB -->
+            <section
+              id="tab-update-issue"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Update Issue Status</h2>
+              </div>
+              <div class="forge-panel-body">
+                <form id="updateIssueForm" class="forge-form">
+                  <div class="forge-form-group">
+                    <label for="updateIssueGuid" class="forge-label"
+                      >Issue GUID *</label
+                    >
+                    <input
+                      type="text"
+                      id="updateIssueGuid"
+                      name="updateIssueGuid"
+                      class="forge-input"
+                      placeholder="e.g., cae94f63-282c-435b-b798-ec527afcde1d"
+                      required
+                    />
+                    <small class="forge-help-text"
+                      >Get GUIDs from the "Fetch Issues Info" tab</small
+                    >
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="updateIssueStatus" class="forge-label"
+                      >New Status *</label
+                    >
+                    <select
+                      id="updateIssueStatus"
+                      name="updateIssueStatus"
+                      class="forge-input"
+                      required
+                    >
+                      <option value="">Select status...</option>
+                      <option value="open">Open</option>
+                      <option value="pending">Pending</option>
+                      <option value="in_review">In Review</option>
+                      <option value="closed">Closed</option>
+                    </select>
+                  </div>
+                  <div class="forge-form-actions">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Update Status
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- FETCH ISSUES TAB -->
+            <section
+              id="tab-fetch-issues"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Fetch Issues Information</h2>
+              </div>
+              <div class="forge-panel-body">
+                <div class="forge-form-actions" style="margin-bottom: 20px;">
+                  <button id="fetchIssuesBtn" class="forge-btn forge-btn-primary">
+                    Load Issue Types & Recent Issues
                   </button>
                 </div>
-              </form>
-            </div>
-          </section>
-
-          <!-- UPDATE ISSUE STATUS TAB -->
-          <section
-            id="tab-update-issue"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Update Issue Status</h2>
-            </div>
-            <div class="forge-panel-body">
-              <form id="updateIssueForm" class="forge-form">
-                <div class="forge-form-group">
-                  <label for="updateIssueGuid" class="forge-label"
-                    >Issue GUID *</label
-                  >
-                  <input
-                    type="text"
-                    id="updateIssueGuid"
-                    name="updateIssueGuid"
-                    class="forge-input"
-                    placeholder="e.g., cae94f63-282c-435b-b798-ec527afcde1d"
-                    required
-                  />
-                  <small class="forge-help-text"
-                    >Get GUIDs from the "Fetch Issues Info" tab</small
-                  >
+                <div id="issuesLoading" class="forge-spinner" hidden>
+                  <div class="spinner"></div>
+                  <p>Loading issues...</p>
                 </div>
-                <div class="forge-form-group">
-                  <label for="updateIssueStatus" class="forge-label"
-                    >New Status *</label
-                  >
-                  <select
-                    id="updateIssueStatus"
-                    name="updateIssueStatus"
-                    class="forge-input"
-                    required
-                  >
-                    <option value="">Select status...</option>
-                    <option value="open">Open</option>
-                    <option value="pending">Pending</option>
-                    <option value="in_review">In Review</option>
-                    <option value="closed">Closed</option>
-                  </select>
-                </div>
-                <div class="forge-form-actions">
-                  <button type="submit" class="forge-btn forge-btn-primary">
-                    Update Status
-                  </button>
-                </div>
-              </form>
-            </div>
-          </section>
-
-          <!-- FETCH ISSUES TAB -->
-          <section
-            id="tab-fetch-issues"
-            class="forge-tab-panel"
-            role="tabpanel"
-            hidden
-          >
-            <div class="forge-panel-header">
-              <h2>Fetch Issues Information</h2>
-            </div>
-            <div class="forge-panel-body">
-              <div class="forge-form-actions" style="margin-bottom: 20px;">
-                <button id="fetchIssuesBtn" class="forge-btn forge-btn-primary">
-                  Load Issue Types & Recent Issues
-                </button>
+                <div id="issueSubtypesDisplay"></div>
+                <div id="recentIssuesDisplay"></div>
               </div>
-              <div id="issuesLoading" class="forge-spinner" hidden>
-                <div class="spinner"></div>
-                <p>Loading issues...</p>
-              </div>
-              <div id="issueSubtypesDisplay"></div>
-              <div id="recentIssuesDisplay"></div>
-            </div>
-          </section>
+            </section>
+          </div>
+          
         </div>
       </div>
     </main>
