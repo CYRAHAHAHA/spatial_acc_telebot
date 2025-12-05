@@ -308,6 +308,27 @@ def create_categories_from_json(token):
     created = create_categories(token, items) or []
     return jsonify({"created": len(created)}), 200
 
+# ---- API: fetching of metadata ---- #
+@app.route("/fetch_metadata")
+@require_access_token(pass_token=True)
+def fetch_metadata_route(token):
+    result = fetch_ifc_metadata(token)   
+    return jsonify(result), 200
+
+# ---- API: fetching of metadata ---- #
+@app.route("/get_root_folder_id")
+@require_access_token(pass_token=True)
+def fetch_root_id_route(token):
+    result = discover_root_folder(token)   
+    return jsonify(result), 200
+
+# ---- API: create assets ---- #
+@app.route("/createassets", methods=["POST"])
+@require_access_token(pass_token=True)
+def upload_ai_assets(token):
+    result = run_create_assets(token)
+    return jsonify(result)
+
 # --- Fetch Activity Log endpoint ---
 @app.route("/fetch_activity_log")
 def fetch_activity_log():
