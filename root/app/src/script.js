@@ -46,16 +46,11 @@
     recentIssuesDisplay: document.getElementById("recentIssuesDisplay"),
     activityLogTableBody: document.getElementById("activityLogTableBody"),
     activityLogLoading: document.getElementById("activityLogLoading"),
+    toggleConfigBtn: document.getElementById("toggleConfigBtn"),
+    activityLogView: document.getElementById("activityLogView"),
+    configurationView: document.getElementById("configurationView"),
   };
 
-
-  // ========================================
-  // VIEW MANAGEMENT - Activity Log and Configuration
-  // ========================================
-  
-  // Both views are now always visible, activity log at top, configuration below
-  const activityLogView = document.getElementById('activityLogView');
-  const configurationView = document.getElementById('configurationView');
 
   // ========================================
   // TOAST NOTIFICATION SYSTEM
@@ -150,6 +145,8 @@
       const result = await response.json();
       const data = result.logs || result;
       loading.hidden = true;
+
+      console.log('Activity log data received:', data);
 
       if (!Array.isArray(data) || data.length === 0) {
         tableBody.innerHTML = `
@@ -2122,4 +2119,35 @@ if (el.categoryCardsContainer) {
   el.categoryCardsContainer.appendChild(createCategoryCard());
   el.categoryCardsContainer.appendChild(createAddCategoryButton());
 }
+
+// ========================================
+// TOGGLE BUTTON FUNCTIONALITY
+// ========================================
+let isShowingActivityLog = true;
+
+el.toggleConfigBtn?.addEventListener('click', () => {
+  isShowingActivityLog = !isShowingActivityLog;
+  
+  if (isShowingActivityLog) {
+    // Show activity log, hide configuration
+    el.activityLogView.hidden = false;
+    el.configurationView.hidden = true;
+    el.toggleConfigBtn.innerHTML = `
+      <svg width="16" height="16" fill="currentColor">
+        <path d="M3 9h6V3H3v6zm8 0h6V3h-6v6zM3 21h6v-6H3v6zm8 0h6v-6h-6v6z"/>
+      </svg>
+      Configuration
+    `;
+  } else {
+    // Show configuration, hide activity log
+    el.activityLogView.hidden = true;
+    el.configurationView.hidden = false;
+    el.toggleConfigBtn.innerHTML = `
+      <svg width="16" height="16" fill="currentColor">
+        <path d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L19.82 8 12 11.82 4.18 8 12 4.18zM4 9.73l7 3.5v6.95l-7-3.5V9.73zm16 0v6.95l-7 3.5v-6.95l7-3.5z"/>
+      </svg>
+      Activity Log
+    `;
+  }
+});
 })();

@@ -1894,3 +1894,99 @@ body {
   }
 }
 
+/* ========================================
+   ACTIVITY LOG STYLES
+   ======================================== */
+
+.activity-log-table-wrapper {
+  overflow-x: auto;
+  overflow-y: auto;
+  margin-top: var(--forge-space-md);
+  border: 1px solid var(--forge-border);
+  border-radius: var(--forge-radius-lg);
+  max-height: 450px;
+}
+
+.activity-log-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.875rem;
+  background: var(--forge-surface);
+}
+
+.activity-log-table thead {
+  background: linear-gradient(135deg, rgba(6, 150, 215, 0.1), rgba(6, 150, 215, 0.05));
+  border-bottom: 2px solid var(--forge-primary);
+}
+
+.activity-log-table th {
+  padding: 12px 16px;
+  text-align: left;
+  font-weight: 600;
+  color: var(--forge-text);
+  white-space: nowrap;
+}
+
+.activity-log-table tbody tr {
+  border-bottom: 1px solid var(--forge-border);
+  transition: background var(--forge-transition);
+}
+
+.activity-log-table tbody tr:hover {
+  background: rgba(6, 150, 215, 0.05);
+}
+
+.activity-log-table tbody tr:last-child {
+  border-bottom: none;
+}
+
+.activity-log-table td {
+  padding: 12px 16px;
+  color: var(--forge-text);
+  vertical-align: middle;
+}
+
+.success-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(52, 168, 83, 0.1);
+  color: var(--forge-success);
+  border: 1px solid rgba(52, 168, 83, 0.3);
+  border-radius: var(--forge-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.error-badge {
+  display: inline-block;
+  padding: 4px 12px;
+  background: rgba(234, 67, 53, 0.1);
+  color: var(--forge-error);
+  border: 1px solid rgba(234, 67, 53, 0.3);
+  border-radius: var(--forge-radius-sm);
+  font-size: 0.75rem;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+/* Scrollbar styling for activity log table */
+.activity-log-table-wrapper::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.activity-log-table-wrapper::-webkit-scrollbar-track {
+  background: var(--forge-surface);
+  border-radius: var(--forge-radius-md);
+}
+
+.activity-log-table-wrapper::-webkit-scrollbar-thumb {
+  background: var(--forge-primary);
+  border-radius: var(--forge-radius-md);
+  transition: background var(--forge-transition);
+}
+
+.activity-log-table-wrapper::-webkit-scrollbar-thumb:hover {
+  background: var(--forge-primary-hover);
+}

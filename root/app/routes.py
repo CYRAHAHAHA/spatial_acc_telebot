@@ -327,6 +327,9 @@ def fetch_activity_log():
         with activity_log_path.open("r", encoding="utf-8") as f:
             activity_log = json.load(f)
         
+        # Reverse to show latest entries first
+        activity_log.reverse()
+        
         # Add unique IDs and ensure all required fields exist
         for idx, entry in enumerate(activity_log):
             if "id" not in entry:

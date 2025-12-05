@@ -20,6 +20,12 @@
           <h1 class="forge-title">ACC Asset Manager</h1>
         </div>
         <div class="forge-header-right">
+          <button id="toggleConfigBtn" class="forge-btn forge-btn-primary">
+            <svg width="16" height="16" fill="currentColor">
+              <path d="M3 9h6V3H3v6zm8 0h6V3h-6v6zM3 21h6v-6H3v6zm8 0h6v-6h-6v6z"/>
+            </svg>
+            Configuration
+          </button>
           <button id="authorizeBtn" class="forge-btn forge-btn-primary">
             <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
               <path
@@ -73,8 +79,8 @@
           </div>
         </section>
 
-        <!-- ========== CONFIGURATION VIEW (ALWAYS VISIBLE BELOW) ========== -->
-        <div id="configurationView">
+        <!-- ========== CONFIGURATION VIEW (HIDDEN BY DEFAULT - TOGGLEABLE) ========== -->
+        <div id="configurationView" hidden>
           
           <!-- ========== STATUS BANNER ========== -->
           <section class="forge-status-banner">
