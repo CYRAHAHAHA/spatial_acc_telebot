@@ -171,7 +171,7 @@ def fetch_ifc_metadata(token: str):
             if (item["name"] or "").strip().lower() in ids:
                 filtered.append(item)
 
-        filtered_path = data_dir / "nlp_metadata.json"
+        filtered_path = data_dir / "model.json"
         json.dump(filtered, filtered_path.open("w", encoding="utf-8"), indent=2)
         print(f"💾 Filtered metadata saved ({len(filtered)} items) → {filtered_path}")
     else:
