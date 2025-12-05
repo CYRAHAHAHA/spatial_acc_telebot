@@ -143,7 +143,8 @@ def fetch_ifc_metadata(token: str):
         project_id = f"b.{project_id}"
 
     #root = get_root_folder(hub_id, project_id, token)
-    root = config.root_id
+    #root = config.root_id
+    root = "urn:adsk.wipprod:fs.folder:co.iYTdY7_9TTqmR_dM7Ur76g"
     ifc_files = list_ifc_files(project_id, root, token)
 
     final_ifc = []
