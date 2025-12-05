@@ -13,6 +13,9 @@ from app.functions.create_issue import create_issue
 from app.functions.fetch_all_assets_info import fetch_all_assets_info 
 from app.functions.create_categories import create_categories
 from app.functions.fetch_issue_subtypes import fetch_issue_subtypes, format_subtypes_output
+from app.functions.fetch_metadata import fetch_ifc_metadata
+from app.functions.create_assets import run_create_assets
+from app.functions.get_root_folder_id import discover_root_folder
 import json
 import logging
 import requests
