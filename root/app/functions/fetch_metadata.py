@@ -88,10 +88,6 @@ def extract_ifc_properties(version_urn: str, token: str):
             props = e.get("properties", {}) or {}
             ifc = props.get("IFC Attributes") or {}
 
-            # ⛔ Skip IFC Space
-            if ifc.get("IfcClass") == "IfcSpace":
-                continue
-
             all_items.append({
                 "name": e.get("name"),
                 "externalId": ext_id,
@@ -168,9 +164,6 @@ def fetch_ifc_metadata(token: str):
 
     if ids:
         filtered = []
-        for item in final_ifc:
-            if (item["name"] or "").strip().lower() in ids:
-                filtered.append(item)
 
         filtered_path = data_dir / "model.json"
         json.dump(filtered, filtered_path.open("w", encoding="utf-8"), indent=2)
