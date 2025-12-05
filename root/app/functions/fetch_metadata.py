@@ -165,6 +165,34 @@ def fetch_ifc_metadata(token: str):
     if ids:
         filtered = []
 
+        for item in final_ifc:
+            name = (item.get("name") or "").strip().lower()
+            if name not in ids:
+                continue
+
+            props = item.get("allProperties", {})
+            ifc = item.get("ifcAttributes", {})
+
+            # Identify the LargeBuilding classifier key
+            large_building_key = None
+            for key in props.keys():
+                if key.startswith("LargeBuilding-"):
+                    large_building_key = key
+                    break
+
+            filtered.append({
+                "name": item.get("name"),
+                "ifcAttributes": {
+                    "GlobalId": ifc.get("GlobalId"),
+                    "ObjectType": ifc.get("ObjectType"),
+                    "IfcClass": ifc.get("IfcClass"),
+                    "IfcPropertySetList": ifc.get("IfcPropertySetList"),
+                    "IfcSpatialContainer": ifc.get("IfcSpatialContainer"),
+                },
+                # Only keep the classifier ID, not its content
+                "classificationId": large_building_key
+            })
+
         filtered_path = data_dir / "model.json"
         json.dump(filtered, filtered_path.open("w", encoding="utf-8"), indent=2)
         print(f"💾 Filtered metadata saved ({len(filtered)} items) → {filtered_path}")
