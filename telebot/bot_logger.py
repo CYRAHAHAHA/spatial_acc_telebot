@@ -396,8 +396,8 @@ def _parse_issue_status(text: str) -> Tuple[str | None, str | None, List[str]]:
         if not m_line:
             continue
         
-        key = m.group("key").strip().lower()
-        val = m.group("val").strip()
+        key = m_line.group("key").strip().lower()
+        val = m_line.group("val").strip()
         
         if key == "guid":
             guid = val
@@ -440,8 +440,8 @@ def _parse_create_issue(text: str) -> Tuple[Dict[str, Any] | None, List[str]]:
         if not m_line:
             continue
         
-        key = m.group("key").strip().lower()
-        val = m.group("val").strip()
+        key = m_line.group("key").strip().lower()
+        val = m_line.group("val").strip()
         
         if key == "title":
             issue_data["title"] = val
