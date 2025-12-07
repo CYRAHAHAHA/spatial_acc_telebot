@@ -361,7 +361,12 @@ CREATE_ISSUE_RE = re.compile(
     (?P<body>.+?)\s*$		
     """,		
     re.IGNORECASE | re.DOTALL | re.VERBOSE,		
-)			
+)		
+
+LINE_RE = re.compile(
+    r"^\s*(?P<key>[^:]+?)\s*:\s*(?P<val>.*)\s*$",
+    re.IGNORECASE,
+)
 
 def _parse_issue_status(text: str) -> Tuple[str | None, str | None, List[str]]:
     """
@@ -385,6 +390,10 @@ def _parse_issue_status(text: str) -> Tuple[str | None, str | None, List[str]]:
     for raw_line in body.splitlines():
         line = raw_line.strip()
         if not line:
+            continue
+
+        m_line = LINE_RE.match(line)
+        if not m_line:
             continue
         
         key = m.group("key").strip().lower()
@@ -425,6 +434,10 @@ def _parse_create_issue(text: str) -> Tuple[Dict[str, Any] | None, List[str]]:
     for raw_line in body.splitlines():
         line = raw_line.strip()
         if not line:
+            continue
+
+        m_line = LINE_RE.match(line)
+        if not m_line:
             continue
         
         key = m.group("key").strip().lower()
@@ -960,7 +973,7 @@ async def one_shot_update_handler(
         )
 
         await msg.reply_text(
-            "Your update has been recorded, but I couldn’t update ACC right now.\n"
+            "Apologies, your update has been recorded but I couldn’t update ACC right now.\n"
             "Please refer to the activity log for the detailed error."
         )
         return
