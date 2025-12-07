@@ -1,5 +1,3 @@
-# Run code: python bot_logger.py
-
 import os
 import re
 import json
@@ -317,8 +315,7 @@ async def on_new_chat(update: Update, context: ContextTypes.DEFAULT_TYPE) -> Non
                 "Please provide the Project ID for this group (one time):\n"
                 "Example:\n"
                 "Project ID: KotaKinabalu-A\n\n"
-                "Once set, send your [UPDATE] or [ISSUE STATUS] messages.\n"
-                "Use /template to see message formats."
+                "Once set, send your [UPDATE] or [ISSUE STATUS] messages."
             )
         )
 
@@ -366,30 +363,6 @@ CREATE_ISSUE_RE = re.compile(
     re.IGNORECASE | re.DOTALL | re.VERBOSE,		
 )			
 
-LINE_RE = re.compile(
-    r"^\s*(?P<key>[^:]+?)\s*:\s*(?P<val>.*)\s*$",
-    re.IGNORECASE,
-)
-
-LOC_SPLIT_RE = re.compile(
-    r"Building\s*(?P<b>[A-Za-z0-9\-]+)\s*,\s*Level\s*(?P<l>[A-Za-z0-9\-]+)",
-    re.IGNORECASE,
-)
-
-GUID_LINE_RE = re.compile(
-    r"^GUID\s*:\s*(?P<guid>.+?)\s*$",
-    re.MULTILINE | re.IGNORECASE,
-)
-
-
-def extract_guid_block_format(text: str):
-    if not text:
-        return None
-    m = GUID_LINE_RE.search(text)
-    if m:
-        return m.group("guid")
-    return None
-
 def _parse_issue_status(text: str) -> Tuple[str | None, str | None, List[str]]:
     """
     Parse [ISSUE STATUS] message format.
@@ -412,10 +385,6 @@ def _parse_issue_status(text: str) -> Tuple[str | None, str | None, List[str]]:
     for raw_line in body.splitlines():
         line = raw_line.strip()
         if not line:
-            continue
-            
-        m = LINE_RE.match(line)
-        if not m:
             continue
         
         key = m.group("key").strip().lower()
@@ -457,10 +426,6 @@ def _parse_create_issue(text: str) -> Tuple[Dict[str, Any] | None, List[str]]:
         line = raw_line.strip()
         if not line:
             continue
-            
-        m = LINE_RE.match(line)
-        if not m:
-            continue
         
         key = m.group("key").strip().lower()
         val = m.group("val").strip()
@@ -492,98 +457,24 @@ def _parse_create_issue(text: str) -> Tuple[Dict[str, Any] | None, List[str]]:
 
 def _parse_update_text(text: str, message_dt_iso: str) -> Tuple[Dict[str, Any], List[str]]:
     """
-    Parse a single-shot [UPDATE] message.
-
-    Now:
-    - Only checks that required fields are present and non-empty.
-    - Does NOT canonicalise or restrict values (any text is allowed).
+    Behaviour:
+    - Only checks that the message matches the [UPDATE] block.
+    - Extracts the body as raw free text for NLP.
+    - Keeps a simple date field derived from the Telegram timestamp.
     """
     m = UPDATE_BLOCK_RE.match(text or "")
     if not m:
         return ({}, ["Message must start with [UPDATE]."])
 
-    body = m.group("body")
-
-    # Collect all fields, forcing whitespace-only values to None
-    found = {
-        "location": None,
-        "area": None,
-        "task": None,
-        "status": None,
-        "date": None,
-        "remarks": None,
-    }
-
-    # Parse line by line so each field is mapped correctly
-    for raw_line in body.splitlines():
-        m = LINE_RE.match(raw_line)
-        if not m:
-            continue
-
-        key = m.group("key").strip().lower()
-        val = _normalize_and_strip(m.group("val"))
-
-        if key.startswith("location"):
-            found["location"] = val
-        elif key.startswith("zone") or key.startswith("grid") or key.startswith("area"):
-            found["area"] = val
-        elif key == "task":
-            found["task"] = val
-        elif key == "status":
-            found["status"] = val
-        elif key == "date":
-            found["date"] = val
-        elif key == "remarks":
-            found["remarks"] = val
-        # GUID is handled separately by extract_guid_block_format()
-
-    # Required fields: just make sure they're not empty
-    label = {
-        "location": "Location: Building X, Level Y",
-        "area": "Zone / Grid / Area: ...",
-        "task": "Task: ...",
-        "status": "Status: ...",
-    }
-    errors: List[str] = []
-    for key in ("location", "area", "task", "status"):
-        value = found.get(key)
-        if value is None or str(value).strip() == "":
-            errors.append(f"Missing '{label[key]}'")
-
-    # If any required fields missing → return errors
-    if errors:
-        return ({}, errors)
-
-    # --- Light parsing of location/area, but no canonicalisation ----
-    building = level = None
-    if found["location"]:
-        lm = LOC_SPLIT_RE.search(found["location"])
-        if lm:
-            braw = lm.group("b")
-            building = (
-                braw if braw.lower().startswith("building") else f"Building {braw}"
-            )
-            level = lm.group("l")
-        else:
-            building = found["location"]
-
-    grid = wing = None
-    if found["area"]:
-        parts = [p.strip() for p in found["area"].split(",", 1)]
-        grid = parts[0] if parts else None
-        wing = parts[1] if len(parts) > 1 else None
+    body = (m.group("body") or "").strip()
 
     # Use message date (YYYY-MM-DD) if present, else today
     date_iso = (message_dt_iso or "").split("T", 1)[0] or dt.utcnow().date().isoformat()
 
     parsed = {
         "type": "UPDATE",
-        "location": {"building": building, "level": level},
-        "area": {"zone": None, "grid": grid, "wing": wing},
-        "task": found["task"],
-        "status": found["status"],
+        "raw_body": body, 
         "date": date_iso,
-        "remarks": found["remarks"] or None,
     }
     return (parsed, [])
 
@@ -618,18 +509,6 @@ def _normalize_area_parts(
             wing = w.capitalize() + " Wing"
     return grid, wing
 
-
-def _normalize_and_strip(s: str) -> str | None:
-    if s is None:
-        return None
-    s = (
-        s.replace("\u00A0", " ")  # NBSP
-        .replace("\u2007", " ")  # Figure space
-        .replace("\u202F", " ")  # Narrow NBSP
-    )
-    s = s.strip()
-    return s if s != "" else None
-
 def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str | None, str | None]:
     """
     Call the matcher (via run_sample_match) and get BOTH:
@@ -640,31 +519,38 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
     Expected matcher output: {"guid": "...", "status": "..."}
     """
     try:
-        loc = parsed.get("location") or {}
-        area = parsed.get("area") or {}
+        # --- NEW: free-text mode --------------------------------------
+        raw_body = parsed.get("raw_body")
+        if raw_body is not None:
+            # Directly pass the free-text body to the matcher
+            update_text = "[UPDATE]\n" + raw_body
+        else:
+            # --- OLD structured mode (kept for compatibility) --------
+            loc = parsed.get("location") or {}
+            area = parsed.get("area") or {}
 
-        building = loc.get("building") or ""
-        level = loc.get("level") or ""
-        grid = area.get("grid") or ""
-        wing = area.get("wing") or ""
-        task = parsed.get("task") or ""
-        status_from_text = parsed.get("status") or ""  # original from message
-        date = parsed.get("date") or ""
-        remarks = parsed.get("remarks") or ""
+            building = loc.get("building") or ""
+            level = loc.get("level") or ""
+            grid = area.get("grid") or ""
+            wing = area.get("wing") or ""
+            task = parsed.get("task") or ""
+            status_from_text = parsed.get("status") or ""
+            date = parsed.get("date") or ""
+            remarks = parsed.get("remarks") or ""
 
-        # Rebuild the [UPDATE] text that your matcher expects
-        lines = [
-            "[UPDATE]",
-            f"Location: {building}, Level {level}".strip().rstrip(", "),
-            f"Zone / Grid / Area: {grid}, {wing}".strip().rstrip(", "),
-            f"Task: {task}",
-            f"Status: {status_from_text}",
-            f"Date: {date}",
-        ]
-        if remarks:
-            lines.append(f"Remarks: {remarks}")
+            lines = [
+                "[UPDATE]",
+                f"Location: {building}, Level {level}".strip().rstrip(", "),
+                f"Zone / Grid / Area: {grid}, {wing}".strip().rstrip(", "),
+                f"Task: {task}",
+                f"Status: {status_from_text}",
+                f"Date: {date}",
+            ]
+            if remarks:
+                lines.append(f"Remarks: {remarks}")
 
-        update_text = "\n".join(lines)
+            update_text = "\n".join(lines)
+
 
         # Call your NLP matcher here
         result = run_sample_match(update_path=update_text) or {}
@@ -751,9 +637,8 @@ async def create_issue_handler(
             error="; ".join(errors),
         )
         await msg.reply_text(
-            "Error: Issue not created.\n\n"
-            "Please fix:\n" + "\n".join(f"• {e}" for e in errors) + 
-            "\n\nUse /template to see the correct format.\nUse /issuesinfo to find Subtype IDs."
+            "Apologies, I couldn’t create this issue from the information provided.\n"
+            "Please refer to the activity log for the full error details."
         )
         return
     
@@ -780,8 +665,8 @@ async def create_issue_handler(
         )
         print("Bot: error calling /create_issue:", repr(e))
         await msg.reply_text(
-            f"Failed to contact the ACC server.\n"
-            f"Error: {str(e)}"
+            "Apologies, I tried to create this issue in ACC but something went wrong.\n"
+            "Please refer to the activity log for detailed error information."
         )
         return
     
@@ -837,9 +722,8 @@ async def create_issue_handler(
         )
         
         await msg.reply_text(
-            f"Issue creation FAILED (HTTP {resp.status_code}).\n\n"
-            f"Error: {error_msg}\n\n"
-            f"Use /issuesinfo to check valid Subtype IDs."
+            "Apologies. This issue could not be created in ACC.\n"
+            "Please refer to the activity log for detailed error information."
         )
 
 # -------------------------------------------------------------------
@@ -888,9 +772,8 @@ async def issue_status_handler(
             error="; ".join(errors),
         )
         await msg.reply_text(
-            "Error: Issue status not updated.\n\n"
-            "Please fix:\n" + "\n".join(f"• {e}" for e in errors) + 
-            "\n\nUse /template to see the correct format."
+            "Apologies, I couldn’t process this issue status update.\n"
+            "Please refer to the activity log for detailed error information."
         )
         return
     
@@ -931,9 +814,8 @@ async def issue_status_handler(
         print("Bot: error calling /update_issue_status:", repr(e))
 
         await msg.reply_text(
-            f"Issue update logged for GUID {guid} (Project: {project_id}), "
-            "but failed to contact the ACC server.\n"
-            f"Error: {str(e)}"
+            "Apologies, I tried to update this issue status in ACC but something went wrong.\n"
+            "Please refer to the activity log for detailed error information."
         )
         return
     
@@ -973,9 +855,8 @@ async def issue_status_handler(
         )
     
         await msg.reply_text(
-            f"Issue update logged for GUID {guid} (Project: {project_id}), "
-            f"but ACC update FAILED (HTTP {resp.status_code}).\n\n"
-            f"Error: {error_msg}"
+            "Apologies, I received your update but but I wasn’t able to connect to ACC.\n"
+            "Please refer to the activity log for detailed error information."
         )
 
 # -------------------------------------------------------------------
@@ -1024,24 +905,6 @@ async def one_shot_update_handler(
     # Log the text as-is for debugging, such as
     print("Bot: received update message:")
     print(text)
-    print("-----")
-    print("Bot: parsed update:", parsed, "errors:", errors)
-
-    # If any required fields are missing/blank, STOP here
-    if errors:
-        # Log to activity log with error
-        log_update_status_activity(
-            msg=msg,
-            project_id=project_id,
-            guid=None,
-            status=None,
-            error="; ".join(errors),
-        )
-
-        await msg.reply_text(
-            "Error: Update not logged.\nPlease fix:\n- " + "\n- ".join(errors)
-        )
-        return
 
     # --- NLP: get GUID + canonical status + any NLP error --------------
     guid, status_value, nlp_error = resolve_guid_from_nlp(project_id, parsed)
@@ -1065,9 +928,8 @@ async def one_shot_update_handler(
         )
 
         await msg.reply_text(
-            "Update logged, but NLP could not determine a valid GUID and status "
-            f"for this update.\n\n"
-            f"NLP error: {error_msg}"
+            "Apologies, I couldn’t understand this update well enough to apply it.\n"
+            "Please refer to the activity log for the detailed error."
         )
         return
 
@@ -1098,8 +960,8 @@ async def one_shot_update_handler(
         )
 
         await msg.reply_text(
-            f"Update logged for GUID {guid} (Project: {project_id}), "
-            "but failed to contact the ACC server."
+            "Your update has been recorded, but I couldn’t update ACC right now.\n"
+            "Please refer to the activity log for the detailed error."
         )
         return
 
