@@ -179,8 +179,6 @@ def fetch_ifc_metadata(token: str):
                     large_building_key = key
                     break
 
-            host = ifc.get("IfcContainedInHost")
-
             filtered.append({
                 "name": item.get("name"),
                 "ifcAttributes": {
@@ -189,7 +187,6 @@ def fetch_ifc_metadata(token: str):
                     "IfcClass": ifc.get("IfcClass"),
                     "IfcPropertySetList": ifc.get("IfcPropertySetList"),
                     "IfcSpatialContainer": ifc.get("IfcSpatialContainer"),
-                    "IfcContainedInHost": host,
                 },
                 # Only keep the classifier ID, not its content
                 "classificationId": large_building_key
