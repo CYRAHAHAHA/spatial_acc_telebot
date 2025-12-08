@@ -3,6 +3,8 @@ import requests
 import base64
 import csv
 from pathlib import Path
+from urllib.parse import quote_plus
+from flask import redirect
 
 from app.functions.authentication import AutodeskAuth
 from app.functions.fetch_all_assets_info import fetch_all_assets_info
@@ -199,6 +201,7 @@ def fetch_ifc_metadata(token: str):
     else:
         print("[WARNING] No matches - filtered JSON not created")
 
-    print("\n[SUCCESS] Metadata extraction complete!\n")
-
+    msg = f"Metadata extraction complete! Processed {len(final_ifc)} IFC elements, filtered to {len(filtered) if ids else 0} matching assets"
+    print(f"\n[SUCCESS] {msg}\n")
+    return redirect(f"/?msg={quote_plus(msg)}")
 

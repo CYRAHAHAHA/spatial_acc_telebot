@@ -3,6 +3,22 @@
     {
       "IFCGlobalId": "",
       "id": "9d653036-a76b-4736-a679-205028a0396d"
+    },
+    {
+      "Trade": "Construction trade responsible",
+      "id": "514da376-477d-4c60-91de-0ea5deb29fce"
+    },
+    {
+      "Level": "Building level (e.g., B2, L1, L15, RF)",
+      "id": "4e191a9b-c0f2-4fe2-bc9a-8da0bcb038ea"
+    },
+    {
+      "Material Type": "Primary material",
+      "id": "937db574-82dd-4325-a6a2-3c8c40817625"
+    },
+    {
+      "Remarks": "Additional notes",
+      "id": "1e6d823a-fbd9-432f-81be-2b32a66abee1"
     }
   ],
   "statusSets": [
@@ -170,6 +186,270 @@
           "createdAt": "2025-11-28T11:01:14.471Z",
           "updatedBy": "7G5ALB7C2DNA",
           "updatedAt": "2025-11-28T11:01:14.471Z",
+          "isActive": true
+        }
+      ]
+    },
+    {
+      "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+      "id": "44637fff-6607-41ed-984f-17507d6db6a8",
+      "name": "General Construction Lifecycle",
+      "description": "Simplified lifecycle for construction elements",
+      "statuses": [
+        {
+          "id": "b6b0425d-b0a9-46d2-99fa-63b20343e769",
+          "version": 74680391,
+          "description": "Order placed with supplier",
+          "bucket": "ordered_1765183081576",
+          "label": "Ordered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "9222a6a4-f913-44e2-8fea-9c3298b981ba",
+          "version": 74680392,
+          "description": "Material delivered to site",
+          "bucket": "delivered_1765183081576",
+          "label": "Delivered",
+          "color": "adsk-purple-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "7e89a96a-8ecf-457e-825d-2a7ace61b8d0",
+          "version": 74680393,
+          "description": "Item installed in position",
+          "bucket": "installed_1765183081576",
+          "label": "Installed",
+          "color": "adsk-blue-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "c33468f4-5ed3-4ec2-b182-84c9c8ea63b1",
+          "version": 74680394,
+          "description": "Quality inspection completed",
+          "bucket": "inspected_1765183081576",
+          "label": "Inspected",
+          "color": "adsk-yellow-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "d7815b2a-56ed-4257-b93d-2b2588889079",
+          "version": 74680395,
+          "description": "Final approval received",
+          "bucket": "approved_1765183081576",
+          "label": "Approved",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        }
+      ]
+    },
+    {
+      "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+      "id": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+      "name": "MEP Systems Lifecycle",
+      "description": "Simplified lifecycle for MEP equipment",
+      "statuses": [
+        {
+          "id": "2da19bbd-da7d-4ebb-a4f5-849e6667f8d4",
+          "version": 74680396,
+          "description": "Equipment ordered",
+          "bucket": "ordered_1765183081990",
+          "label": "Ordered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "2df9695d-30e1-41fe-81f7-f6c2b9dcacf2",
+          "version": 74680397,
+          "description": "Equipment delivered",
+          "bucket": "delivered_1765183081990",
+          "label": "Delivered",
+          "color": "adsk-purple-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "ce845354-8329-43ea-985f-c72be65b2124",
+          "version": 74680398,
+          "description": "Equipment installed",
+          "bucket": "installed_1765183081990",
+          "label": "Installed",
+          "color": "adsk-turquoise-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "b896b09d-fc67-4655-9d24-82043f1abac9",
+          "version": 74680399,
+          "description": "Equipment tested",
+          "bucket": "tested_1765183081990",
+          "label": "Tested",
+          "color": "adsk-yellow-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "daaf8a87-c707-46be-a6b5-800f20e2eb10",
+          "version": 74680400,
+          "description": "Successfully commissioned",
+          "bucket": "commissioned_1765183081990",
+          "label": "Commissioned",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        }
+      ]
+    },
+    {
+      "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+      "id": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+      "name": "Structural Elements Lifecycle",
+      "description": "Simplified lifecycle for structural elements",
+      "statuses": [
+        {
+          "id": "5b4ef19a-40c8-487a-b5d6-589bee8eab5c",
+          "version": 74680401,
+          "description": "Structural design approved",
+          "bucket": "design_approved_1765183082396",
+          "label": "Design Approved",
+          "color": "adsk-charcoal-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "d3f0bed2-be76-43dd-b0d3-5555f0291935",
+          "version": 74680402,
+          "description": "Materials on site",
+          "bucket": "material_delivered_1765183082396",
+          "label": "Material Delivered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "9ea62405-9362-4c2a-b844-ba53aa032939",
+          "version": 74680403,
+          "description": "Formwork installed",
+          "bucket": "formwork_setup_1765183082396",
+          "label": "Formwork Setup",
+          "color": "adsk-brown-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "cb47cda4-5dce-404c-b0b2-49fb87a963ac",
+          "version": 74680404,
+          "description": "Concrete poured",
+          "bucket": "concrete_poured_1765183082396",
+          "label": "Concrete Poured",
+          "color": "adsk-blue-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "071a30dd-014e-4a80-9600-5d0b1490ee38",
+          "version": 74680405,
+          "description": "Final inspection passed",
+          "bucket": "inspected_1765183082396",
+          "label": "Inspected",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
           "isActive": true
         }
       ]
@@ -350,6 +630,41 @@
           "description": null,
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
         }
       ],
       "children": [
@@ -360,7 +675,10 @@
         "8",
         "9",
         "10",
-        "11"
+        "11",
+        "13",
+        "14",
+        "15"
       ]
     },
     {
@@ -535,6 +853,41 @@
         {
           "displayName": "IFCGlobalId",
           "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
           "dataType": "text",
           "enumValues": []
         }
@@ -715,6 +1068,41 @@
           "description": null,
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
         }
       ],
       "children": []
@@ -891,6 +1279,41 @@
         {
           "displayName": "IFCGlobalId",
           "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
           "dataType": "text",
           "enumValues": []
         }
@@ -1071,6 +1494,41 @@
           "description": null,
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
         }
       ],
       "children": []
@@ -1247,6 +1705,41 @@
         {
           "displayName": "IFCGlobalId",
           "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
           "dataType": "text",
           "enumValues": []
         }
@@ -1427,6 +1920,41 @@
           "description": null,
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
         }
       ],
       "children": []
@@ -1605,6 +2133,41 @@
           "description": null,
           "dataType": "text",
           "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
         }
       ],
       "children": []
@@ -1781,6 +2344,1113 @@
         {
           "displayName": "IFCGlobalId",
           "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "Structural",
+      "categoryId": "13",
+      "parentId": "1",
+      "statusSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+      "statusSetName": "Structural Elements Lifecycle",
+      "statuses": [
+        {
+          "id": "5b4ef19a-40c8-487a-b5d6-589bee8eab5c",
+          "version": 74680401,
+          "description": "Structural design approved",
+          "bucket": "design_approved_1765183082396",
+          "label": "Design Approved",
+          "color": "adsk-charcoal-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "d3f0bed2-be76-43dd-b0d3-5555f0291935",
+          "version": 74680402,
+          "description": "Materials on site",
+          "bucket": "material_delivered_1765183082396",
+          "label": "Material Delivered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "9ea62405-9362-4c2a-b844-ba53aa032939",
+          "version": 74680403,
+          "description": "Formwork installed",
+          "bucket": "formwork_setup_1765183082396",
+          "label": "Formwork Setup",
+          "color": "adsk-brown-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "cb47cda4-5dce-404c-b0b2-49fb87a963ac",
+          "version": 74680404,
+          "description": "Concrete poured",
+          "bucket": "concrete_poured_1765183082396",
+          "label": "Concrete Poured",
+          "color": "adsk-blue-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "071a30dd-014e-4a80-9600-5d0b1490ee38",
+          "version": 74680405,
+          "description": "Final inspection passed",
+          "bucket": "inspected_1765183082396",
+          "label": "Inspected",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        }
+      ],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": [
+        "16",
+        "17"
+      ]
+    },
+    {
+      "categoryName": "Architecture",
+      "categoryId": "14",
+      "parentId": "1",
+      "statusSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+      "statusSetName": "General Construction Lifecycle",
+      "statuses": [
+        {
+          "id": "b6b0425d-b0a9-46d2-99fa-63b20343e769",
+          "version": 74680391,
+          "description": "Order placed with supplier",
+          "bucket": "ordered_1765183081576",
+          "label": "Ordered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "9222a6a4-f913-44e2-8fea-9c3298b981ba",
+          "version": 74680392,
+          "description": "Material delivered to site",
+          "bucket": "delivered_1765183081576",
+          "label": "Delivered",
+          "color": "adsk-purple-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "7e89a96a-8ecf-457e-825d-2a7ace61b8d0",
+          "version": 74680393,
+          "description": "Item installed in position",
+          "bucket": "installed_1765183081576",
+          "label": "Installed",
+          "color": "adsk-blue-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "c33468f4-5ed3-4ec2-b182-84c9c8ea63b1",
+          "version": 74680394,
+          "description": "Quality inspection completed",
+          "bucket": "inspected_1765183081576",
+          "label": "Inspected",
+          "color": "adsk-yellow-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "d7815b2a-56ed-4257-b93d-2b2588889079",
+          "version": 74680395,
+          "description": "Final approval received",
+          "bucket": "approved_1765183081576",
+          "label": "Approved",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        }
+      ],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": [
+        "18",
+        "19"
+      ]
+    },
+    {
+      "categoryName": "MEP Systems",
+      "categoryId": "15",
+      "parentId": "1",
+      "statusSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+      "statusSetName": "MEP Systems Lifecycle",
+      "statuses": [
+        {
+          "id": "2da19bbd-da7d-4ebb-a4f5-849e6667f8d4",
+          "version": 74680396,
+          "description": "Equipment ordered",
+          "bucket": "ordered_1765183081990",
+          "label": "Ordered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "2df9695d-30e1-41fe-81f7-f6c2b9dcacf2",
+          "version": 74680397,
+          "description": "Equipment delivered",
+          "bucket": "delivered_1765183081990",
+          "label": "Delivered",
+          "color": "adsk-purple-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "ce845354-8329-43ea-985f-c72be65b2124",
+          "version": 74680398,
+          "description": "Equipment installed",
+          "bucket": "installed_1765183081990",
+          "label": "Installed",
+          "color": "adsk-turquoise-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "b896b09d-fc67-4655-9d24-82043f1abac9",
+          "version": 74680399,
+          "description": "Equipment tested",
+          "bucket": "tested_1765183081990",
+          "label": "Tested",
+          "color": "adsk-yellow-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "daaf8a87-c707-46be-a6b5-800f20e2eb10",
+          "version": 74680400,
+          "description": "Successfully commissioned",
+          "bucket": "commissioned_1765183081990",
+          "label": "Commissioned",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        }
+      ],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": [
+        "20"
+      ]
+    },
+    {
+      "categoryName": "Columns",
+      "categoryId": "16",
+      "parentId": "13",
+      "statusSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+      "statusSetName": "Structural Elements Lifecycle",
+      "statuses": [
+        {
+          "id": "5b4ef19a-40c8-487a-b5d6-589bee8eab5c",
+          "version": 74680401,
+          "description": "Structural design approved",
+          "bucket": "design_approved_1765183082396",
+          "label": "Design Approved",
+          "color": "adsk-charcoal-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "d3f0bed2-be76-43dd-b0d3-5555f0291935",
+          "version": 74680402,
+          "description": "Materials on site",
+          "bucket": "material_delivered_1765183082396",
+          "label": "Material Delivered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "9ea62405-9362-4c2a-b844-ba53aa032939",
+          "version": 74680403,
+          "description": "Formwork installed",
+          "bucket": "formwork_setup_1765183082396",
+          "label": "Formwork Setup",
+          "color": "adsk-brown-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "cb47cda4-5dce-404c-b0b2-49fb87a963ac",
+          "version": 74680404,
+          "description": "Concrete poured",
+          "bucket": "concrete_poured_1765183082396",
+          "label": "Concrete Poured",
+          "color": "adsk-blue-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "071a30dd-014e-4a80-9600-5d0b1490ee38",
+          "version": 74680405,
+          "description": "Final inspection passed",
+          "bucket": "inspected_1765183082396",
+          "label": "Inspected",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        }
+      ],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "Beams",
+      "categoryId": "17",
+      "parentId": "13",
+      "statusSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+      "statusSetName": "Structural Elements Lifecycle",
+      "statuses": [
+        {
+          "id": "5b4ef19a-40c8-487a-b5d6-589bee8eab5c",
+          "version": 74680401,
+          "description": "Structural design approved",
+          "bucket": "design_approved_1765183082396",
+          "label": "Design Approved",
+          "color": "adsk-charcoal-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "d3f0bed2-be76-43dd-b0d3-5555f0291935",
+          "version": 74680402,
+          "description": "Materials on site",
+          "bucket": "material_delivered_1765183082396",
+          "label": "Material Delivered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "9ea62405-9362-4c2a-b844-ba53aa032939",
+          "version": 74680403,
+          "description": "Formwork installed",
+          "bucket": "formwork_setup_1765183082396",
+          "label": "Formwork Setup",
+          "color": "adsk-brown-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "cb47cda4-5dce-404c-b0b2-49fb87a963ac",
+          "version": 74680404,
+          "description": "Concrete poured",
+          "bucket": "concrete_poured_1765183082396",
+          "label": "Concrete Poured",
+          "color": "adsk-blue-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        },
+        {
+          "id": "071a30dd-014e-4a80-9600-5d0b1490ee38",
+          "version": 74680405,
+          "description": "Final inspection passed",
+          "bucket": "inspected_1765183082396",
+          "label": "Inspected",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "910e1860-e20d-4d19-bc75-dbdf2e39058f",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:02.397Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:02.397Z",
+          "isActive": true
+        }
+      ],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "Walls",
+      "categoryId": "18",
+      "parentId": "14",
+      "statusSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+      "statusSetName": "General Construction Lifecycle",
+      "statuses": [
+        {
+          "id": "b6b0425d-b0a9-46d2-99fa-63b20343e769",
+          "version": 74680391,
+          "description": "Order placed with supplier",
+          "bucket": "ordered_1765183081576",
+          "label": "Ordered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "9222a6a4-f913-44e2-8fea-9c3298b981ba",
+          "version": 74680392,
+          "description": "Material delivered to site",
+          "bucket": "delivered_1765183081576",
+          "label": "Delivered",
+          "color": "adsk-purple-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "7e89a96a-8ecf-457e-825d-2a7ace61b8d0",
+          "version": 74680393,
+          "description": "Item installed in position",
+          "bucket": "installed_1765183081576",
+          "label": "Installed",
+          "color": "adsk-blue-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "c33468f4-5ed3-4ec2-b182-84c9c8ea63b1",
+          "version": 74680394,
+          "description": "Quality inspection completed",
+          "bucket": "inspected_1765183081576",
+          "label": "Inspected",
+          "color": "adsk-yellow-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "d7815b2a-56ed-4257-b93d-2b2588889079",
+          "version": 74680395,
+          "description": "Final approval received",
+          "bucket": "approved_1765183081576",
+          "label": "Approved",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        }
+      ],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "Doors",
+      "categoryId": "19",
+      "parentId": "14",
+      "statusSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+      "statusSetName": "General Construction Lifecycle",
+      "statuses": [
+        {
+          "id": "b6b0425d-b0a9-46d2-99fa-63b20343e769",
+          "version": 74680391,
+          "description": "Order placed with supplier",
+          "bucket": "ordered_1765183081576",
+          "label": "Ordered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "9222a6a4-f913-44e2-8fea-9c3298b981ba",
+          "version": 74680392,
+          "description": "Material delivered to site",
+          "bucket": "delivered_1765183081576",
+          "label": "Delivered",
+          "color": "adsk-purple-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "7e89a96a-8ecf-457e-825d-2a7ace61b8d0",
+          "version": 74680393,
+          "description": "Item installed in position",
+          "bucket": "installed_1765183081576",
+          "label": "Installed",
+          "color": "adsk-blue-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "c33468f4-5ed3-4ec2-b182-84c9c8ea63b1",
+          "version": 74680394,
+          "description": "Quality inspection completed",
+          "bucket": "inspected_1765183081576",
+          "label": "Inspected",
+          "color": "adsk-yellow-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        },
+        {
+          "id": "d7815b2a-56ed-4257-b93d-2b2588889079",
+          "version": 74680395,
+          "description": "Final approval received",
+          "bucket": "approved_1765183081576",
+          "label": "Approved",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "44637fff-6607-41ed-984f-17507d6db6a8",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.576Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.576Z",
+          "isActive": true
+        }
+      ],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
+          "dataType": "text",
+          "enumValues": []
+        }
+      ],
+      "children": []
+    },
+    {
+      "categoryName": "Mechanical",
+      "categoryId": "20",
+      "parentId": "15",
+      "statusSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+      "statusSetName": "MEP Systems Lifecycle",
+      "statuses": [
+        {
+          "id": "2da19bbd-da7d-4ebb-a4f5-849e6667f8d4",
+          "version": 74680396,
+          "description": "Equipment ordered",
+          "bucket": "ordered_1765183081990",
+          "label": "Ordered",
+          "color": "adsk-blue-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 1,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "2df9695d-30e1-41fe-81f7-f6c2b9dcacf2",
+          "version": 74680397,
+          "description": "Equipment delivered",
+          "bucket": "delivered_1765183081990",
+          "label": "Delivered",
+          "color": "adsk-purple-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 2,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "ce845354-8329-43ea-985f-c72be65b2124",
+          "version": 74680398,
+          "description": "Equipment installed",
+          "bucket": "installed_1765183081990",
+          "label": "Installed",
+          "color": "adsk-turquoise-300",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 3,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "b896b09d-fc67-4655-9d24-82043f1abac9",
+          "version": 74680399,
+          "description": "Equipment tested",
+          "bucket": "tested_1765183081990",
+          "label": "Tested",
+          "color": "adsk-yellow-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 4,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        },
+        {
+          "id": "daaf8a87-c707-46be-a6b5-800f20e2eb10",
+          "version": 74680400,
+          "description": "Successfully commissioned",
+          "bucket": "commissioned_1765183081990",
+          "label": "Commissioned",
+          "color": "adsk-green-500",
+          "projectId": "b1e65c53-d08a-407d-ab89-399c63b2f2cf",
+          "statusStepSetId": "f72ecf89-a633-41fb-a6ce-ae724b33b417",
+          "sortOrder": 5,
+          "createdBy": "26T24R4NKFREYN6X",
+          "createdAt": "2025-12-08T08:38:01.990Z",
+          "updatedBy": "26T24R4NKFREYN6X",
+          "updatedAt": "2025-12-08T08:38:01.990Z",
+          "isActive": true
+        }
+      ],
+      "customAttributes": [
+        {
+          "displayName": "IFCGlobalId",
+          "description": null,
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Trade",
+          "description": "Construction trade responsible",
+          "dataType": "select",
+          "enumValues": [
+            "Architectural",
+            "Structural",
+            "Mechanical",
+            "Electrical"
+          ]
+        },
+        {
+          "displayName": "Level",
+          "description": "Building level (e.g., B2, L1, L15, RF)",
+          "dataType": "text",
+          "enumValues": []
+        },
+        {
+          "displayName": "Material Type",
+          "description": "Primary material",
+          "dataType": "select",
+          "enumValues": [
+            "Concrete",
+            "Steel",
+            "Aluminum",
+            "Timber",
+            "Glass"
+          ]
+        },
+        {
+          "displayName": "Remarks",
+          "description": "Additional notes",
           "dataType": "text",
           "enumValues": []
         }

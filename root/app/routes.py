@@ -22,6 +22,16 @@ import requests
 
 logger = logging.getLogger(__name__)
 
+@app.route('/do_all_initial_setup')
+@require_access_token(pass_token=True)
+def do_all_initial_setup(token):
+    # Call all setup functions in the correct order
+    print(fetch_assets_config(token))
+    print(fetch_all_assets_info(token))
+    print(fetch_ifc_metadata(token))
+    msg = "All initial setup functions called successfully"
+    return redirect(f"/?msg={quote_plus(msg)}")
+
 # Serve files from data directory
 @app.route('/data/<path:filename>')
 def serve_data_files(filename):
@@ -396,8 +406,7 @@ def create_categories_from_json(token):
 @app.route("/fetch_metadata")
 @require_access_token(pass_token=True)
 def fetch_metadata_route(token):
-    result = fetch_ifc_metadata(token)   
-    return jsonify(result), 200
+    return fetch_ifc_metadata(token)
 
 # ---- API: fetching of metadata ---- #
 @app.route("/get_root_folder_id")
