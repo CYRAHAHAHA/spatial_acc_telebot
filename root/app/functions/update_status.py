@@ -38,10 +38,10 @@ def _lookup_status_id_by_label(label: str, status_set_id: str) -> Optional[str]:
                 
                 if row_label == needle_label and row_status_set_id == needle_status_set_id:
                     found_status_id = row.get("status_id") or None
-                    print(f"[OK] Match found! status_id='{found_status_id}'")
+                    print(f"✓ Match found! status_id='{found_status_id}'")
                     return found_status_id
         
-        print(f"No match found for label='{needle_label}' in status_set_id='{needle_status_set_id}'")
+        print(f"✗ No match found for label='{needle_label}' in status_set_id='{needle_status_set_id}'")
     except Exception as e:
         print(f"ERROR reading status_sets.csv: {e}")
         return None
@@ -73,10 +73,10 @@ def _resolve_asset_info_from_guid(asset_guid: str) -> Optional[Dict[str, str]]:
                         "status_set_id": row.get("status_set_id") or None,
                         "category_id": row.get("category_id") or None
                     }
-                    print(f"[OK] Asset found! B3F_id='{asset_info['B3F_id']}', status_set_id='{asset_info['status_set_id']}'")
+                    print(f"✓ Asset found! B3F_id='{asset_info['B3F_id']}', status_set_id='{asset_info['status_set_id']}'")
                     return asset_info
         
-        print(f"No asset found with GUID '{needle_guid}'")
+        print(f"✗ No asset found with GUID '{needle_guid}'")
     except Exception as e:
         print(f"ERROR reading assets_total.csv: {e}")
         return None
@@ -106,7 +106,7 @@ def update_assets(access_token: str, asset_guid: str, status_value: str):
     # Step 1: Get asset info (B3F_id and status_set_id) from assets_total.csv
     asset_info = _resolve_asset_info_from_guid(asset_guid)
     if not asset_info or not asset_info.get("B3F_id"):
-        print("FAILED: Could not find asset with GUID:", asset_guid)
+        print("✗ FAILED: Could not find asset with GUID:", asset_guid)
         return jsonify({"error": f"Asset with GUID '{asset_guid}' not found in assets_total.csv"}), 404
     
     asset_id = asset_info["B3F_id"]
@@ -117,13 +117,13 @@ def update_assets(access_token: str, asset_guid: str, status_value: str):
     print(f"  status_set_id: {status_set_id}")
     
     if not status_set_id:
-        print("FAILED: Asset has no status_set_id")
+        print("✗ FAILED: Asset has no status_set_id")
         return jsonify({"error": "Asset has no status_set_id assigned"}), 400
     
     # Step 2: Lookup status_id using BOTH status_value and status_set_id
     status_id = _lookup_status_id_by_label(status_value, status_set_id)
     if not status_id:
-        print(f"FAILED: Could not find status_id for '{status_value}' in status_set '{status_set_id}'")
+        print(f"✗ FAILED: Could not find status_id for '{status_value}' in status_set '{status_set_id}'")
         return jsonify({
             "error": f"Status '{status_value}' not found in status_set_id '{status_set_id}'",
             "hint": "Check status_sets.csv for available statuses in this status set"
@@ -154,13 +154,13 @@ def update_assets(access_token: str, asset_guid: str, status_value: str):
         
         # Pass through upstream response for transparency
         if resp.status_code >= 200 and resp.status_code < 300:
-            print("[SUCCESS] Asset status updated")
+            print("✓ SUCCESS: Asset status updated")
             try:
                 return jsonify(resp.json()), resp.status_code
             except Exception:
                 return resp.text, resp.status_code
         else:
-            print(f"FAILED: APS API returned error {resp.status_code}")
+            print(f"✗ FAILED: APS API returned error {resp.status_code}")
             # Include request body context to aid debugging (exclude token)
             detail = {
                 "url": url,
@@ -174,5 +174,5 @@ def update_assets(access_token: str, asset_guid: str, status_value: str):
             detail["request_body"] = body
             return jsonify({"error": "APS update failed", **detail}), resp.status_code
     except requests.RequestException as e:
-        print(f"FAILED: Request exception: {e}")
+        print(f"✗ FAILED: Request exception: {e}")
         return jsonify({"error": f"Request to APS failed: {e}"}), 502

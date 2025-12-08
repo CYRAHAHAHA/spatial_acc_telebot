@@ -49,7 +49,6 @@
     toggleConfigBtn: document.getElementById("toggleConfigBtn"),
     activityLogView: document.getElementById("activityLogView"),
     configurationView: document.getElementById("configurationView"),
-    initialSetupBtn: document.getElementById("initialSetupBtn"),
   };
 
 
@@ -1585,13 +1584,6 @@
       console.error("Setup default config error:", err);
       showToast("error", "Setup failed", err.message);
     }
-  });
-
-  el.initialSetupBtn?.addEventListener("click", async () => {
-    showToast('warning', 'Doing all initial setup', 'This will reload the page...', 3000);
-    setTimeout(() => {
-      window.location.href = "/do_all_initial_setup";
-    }, 500);
   });
 
   document.getElementById("updateAssetForm")?.addEventListener("submit", async (e) => {

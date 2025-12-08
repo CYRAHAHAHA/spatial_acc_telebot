@@ -239,190 +239,6 @@ def _tokenize(text: str) -> set[str]:
     return {match.group(0).lower() for match in _TOKEN_PATTERN.finditer(text)}
 
 
-def _normalize_typo(token: str) -> str:
-    """Collapse excessive repeated characters to stabilize simple typos (e.g., dooor -> door)."""
-    return re.sub(r"(.)\\1{2,}", r"\\1\\1", token)
-
-
-def _augment_tokens(tokens: set[str]) -> set[str]:
-    augmented = set(tokens)
-    for token in list(tokens):
-        normalized = _normalize_typo(token)
-        if normalized != token and len(normalized) > 2:
-            augmented.add(normalized)
-    return augmented
-
-
-STOP_TOKENS = {
-    "the",
-    "a",
-    "an",
-    "status",
-    "is",
-    "to",
-    "of",
-    "for",
-    "in",
-    "on",
-    "at",
-    "and",
-    "complete",
-    "completed",
-    "done",
-    "pending",
-    "progress",
-    "delayed",
-    "blocked",
-    "inspection",
-    "manual",
-    "review",
-    "level",
-    "lvl",
-    "l",
-    "building",
-}
-
-
-def _significant_tokens(tokens: set[str]) -> set[str]:
-    return {token for token in tokens if token not in STOP_TOKENS and not token.isdigit()}
-
-
-LEVEL_PATTERN = re.compile(r"\b(?:[a-z]?level|lvl|l)\s*([0-9]+)\b", re.IGNORECASE)
-BUILDING_PATTERN = re.compile(r"\bbuilding\s*([A-Za-z0-9]+)\b", re.IGNORECASE)
-
-
-@dataclass(slots=True)
-class UpdateHints:
-    tokens: set[str]
-    significant_tokens: set[str]
-    levels: set[str]
-    buildings: set[str]
-
-
-@dataclass(slots=True)
-class ElementMetadata:
-    tokens: set[str]
-    levels: set[str]
-    buildings: set[str]
-
-
-_ELEMENT_META_CACHE: dict[str, ElementMetadata] = {}
-
-
-def _normalize_level_label(value: str | None) -> str | None:
-    if not value:
-        return None
-    match = LEVEL_PATTERN.search(value)
-    if match:
-        return f"level {match.group(1)}".lower()
-    value_lower = value.lower().strip()
-    if value_lower.startswith("level"):
-        return value_lower
-    return None
-
-
-def _split_identifier_tokens(value: str) -> set[str]:
-    tokens: set[str] = set()
-    parts = re.split(r"[^A-Za-z0-9]+", value)
-    for part in parts:
-        if not part:
-            continue
-        tokens.add(part.lower())
-        camel_parts = re.findall(r"[A-Z][a-z]+", part)
-        tokens.update(part.lower() for part in camel_parts)
-    return {token for token in tokens if token}
-
-
-def _extract_update_hints(update_text: str) -> UpdateHints:
-    tokens = _augment_tokens(_tokenize(update_text))
-    significant_tokens = _significant_tokens(tokens)
-    levels = {f"level {match}".lower() for match in LEVEL_PATTERN.findall(update_text)}
-    buildings = {f"building {match.lower()}" for match in BUILDING_PATTERN.findall(update_text)}
-    # Remove level/building tokens from significance to avoid drowning type cues.
-    for level in levels:
-        significant_tokens.discard(level.replace(" ", ""))
-        significant_tokens.discard(level)
-    for building in buildings:
-        significant_tokens.discard(building.replace(" ", ""))
-        significant_tokens.discard(building)
-    return UpdateHints(tokens=tokens, significant_tokens=significant_tokens, levels=levels, buildings=buildings)
-
-
-def _element_metadata(element: ModelElement) -> ElementMetadata:
-    cached = _ELEMENT_META_CACHE.get(element.guid)
-    if cached:
-        return cached
-
-    tokens = _augment_tokens(_tokenize(element.serialize()))
-    levels: set[str] = set()
-    buildings: set[str] = set()
-
-    payload = element.payload
-    ifc_attributes = payload.get("ifcAttributes") if isinstance(payload, dict) else {}
-    spatial = None
-    if isinstance(ifc_attributes, dict):
-        spatial = ifc_attributes.get("IfcSpatialContainer")
-        for key in ("IfcClass", "ObjectType"):
-            value = ifc_attributes.get(key)
-            if isinstance(value, str):
-                tokens.update(_split_identifier_tokens(value))
-                tokens.update(_tokenize(value))
-                normalized = _normalize_level_label(value)
-                if normalized:
-                    levels.add(normalized)
-    if spatial and isinstance(spatial, str):
-        normalized = _normalize_level_label(spatial)
-        if normalized:
-            levels.add(normalized)
-
-    # Fallback: scan the serialized payload for level cues if none were captured.
-    if not levels:
-        for match in LEVEL_PATTERN.findall(element.serialize()):
-            levels.add(f"level {match}".lower())
-
-    classification_id = payload.get("classificationId") if isinstance(payload, dict) else None
-    if isinstance(classification_id, str):
-        tokens.update(_split_identifier_tokens(classification_id))
-        tokens.update(_tokenize(classification_id))
-        if "building" in classification_id.lower():
-            buildings.add(classification_id.lower())
-            buildings.update(_split_identifier_tokens(classification_id))
-
-    # Capture building cues embedded in names or attributes.
-    if isinstance(payload, dict):
-        for key in ("name", "label", "title"):
-            value = payload.get(key)
-            if isinstance(value, str):
-                tokens.update(_tokenize(value))
-                tokens.update(_split_identifier_tokens(value))
-                for match in BUILDING_PATTERN.findall(value):
-                    buildings.add(f"building {match.lower()}")
-
-    meta = ElementMetadata(tokens=tokens, levels=levels, buildings=buildings)
-    _ELEMENT_META_CACHE[element.guid] = meta
-    return meta
-
-
-def _score_element(element: ModelElement, hints: UpdateHints) -> int:
-    meta = _element_metadata(element)
-    token_overlap = _token_overlap(meta.tokens, hints.tokens)
-    significant_overlap = _token_overlap(meta.tokens, hints.significant_tokens)
-    level_overlap = len(meta.levels & hints.levels)
-    building_overlap = len(meta.buildings & hints.buildings)
-
-    score = token_overlap + (significant_overlap * 3)
-    score += level_overlap * 12
-    score += building_overlap * 6
-    if hints.levels:
-        if meta.levels:
-            if level_overlap == 0:
-                score -= 6
-        else:
-            score -= 8  # strong penalty when update has a level but element lacks one
-    if hints.buildings and not building_overlap:
-        score -= 2
-
-    return score
 ACTION_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bstatus\s*(?:is\s*)?(?:complete|completed|done)\b", re.IGNORECASE), "status_completed"),
     (re.compile(r"\bstatus\s*(?:is\s*)?in\s+progress\b", re.IGNORECASE), "status_in_progress"),
@@ -446,36 +262,30 @@ def infer_action_from_update(update_text: str) -> str | None:
 def prioritize_elements(elements: list[ModelElement], update_text: str, limit: int) -> list[ModelElement]:
     if limit <= 0 or len(elements) <= limit:
         return elements
-    hints = _extract_update_hints(update_text)
-    if not hints.tokens:
+    tokens = _tokenize(update_text)
+    if not tokens:
         return elements[:limit]
 
-    scored = sorted(
-        elements,
-        key=lambda element: _score_element(element, hints),
-        reverse=True,
-    )
+    guid_tokens = {token for token in tokens if len(token) > 3}
+
+    def score(element: ModelElement) -> int:
+        serialized = element.serialize().lower()
+        rank = 0
+        for token in tokens:
+            if token in serialized:
+                rank += 1
+        guid_lower = element.guid.lower()
+        for token in guid_tokens:
+            if token in guid_lower:
+                rank += 3
+        return rank
+
+    scored = sorted(elements, key=score, reverse=True)
     return scored[:limit]
 
 
 def _token_overlap(a_tokens: set[str], b_tokens: set[str]) -> int:
     return len(a_tokens & b_tokens)
-
-
-def _fuzzy_token_overlap(a_tokens: set[str], b_tokens: set[str]) -> int:
-    """Count loose overlaps (singular/plural or substring matches) to avoid brittle drops."""
-    score = 0
-    for a in a_tokens:
-        a_base = a[:-1] if a.endswith("s") and len(a) > 3 else a
-        for b in b_tokens:
-            b_base = b[:-1] if b.endswith("s") and len(b) > 3 else b
-            if a_base == b_base:
-                score += 1
-            elif len(a_base) >= 4 and a_base in b_base:
-                score += 1
-            elif len(b_base) >= 4 and b_base in a_base:
-                score += 1
-    return score
 
 
 def parse_model_data(raw_model: Any) -> tuple[list[ModelElement], str]:
@@ -513,14 +323,7 @@ def chunk_elements(elements: list[ModelElement], max_chars: int) -> list[str]:
     current: list[str] = []
     size = 0
     for element in elements:
-        meta = _element_metadata(element)
-        summary_bits: list[str] = []
-        if meta.levels:
-            summary_bits.append(f"level={','.join(sorted(meta.levels))}")
-        if meta.buildings:
-            summary_bits.append(f"building={','.join(sorted(meta.buildings))}")
-        summary = "; ".join(summary_bits)
-        serialized = f"GUID: {element.guid}\nSUMMARY: {summary or 'n/a'}\nDATA: {element.serialize()}\n"
+        serialized = f"GUID: {element.guid}\nDATA: {element.serialize()}\n"
         if size + len(serialized) > max_chars and current:
             chunks.append("\n".join(current))
             current = []
@@ -545,8 +348,6 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
     """Match a Telegram-style update to a BIM element and classify the action."""
     update_text = normalize_update(raw_update)
     update_tokens = _tokenize(update_text)
-    update_hints = _extract_update_hints(update_text)
-    significant_tokens = update_hints.significant_tokens
     elements, fallback_blob = parse_model_data(raw_model)
     client = OpenAIClient()
     element_index = {element.guid: element for element in elements}
@@ -608,33 +409,7 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
         element = element_index.get(matched_guid)
         if element:
             element_tokens = _tokenize(element.serialize())
-            meta = _element_metadata(element)
-            level_overlap = len(meta.levels & update_hints.levels)
-            building_overlap = len(meta.buildings & update_hints.buildings)
-            significant_overlap = _token_overlap(meta.tokens, significant_tokens)
-            fuzzy_significant = _fuzzy_token_overlap(meta.tokens, significant_tokens) if significant_tokens else 0
-            basic_overlap = _token_overlap(update_tokens, element_tokens)
-            if update_hints.levels and meta.levels and level_overlap == 0:
-                matched_guid = ""
-                status = inferred_action or "manual_review"
-                status_source = "guardrail_reset"
-                guardrail_reason = "Dropped match because level cues did not align."
-            elif update_hints.levels and not meta.levels:
-                matched_guid = ""
-                status = inferred_action or "manual_review"
-                status_source = "guardrail_reset"
-                guardrail_reason = "Dropped match because element lacked a spatial container for level."
-            elif update_hints.buildings and meta.buildings and building_overlap == 0:
-                matched_guid = ""
-                status = inferred_action or "manual_review"
-                status_source = "guardrail_reset"
-                guardrail_reason = "Dropped match because building cues did not align."
-            elif significant_tokens and significant_overlap == 0 and fuzzy_significant == 0:
-                matched_guid = ""
-                status = inferred_action or "manual_review"
-                status_source = "guardrail_reset"
-                guardrail_reason = "Dropped match because no significant tokens overlapped."
-            elif basic_overlap == 0:
+            if _token_overlap(update_tokens, element_tokens) == 0:
                 matched_guid = ""
                 status = inferred_action or "manual_review"
                 status_source = "guardrail_reset"
@@ -649,24 +424,13 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
     if not matched_guid and update_tokens:
         best_overlap = 0
         best_guid = ""
-        search_tokens = significant_tokens or update_tokens
-        fuzzy_best = 0
         for element in elements:
-            meta = _element_metadata(element)
-            if update_hints.levels:
-                if not meta.levels:
-                    continue  # require spatial level when update provides one
-                if meta.levels and not (meta.levels & update_hints.levels):
-                    continue
-            overlap = _token_overlap(meta.tokens, search_tokens)
-            fuzzy_overlap = _fuzzy_token_overlap(meta.tokens, search_tokens) if search_tokens else 0
-            total_overlap = overlap + fuzzy_overlap
-            if total_overlap > best_overlap or (total_overlap == best_overlap and fuzzy_overlap > fuzzy_best):
-                fuzzy_best = fuzzy_overlap
+            element_tokens = _tokenize(element.serialize())
+            overlap = _token_overlap(update_tokens, element_tokens)
+            if overlap > best_overlap:
                 best_overlap = overlap
                 best_guid = element.guid
-        required = 1 if len(search_tokens) <= 2 else 2
-        if best_overlap + fuzzy_best >= required:
+        if best_overlap >= 2:  # require at least a couple of shared tokens to avoid noise
             matched_guid = best_guid
             status = inferred_action or status
             status_source = "token_overlap"
