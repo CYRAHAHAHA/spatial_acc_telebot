@@ -65,16 +65,97 @@ def fetch_all_assets(token):
 def update_status(token):
     """
     Update asset status in ACC.
-    Expected JSON: {"asset_guid": "...", "status_value": "..."}
+    Expected JSON: {"asset_guid": ["guid1", "guid2", ...], "status_value": "..."}
+    Or single GUID: {"asset_guid": "single-guid", "status_value": "..."}
     """
     data = request.get_json(silent=True) or {}
     asset_guid = data.get("asset_guid")
     status_value = data.get("status_value")
     
-    if not asset_guid or not status_value:
-        return jsonify({"error": "Missing asset_guid or status_value"}), 400
+    if not status_value:
+        return jsonify({"error": "Missing status_value"}), 400
     
-    return update_assets(token, asset_guid, status_value)
+    # Handle both list and single GUID
+    if not asset_guid:
+        return jsonify({"error": "Missing asset_guid"}), 400
+    
+    # Convert single GUID to list for uniform processing
+    if isinstance(asset_guid, str):
+        asset_guid_list = [asset_guid]
+    elif isinstance(asset_guid, list):
+        asset_guid_list = asset_guid
+    else:
+        return jsonify({"error": "asset_guid must be a string or list"}), 400
+    
+    # Handle empty list
+    if len(asset_guid_list) == 0:
+        return jsonify({
+            "success": True,
+            "message": "No assets to update",
+            "total": 0,
+            "successful": 0,
+            "failed": 0,
+            "results": []
+        }), 200
+    
+    # Process each GUID
+    results = []
+    successful = 0
+    failed = 0
+    
+    for guid in asset_guid_list:
+        try:
+            logger.info(f"Updating asset {guid} to status {status_value}")
+            result = update_assets(token, guid, status_value)
+            
+            # Check if update was successful
+            if isinstance(result, tuple):
+                response_data, status_code = result
+            else:
+                response_data = result
+                status_code = 200
+            
+            if status_code == 200:
+                successful += 1
+                results.append({
+                    "asset_guid": guid,
+                    "success": True,
+                    "status_value": status_value
+                })
+            else:
+                failed += 1
+                # Try to extract error message from various response formats
+                error_msg = "Unknown error"
+                try:
+                    if isinstance(response_data, dict):
+                        error_msg = response_data.get("error", "Unknown error")
+                    else:
+                        error_msg = str(response_data)
+                except:
+                    error_msg = "Unknown error"
+                    
+                results.append({
+                    "asset_guid": guid,
+                    "success": False,
+                    "error": error_msg
+                })
+        except Exception as e:
+            logger.error(f"Error updating asset {guid}: {str(e)}")
+            failed += 1
+            results.append({
+                "asset_guid": guid,
+                "success": False,
+                "error": str(e)
+            })
+    
+    return jsonify({
+        "success": True,
+        "message": f"Processed {len(asset_guid_list)} asset(s)",
+        "total": len(asset_guid_list),
+        "successful": successful,
+        "failed": failed,
+        "results": results
+    }), 200
 
 # ---- Issue status update endpoint ---- #
 @app.route("/update_issue_status", methods=["POST"])
