@@ -3,9 +3,6 @@ from app import app
 from app.functions.fetch_assets_config import fetch_assets_config
 from app.utils import require_access_token
 from app.config import config
-from app.functions.fetch_metadata import fetch_ifc_metadata
-from app.functions.get_root_folder_id import discover_root_folder
-from app.functions.create_assets import run_create_assets
 from app.functions.create_status_sets import create_status_sets
 from app.functions.create_custom_fields import create_custom_fields
 from urllib.parse import quote_plus
@@ -16,11 +13,24 @@ from app.functions.create_issue import create_issue
 from app.functions.fetch_all_assets_info import fetch_all_assets_info 
 from app.functions.create_categories import create_categories
 from app.functions.fetch_issue_subtypes import fetch_issue_subtypes, format_subtypes_output
+from app.functions.fetch_metadata import fetch_ifc_metadata
+from app.functions.create_assets import run_create_assets
+from app.functions.get_root_folder_id import discover_root_folder
 import json
 import logging
 import requests
 
 logger = logging.getLogger(__name__)
+
+@app.route('/do_all_initial_setup')
+@require_access_token(pass_token=True)
+def do_all_initial_setup(token):
+    # Call all setup functions in the correct order
+    print(fetch_assets_config(token))
+    print(fetch_all_assets_info(token))
+    print(fetch_ifc_metadata(token))
+    msg = "All initial setup functions called successfully"
+    return redirect(f"/?msg={quote_plus(msg)}")
 
 # Serve files from data directory
 @app.route('/data/<path:filename>')
@@ -49,28 +59,6 @@ def callback():
     session["access_token"] = token
     return redirect("/?msg=Authenticated+successfully.")
 
-# ---- API: fetching of metadata ---- #
-@app.route("/fetch_metadata")
-@require_access_token(pass_token=True)
-def fetch_metadata_route(token):
-    result = fetch_ifc_metadata(token)   
-    return jsonify(result), 200
-
-# ---- API: fetching of metadata ---- #
-@app.route("/get_root_folder_id")
-@require_access_token(pass_token=True)
-def fetch_root_id_route(token):
-    result = discover_root_folder(token)   
-    return jsonify(result), 200
-
-# ---- API: create assets ---- #
-@app.route("/createassets", methods=["POST"])
-@require_access_token(pass_token=True)
-def upload_ai_assets(token):
-    result = run_create_assets(token)
-    return jsonify(result)
-
-
 # ---- API: assets config and status updates ---- #
 @app.route("/fetch_assets_config")
 @require_access_token(pass_token=True)
@@ -87,16 +75,97 @@ def fetch_all_assets(token):
 def update_status(token):
     """
     Update asset status in ACC.
-    Expected JSON: {"asset_guid": "...", "status_value": "..."}
+    Expected JSON: {"asset_guid": ["guid1", "guid2", ...], "status_value": "..."}
+    Or single GUID: {"asset_guid": "single-guid", "status_value": "..."}
     """
     data = request.get_json(silent=True) or {}
     asset_guid = data.get("asset_guid")
     status_value = data.get("status_value")
     
-    if not asset_guid or not status_value:
-        return jsonify({"error": "Missing asset_guid or status_value"}), 400
+    if not status_value:
+        return jsonify({"error": "Missing status_value"}), 400
     
-    return update_assets(token, asset_guid, status_value)
+    # Handle both list and single GUID
+    if not asset_guid:
+        return jsonify({"error": "Missing asset_guid"}), 400
+    
+    # Convert single GUID to list for uniform processing
+    if isinstance(asset_guid, str):
+        asset_guid_list = [asset_guid]
+    elif isinstance(asset_guid, list):
+        asset_guid_list = asset_guid
+    else:
+        return jsonify({"error": "asset_guid must be a string or list"}), 400
+    
+    # Handle empty list
+    if len(asset_guid_list) == 0:
+        return jsonify({
+            "success": True,
+            "message": "No assets to update",
+            "total": 0,
+            "successful": 0,
+            "failed": 0,
+            "results": []
+        }), 200
+    
+    # Process each GUID
+    results = []
+    successful = 0
+    failed = 0
+    
+    for guid in asset_guid_list:
+        try:
+            logger.info(f"Updating asset {guid} to status {status_value}")
+            result = update_assets(token, guid, status_value)
+            
+            # Check if update was successful
+            if isinstance(result, tuple):
+                response_data, status_code = result
+            else:
+                response_data = result
+                status_code = 200
+            
+            if status_code == 200:
+                successful += 1
+                results.append({
+                    "asset_guid": guid,
+                    "success": True,
+                    "status_value": status_value
+                })
+            else:
+                failed += 1
+                # Try to extract error message from various response formats
+                error_msg = "Unknown error"
+                try:
+                    if isinstance(response_data, dict):
+                        error_msg = response_data.get("error", "Unknown error")
+                    else:
+                        error_msg = str(response_data)
+                except:
+                    error_msg = "Unknown error"
+                    
+                results.append({
+                    "asset_guid": guid,
+                    "success": False,
+                    "error": error_msg
+                })
+        except Exception as e:
+            logger.error(f"Error updating asset {guid}: {str(e)}")
+            failed += 1
+            results.append({
+                "asset_guid": guid,
+                "success": False,
+                "error": str(e)
+            })
+    
+    return jsonify({
+        "success": True,
+        "message": f"Processed {len(asset_guid_list)} asset(s)",
+        "total": len(asset_guid_list),
+        "successful": successful,
+        "failed": failed,
+        "results": results
+    }), 200
 
 # ---- Issue status update endpoint ---- #
 @app.route("/update_issue_status", methods=["POST"])
@@ -332,6 +401,26 @@ def create_categories_from_json(token):
         return jsonify({"error": "Invalid payload: expected a JSON array."}), 400
     created = create_categories(token, items) or []
     return jsonify({"created": len(created)}), 200
+
+# ---- API: fetching of metadata ---- #
+@app.route("/fetch_metadata")
+@require_access_token(pass_token=True)
+def fetch_metadata_route(token):
+    return fetch_ifc_metadata(token)
+
+# ---- API: fetching of metadata ---- #
+@app.route("/get_root_folder_id")
+@require_access_token(pass_token=True)
+def fetch_root_id_route(token):
+    result = discover_root_folder(token)   
+    return jsonify(result), 200
+
+# ---- API: create assets ---- #
+@app.route("/createassets", methods=["POST"])
+@require_access_token(pass_token=True)
+def upload_ai_assets(token):
+    result = run_create_assets(token)
+    return jsonify(result)
 
 # --- Fetch Activity Log endpoint ---
 @app.route("/fetch_activity_log")

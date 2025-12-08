@@ -3,6 +3,8 @@ import requests
 import base64
 import csv
 from pathlib import Path
+from urllib.parse import quote_plus
+from flask import redirect
 
 from app.functions.authentication import AutodeskAuth
 from app.functions.fetch_all_assets_info import fetch_all_assets_info
@@ -43,7 +45,7 @@ def list_ifc_files(project_id: str, folder_id: str, token: str):
             elif name.lower().endswith(".ifc"):
                 found.append(item)
 
-    print(f"🔍 Found {len(found)} IFC file(s)")
+    print(f"[SEARCH] Found {len(found)} IFC file(s)")
     return found
 
 
@@ -75,7 +77,7 @@ def extract_ifc_properties(version_urn: str, token: str):
         guid = view.get("guid")
         view_name = view.get("name")
 
-        print(f"📄 Reading view → {view_name}")
+        print(f"[VIEW] Reading view -> {view_name}")
 
         prop_url = f"https://developer.api.autodesk.com/modelderivative/v2/designdata/{encoded_urn}/metadata/{guid}/properties"
         res = requests.get(prop_url, headers=headers).json()
@@ -99,7 +101,7 @@ def extract_ifc_properties(version_urn: str, token: str):
                 "ifcAttributes": ifc
             })
 
-    print(f"📌 Extracted {len(all_items)} metadata elements")
+    print(f"[EXTRACT] Extracted {len(all_items)} metadata elements")
     return all_items
 
 
@@ -108,14 +110,14 @@ def extract_ifc_properties(version_urn: str, token: str):
 # ------------------------------------------------------------
 def load_asset_names_from_csv(csv_path: Path):
     if not csv_path.exists():
-        print(f"⚠ Missing CSV: {csv_path}")
+        print(f"[WARNING] Missing CSV: {csv_path}")
         return set()
 
     names = set()
     with csv_path.open("r", encoding="utf-8-sig", newline="") as f:
         reader = csv.DictReader(f)
         if "clientAssetId" not in (reader.fieldnames or []):
-            print("⚠ Missing 'clientAssetId' column!")
+            print("[WARNING] Missing 'clientAssetId' column!")
             return set()
 
         for row in reader:
@@ -123,7 +125,7 @@ def load_asset_names_from_csv(csv_path: Path):
             if val:
                 names.add(val)
 
-    print(f"📄 Loaded {len(names)} clientAssetId entries")
+    print(f"[LOAD] Loaded {len(names)} clientAssetId entries")
     return names
 
 
@@ -139,7 +141,8 @@ def fetch_ifc_metadata(token: str):
         project_id = f"b.{project_id}"
 
     #root = get_root_folder(hub_id, project_id, token)
-    root = config.root_id
+    #root = config.root_id
+    root = "urn:adsk.wipprod:fs.folder:co.iYTdY7_9TTqmR_dM7Ur76g"
     ifc_files = list_ifc_files(project_id, root, token)
 
     final_ifc = []
@@ -152,9 +155,9 @@ def fetch_ifc_metadata(token: str):
 
     raw_path = data_dir / "nlp_raw_metadata.json"
     json.dump(final_ifc, raw_path.open("w", encoding="utf-8"), indent=2)
-    print(f"💾 Raw metadata saved → {raw_path}")
+    print(f"[SAVE] Raw metadata saved -> {raw_path}")
 
-    print("\n📥 Fetching all ACC assets before filtering IFC metadata...")
+    print("\n[FETCH] Fetching all ACC assets before filtering IFC metadata...")
     fetch_all_assets_info(token)
 
     # Filter results using CSV names
@@ -194,10 +197,11 @@ def fetch_ifc_metadata(token: str):
 
         filtered_path = data_dir / "model.json"
         json.dump(filtered, filtered_path.open("w", encoding="utf-8"), indent=2)
-        print(f"💾 Filtered metadata saved ({len(filtered)} items) → {filtered_path}")
+        print(f"[SAVE] Filtered metadata saved ({len(filtered)} items) -> {filtered_path}")
     else:
-        print("⚠ No matches — filtered JSON not created")
+        print("[WARNING] No matches - filtered JSON not created")
 
-    print("\n🎉 Metadata extraction complete!\n")
-
+    msg = f"Metadata extraction complete! Processed {len(final_ifc)} IFC elements, filtered to {len(filtered) if ids else 0} matching assets"
+    print(f"\n[SUCCESS] {msg}\n")
+    return redirect(f"/?msg={quote_plus(msg)}")
 
