@@ -6,6 +6,7 @@ import json
 import logging
 import os
 import re
+import difflib
 from collections import deque
 from dataclasses import dataclass
 from functools import lru_cache
@@ -55,6 +56,7 @@ class Settings:
     max_chunk_chars: int = int(os.getenv("MODEL_MAX_CHUNK_CHARS", "12000"))
     max_elements: int = int(os.getenv("MODEL_MAX_ELEMENTS", "400"))
     max_openai_chunks: int = int(os.getenv("MODEL_MAX_OPENAI_CHUNKS", "3"))
+    max_results: int = int(os.getenv("MODEL_MAX_RESULTS", "8"))
 
 
 settings = Settings()
@@ -282,6 +284,29 @@ STOP_TOKENS = {
     "building",
 }
 
+CONFLICT_TOKEN_RULES: list[tuple[str, str]] = [
+    ("outside", "inside"),
+    ("inside", "outside"),
+    ("exterior", "interior"),
+    ("interior", "exterior"),
+    ("single", "double"),
+    ("double", "single"),
+]
+
+TYPE_KEYWORDS = [
+    "window",
+    "door",
+    "roof",
+    "wall",
+    "column",
+    "beam",
+    "slab",
+    "stair",
+    "railing",
+    "pipe",
+    "duct",
+]
+
 
 def _significant_tokens(tokens: set[str]) -> set[str]:
     return {token for token in tokens if token not in STOP_TOKENS and not token.isdigit()}
@@ -289,6 +314,16 @@ def _significant_tokens(tokens: set[str]) -> set[str]:
 
 LEVEL_PATTERN = re.compile(r"\b(?:[a-z]?level|lvl|l)\s*([0-9]+)\b", re.IGNORECASE)
 BUILDING_PATTERN = re.compile(r"\bbuilding\s*([A-Za-z0-9]+)\b", re.IGNORECASE)
+
+WEAK_TOKENS = {
+    # Generic/common words that should not by themselves justify a match.
+    "basic",
+    "generic",
+    "common",
+    "other",
+    "case",
+    "type",
+}
 
 
 @dataclass(slots=True)
@@ -304,6 +339,7 @@ class ElementMetadata:
     tokens: set[str]
     levels: set[str]
     buildings: set[str]
+    type_tokens: set[str]
 
 
 _ELEMENT_META_CACHE: dict[str, ElementMetadata] = {}
@@ -356,6 +392,7 @@ def _element_metadata(element: ModelElement) -> ElementMetadata:
     tokens = _augment_tokens(_tokenize(element.serialize()))
     levels: set[str] = set()
     buildings: set[str] = set()
+    type_tokens: set[str] = set()
 
     payload = element.payload
     ifc_attributes = payload.get("ifcAttributes") if isinstance(payload, dict) else {}
@@ -367,6 +404,8 @@ def _element_metadata(element: ModelElement) -> ElementMetadata:
             if isinstance(value, str):
                 tokens.update(_split_identifier_tokens(value))
                 tokens.update(_tokenize(value))
+                type_tokens.update(_split_identifier_tokens(value))
+                type_tokens.update(_tokenize(value))
                 normalized = _normalize_level_label(value)
                 if normalized:
                     levels.add(normalized)
@@ -374,6 +413,20 @@ def _element_metadata(element: ModelElement) -> ElementMetadata:
         normalized = _normalize_level_label(spatial)
         if normalized:
             levels.add(normalized)
+
+    # Fallback for models that surface attributes at the top level instead of under ifcAttributes.
+    if isinstance(payload, dict):
+        for key in ("IfcClass", "ObjectType", "IfcContainedInHost"):
+            value = payload.get(key)
+            if isinstance(value, str):
+                tokens.update(_split_identifier_tokens(value))
+                tokens.update(_tokenize(value))
+                if key != "IfcContainedInHost":
+                    type_tokens.update(_split_identifier_tokens(value))
+                    type_tokens.update(_tokenize(value))
+                normalized = _normalize_level_label(value)
+                if normalized:
+                    levels.add(normalized)
 
     # Fallback: scan the serialized payload for level cues if none were captured.
     if not levels:
@@ -398,7 +451,7 @@ def _element_metadata(element: ModelElement) -> ElementMetadata:
                 for match in BUILDING_PATTERN.findall(value):
                     buildings.add(f"building {match.lower()}")
 
-    meta = ElementMetadata(tokens=tokens, levels=levels, buildings=buildings)
+    meta = ElementMetadata(tokens=tokens, levels=levels, buildings=buildings, type_tokens=type_tokens)
     _ELEMENT_META_CACHE[element.guid] = meta
     return meta
 
@@ -431,6 +484,50 @@ ACTION_PATTERNS: list[tuple[re.Pattern[str], str]] = [
     (re.compile(r"\bblocked\b", re.IGNORECASE), "issue_blocked"),
     (re.compile(r"\binspection\b", re.IGNORECASE), "inspection_required"),
 ]
+
+STATUS_CUE_TOKENS = {
+    "delivered",
+    "deliver",
+    "delivery",
+    "complete",
+    "completed",
+    "done",
+    "progress",
+    "delayed",
+    "blocked",
+    "inspection",
+    "install",
+    "installed",
+    "specified",
+    "order",
+    "ordered",
+    "acceptance",
+    "accepted",
+    "startup",
+    "start",
+    "pre",
+    "post",
+    "status",
+}
+
+def _has_status_cue(update_tokens: set[str], cue_tokens: set[str]) -> bool:
+    """Detect status cues with fuzzy matching to handle typos (e.g., delivr, accpt)."""
+    if update_tokens & cue_tokens:
+        return True
+    for token in update_tokens:
+        token_base = token[:-1] if token.endswith("s") and len(token) > 3 else token
+        if len(token_base) < 3:
+            continue
+        for cue in cue_tokens:
+            cue_base = cue[:-1] if cue.endswith("s") and len(cue) > 3 else cue
+            if len(cue_base) < 3:
+                continue
+            if token_base in cue_base or cue_base in token_base:
+                return True
+            score = difflib.SequenceMatcher(None, token_base, cue_base).ratio()
+            if score >= 0.68:
+                return True
+    return False
 
 
 def infer_action_from_update(update_text: str) -> str | None:
@@ -505,6 +602,55 @@ def normalize_update(raw_update: Any) -> str:
         return str(raw_update)
 
 
+def _detect_preferred_type(tokens: set[str], significant_tokens: set[str]) -> str | None:
+    """Pick a preferred element type keyword using plural-insensitive matching."""
+    all_tokens = tokens | significant_tokens
+    for keyword in TYPE_KEYWORDS:
+        if keyword in all_tokens:
+            return keyword
+        plural = f"{keyword}s"
+        if plural in all_tokens:
+            return keyword
+        for token in all_tokens:
+            token_base = token[:-1] if token.endswith("s") and len(token) > 3 else token
+            if token_base == keyword:
+                return keyword
+    return None
+
+
+def _normalize_label(value: str) -> str:
+    return re.sub(r"[^a-z0-9]", "", value.lower())
+
+
+def _select_allowed_status(candidate: str | None, allowed: list[str]) -> str | None:
+    """
+    Map a potentially noisy status value (typo/spacing) to the closest allowed label.
+    Falls back to None if no reasonable similarity is found.
+    """
+    if not candidate:
+        return None
+    cand_norm = _normalize_label(candidate)
+    if not cand_norm:
+        return None
+
+    best = None
+    best_score = 0.0
+    for option in allowed:
+        option_norm = _normalize_label(option)
+        if cand_norm == option_norm:
+            return option
+        # Base similarity plus a boost when one contains the other.
+        score = difflib.SequenceMatcher(None, cand_norm, option_norm).ratio()
+        if cand_norm in option_norm or option_norm in cand_norm:
+            score += 0.15
+        if score > best_score:
+            best_score = score
+            best = option
+    if best_score >= 0.72:
+        return best
+    return None
+
+
 def chunk_elements(elements: list[ModelElement], max_chars: int) -> list[str]:
     if not elements:
         return []
@@ -542,12 +688,23 @@ DEFAULT_RESPONSE = {
 
 
 def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
-    """Match a Telegram-style update to a BIM element and classify the action."""
+    """Match a Telegram-style update to BIM elements and classify a single action."""
+    _ELEMENT_META_CACHE.clear()  # Avoid stale metadata across runs or code changes.
     update_text = normalize_update(raw_update)
     update_tokens = _tokenize(update_text)
     update_hints = _extract_update_hints(update_text)
     significant_tokens = update_hints.significant_tokens
+
+    # Prefer matching element type to the most specific type keyword present in the update.
+    preferred_type = _detect_preferred_type(update_tokens, significant_tokens)
+
     elements, fallback_blob = parse_model_data(raw_model)
+    guid_status_map = load_guid_statuses()
+    status_cue_tokens: set[str] = set()
+    for statuses in guid_status_map.values():
+        for status_value in statuses:
+            status_cue_tokens |= _tokenize(str(status_value))
+
     client = OpenAIClient()
     element_index = {element.guid: element for element in elements}
     reason_notes: list[str] = []
@@ -562,6 +719,134 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
 
     if settings.max_openai_chunks > 0:
         chunks = chunks[: settings.max_openai_chunks]
+
+    def _token_matches_any(token: str, candidates: set[str]) -> bool:
+        token_base = token[:-1] if token.endswith("s") and len(token) > 3 else token
+        for candidate in candidates:
+            cand_base = candidate[:-1] if candidate.endswith("s") and len(candidate) > 3 else candidate
+            if token == candidate or token_base == cand_base:
+                return True
+            if len(token_base) >= 4 and token_base in cand_base:
+                return True
+            if len(cand_base) >= 4 and cand_base in token_base:
+                return True
+        return False
+
+    def _significant_match_ok(sig_tokens: set[str], candidates: set[str]) -> tuple[bool, int, int, int, int]:
+        """
+        Require partial coverage of significant tokens but also enforce at least one
+        non-generic (non-weak) match so generic terms like "basic" don't pass alone.
+        """
+        if not sig_tokens:
+            return True, 0, 0, 0, 0
+        matches = 0
+        strong_matches = 0
+        strong_tokens = 0
+        for token in sig_tokens:
+            if token not in WEAK_TOKENS:
+                strong_tokens += 1
+            if _token_matches_any(token, candidates):
+                matches += 1
+                if token not in WEAK_TOKENS:
+                    strong_matches += 1
+        required = 1 if len(sig_tokens) <= 2 else max(2, len(sig_tokens) // 2)
+        strong_required = 1 if strong_tokens else 0
+        ok = matches >= required and strong_matches >= strong_required
+        return ok, matches, required, strong_matches, strong_required
+
+    def _has_conflict(update_tokens: set[str], element_tokens: set[str]) -> bool:
+        """Return True when update tokens imply a mutually exclusive condition with element tokens."""
+        for required, conflicting in CONFLICT_TOKEN_RULES:
+            if required in update_tokens and conflicting in element_tokens and required not in element_tokens:
+                return True
+        return False
+
+    def _type_conflicts(element_type_tokens: set[str]) -> bool:
+        """Reject elements advertising a different primary type than the requested one."""
+        if not preferred_type:
+            return False
+        for type_key in TYPE_KEYWORDS:
+            if type_key == preferred_type:
+                continue
+            if type_key in element_type_tokens:
+                return True
+        return False
+
+    def _element_matches_update(element: ModelElement) -> bool:
+        meta = _element_metadata(element)
+        if update_hints.levels:
+            if not meta.levels or not update_hints.levels.issubset(meta.levels):
+                return False
+        if update_hints.buildings:
+            if not meta.buildings or not update_hints.buildings.issubset(meta.buildings):
+                return False
+        if _has_conflict(update_tokens, meta.tokens):
+            return False
+        if preferred_type and not any(preferred_type in token for token in meta.type_tokens):
+            return False
+        if _type_conflicts(meta.type_tokens):
+            return False
+        if significant_tokens:
+            sig_ok, _, _, _, _ = _significant_match_ok(significant_tokens, meta.tokens)
+            if not sig_ok:
+                return False
+        else:
+            basic_overlap = _token_overlap(update_tokens, meta.tokens)
+            if basic_overlap == 0:
+                return False
+        return True
+
+    matched_elements: list[ModelElement] = []
+    seen_guids: set[str] = set()
+    for element in ranked_elements:
+        if element.guid in seen_guids:
+            continue
+        if _element_matches_update(element):
+            matched_elements.append(element)
+            seen_guids.add(element.guid)
+
+    inferred_action = infer_action_from_update(update_text)
+    status_cues = bool(inferred_action) or _has_status_cue(update_tokens, STATUS_CUE_TOKENS | status_cue_tokens)
+    status = inferred_action or ""
+    status_source = "inferred_action" if inferred_action else "unspecified"
+
+    matched_guids = [element.guid for element in matched_elements]
+
+    if matched_guids:
+        # Use the first guid with a status mapping to keep a single status for the batch.
+        for guid in matched_guids:
+            guid_statuses = guid_status_map.get(guid)
+            if not guid_statuses:
+                continue
+            if not status_cues:
+                reason_notes.append("Skipped status classification because update had no clear status cues.")
+                continue
+            try:
+                status_response = client.classify_status(update_text, guid, guid_statuses)
+                suggested_status = status_response.get("status")
+                mapped = _select_allowed_status(suggested_status if isinstance(suggested_status, str) else "", guid_statuses)
+                if mapped:
+                    status = mapped
+                    status_source = "status_classifier"
+                    break
+            except Exception as exc:  # pragma: no cover - logging only
+                logger.warning("Status classification failed: %s", exc)
+                reason_notes.append("Status classifier failed; kept previous status choice.")
+
+        reason_parts = [
+            f"Matched {len(matched_guids)} element(s) via token/level filters.",
+        ]
+        if update_hints.levels:
+            reason_parts.append(f"Level filter applied: {', '.join(sorted(update_hints.levels))}.")
+        if update_hints.buildings:
+            reason_parts.append(f"Building filter applied: {', '.join(sorted(update_hints.buildings))}.")
+        if status_source == "inferred_action":
+            reason_parts.append(f"Status inferred from update text patterns: {status}.")
+        elif status_source == "status_classifier":
+            reason_parts.append("Status refined using allowed statuses.")
+        reason_parts.extend(reason_notes)
+        reason_text = " ".join(reason_parts).strip()
+        return {"guid": matched_guids, "status": status, "error": reason_text}
 
     best = DEFAULT_RESPONSE.copy()
     best_confidence = 0.0
@@ -593,8 +878,6 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
         if best["confidence"] >= 0.95:
             break
 
-    inferred_action = infer_action_from_update(update_text)
-    status_source = "openai"
     if best["matched_guid"] and inferred_action:
         if not best["action_required"] or best["action_required"] == "manual_review":
             best["action_required"] = inferred_action
@@ -614,34 +897,56 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
             significant_overlap = _token_overlap(meta.tokens, significant_tokens)
             fuzzy_significant = _fuzzy_token_overlap(meta.tokens, significant_tokens) if significant_tokens else 0
             basic_overlap = _token_overlap(update_tokens, element_tokens)
-            if update_hints.levels and meta.levels and level_overlap == 0:
+            sig_ok, sig_matches, sig_required, sig_strong, sig_strong_required = _significant_match_ok(
+                significant_tokens, meta.tokens
+            )
+            if update_hints.levels and (not meta.levels or not update_hints.levels.issubset(meta.levels)):
                 matched_guid = ""
-                status = inferred_action or "manual_review"
+                status = inferred_action or ""
                 status_source = "guardrail_reset"
                 guardrail_reason = "Dropped match because level cues did not align."
             elif update_hints.levels and not meta.levels:
                 matched_guid = ""
-                status = inferred_action or "manual_review"
+                status = inferred_action or ""
                 status_source = "guardrail_reset"
                 guardrail_reason = "Dropped match because element lacked a spatial container for level."
-            elif update_hints.buildings and meta.buildings and building_overlap == 0:
+            elif update_hints.buildings and (not meta.buildings or not update_hints.buildings.issubset(meta.buildings)):
                 matched_guid = ""
-                status = inferred_action or "manual_review"
+                status = inferred_action or ""
                 status_source = "guardrail_reset"
                 guardrail_reason = "Dropped match because building cues did not align."
-            elif significant_tokens and significant_overlap == 0 and fuzzy_significant == 0:
+            elif _has_conflict(update_tokens, meta.tokens):
                 matched_guid = ""
-                status = inferred_action or "manual_review"
+                status = inferred_action or ""
                 status_source = "guardrail_reset"
-                guardrail_reason = "Dropped match because no significant tokens overlapped."
+                guardrail_reason = "Dropped match because element tokens conflict with update intent."
+            elif _type_conflicts(meta.type_tokens):
+                matched_guid = ""
+                status = inferred_action or ""
+                status_source = "guardrail_reset"
+                guardrail_reason = "Dropped match because element type conflicts with requested type."
+            elif significant_tokens and not sig_ok:
+                matched_guid = ""
+                status = inferred_action or ""
+                status_source = "guardrail_reset"
+                guardrail_reason = (
+                    "Dropped match because only "
+                    f"{sig_matches}/{len(significant_tokens)} significant tokens aligned (need {sig_required}) "
+                    f"and strong matches {sig_strong}/{sig_strong_required}."
+                )
+            elif preferred_type and not any(preferred_type in token for token in meta.type_tokens):
+                matched_guid = ""
+                status = inferred_action or ""
+                status_source = "guardrail_reset"
+                guardrail_reason = f"Dropped match because element type lacks '{preferred_type}' tokens."
             elif basic_overlap == 0:
                 matched_guid = ""
-                status = inferred_action or "manual_review"
+                status = inferred_action or ""
                 status_source = "guardrail_reset"
                 guardrail_reason = "Dropped OpenAI match because it shared no tokens with the update text."
         else:
             matched_guid = ""
-            status = inferred_action or "manual_review"
+            status = inferred_action or ""
             status_source = "guardrail_reset"
             guardrail_reason = "Dropped OpenAI match because element payload was missing."
 
@@ -656,7 +961,23 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
             if update_hints.levels:
                 if not meta.levels:
                     continue  # require spatial level when update provides one
-                if meta.levels and not (meta.levels & update_hints.levels):
+                if not update_hints.levels.issubset(meta.levels):
+                    continue
+            if update_hints.buildings:
+                if not meta.buildings:
+                    continue
+                if not update_hints.buildings.issubset(meta.buildings):
+                    continue
+            if _has_conflict(update_tokens, meta.tokens):
+                continue
+            if preferred_type:
+                if not any(preferred_type in token for token in meta.type_tokens):
+                    continue
+                if _type_conflicts(meta.type_tokens):
+                    continue
+            if significant_tokens:
+                sig_ok, _, _, _, _ = _significant_match_ok(significant_tokens, meta.tokens)
+                if not sig_ok:
                     continue
             overlap = _token_overlap(meta.tokens, search_tokens)
             fuzzy_overlap = _fuzzy_token_overlap(meta.tokens, search_tokens) if search_tokens else 0
@@ -668,18 +989,19 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
         required = 1 if len(search_tokens) <= 2 else 2
         if best_overlap + fuzzy_best >= required:
             matched_guid = best_guid
-            status = inferred_action or status
+            status = inferred_action or status or ""
             status_source = "token_overlap"
             reason_notes.append(f"Selected GUID via token-overlap heuristic (shared tokens: {best_overlap}).")
 
     if matched_guid:
         guid_statuses = load_guid_statuses().get(matched_guid)
-        if guid_statuses:
+        if guid_statuses and status_cues:
             try:
                 status_response = client.classify_status(update_text, matched_guid, guid_statuses)
                 suggested_status = status_response.get("status")
-                if isinstance(suggested_status, str) and suggested_status.strip():
-                    status = suggested_status.strip()
+                mapped = _select_allowed_status(suggested_status if isinstance(suggested_status, str) else "", guid_statuses)
+                if mapped:
+                    status = mapped
                     status_source = "status_classifier"
             except Exception as exc:  # pragma: no cover - logging only
                 logger.warning("Status classification failed: %s", exc)
@@ -716,7 +1038,7 @@ def run_matching(raw_model: Any, raw_update: Any) -> dict[str, Any]:
 
     reason_text = " ".join(reason_parts).strip()
 
-    return {"guid": matched_guid, "status": status, "error": reason_text}
+    return {"guid": [matched_guid] if matched_guid else [], "status": status, "error": reason_text}
 
 
 def _read_file(path: str) -> str:
