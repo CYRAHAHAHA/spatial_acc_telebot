@@ -529,16 +529,18 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
       - status (canonical status to apply)
       - error   (any NLP error message, if available)
 
-    Expected matcher output: {"guid": "...", "status": "..."}
+    Expected matcher output now supports:
+      {"guid": "one-guid", "status": "..."}
+      OR
+      {"guid": ["g1", "g2", ...], "status": "..."}
     """
     try:
         # --- NEW: free-text mode --------------------------------------
         raw_body = parsed.get("raw_body")
         if raw_body is not None:
-            # Directly pass the free-text body to the matcher
             update_text = "[UPDATE]\n" + raw_body
         else:
-            # --- OLD structured mode (kept for compatibility) --------
+            # old structured mode (kept as backup)
             loc = parsed.get("location") or {}
             area = parsed.get("area") or {}
 
@@ -564,37 +566,42 @@ def resolve_guid_from_nlp(project_id: str, parsed: Dict[str, Any]) -> tuple[str 
 
             update_text = "\n".join(lines)
 
-
         # Call your NLP matcher here
         result = run_sample_match(update_path=update_text) or {}
 
-        # Your NLP output: {"guid": "xyz", "status": "abc"}
-        guid = result.get("guid")
+        raw_guid = result.get("guid")
         status_value = result.get("status")
 
-        # Try to extract any error description your NLP returns
-        nlp_error = (
-            result.get("error_description")
-            or result.get("error_msg")
-            or result.get("error")
-            or None
-        )
+        #Normalize: always end up with a list of GUIDs
+        guid_list: List[str] = []
+        if isinstance(raw_guid, str):
+            g = raw_guid.strip()
+            if g:
+                guid_list = [g]
+        elif isinstance(raw_guid, (list, tuple)):
+            guid_list = [
+                str(g).strip()
+                for g in raw_guid
+                if isinstance(g, str) and str(g).strip()
+            ]
 
-        if isinstance(guid, str):
-            guid = guid.strip()
         if isinstance(status_value, str):
             status_value = status_value.strip()
 
-        if not guid or not status_value:
-            print("Bot: NLP did not return both guid and status:", result)
-            if not nlp_error:
-                nlp_error = "NLP could not determine a valid GUID and status."
+        if not guid_list or not status_value:
+            print("Bot: NLP did not return valid GUID list and status:", result)
+            nlp_error = (
+                result.get("error_description")
+                or result.get("error_msg")
+                or result.get("error")
+                or "NLP could not determine valid GUID(s) and status."
+            )
             return None, None, nlp_error
 
         print(
-            f"Bot: NLP resolved GUID={guid}, STATUS={status_value} for project {project_id}"
+            f"Bot: NLP resolved GUIDS={guid_list}, STATUS={status_value} for project {project_id}"
         )
-        return guid, status_value, None
+        return guid_list, status_value, None
 
     except Exception as e:
         err_msg = f"Error while running NLP matcher: {e}"
@@ -920,15 +927,15 @@ async def one_shot_update_handler(
     print(text)
 
     # --- NLP: get GUID + canonical status + any NLP error --------------
-    guid, status_value, nlp_error = resolve_guid_from_nlp(project_id, parsed)
+    guid_list, status_value, nlp_error = resolve_guid_from_nlp(project_id, parsed)
 
     # DEBUG: confirm what handler received from NLP
     print(
-        f"Bot: handler got from NLP -> GUID={guid}, STATUS={status_value}, NLP_ERROR={nlp_error}"
+        f"Bot: handler got from NLP -> GUID={guid_list}, STATUS={status_value}, NLP_ERROR={nlp_error}"
     )
 
     # If NLP cannot determine GUID or status, log as UNKNOWN and stop
-    if not guid or not status_value:
+    if not guid_list or not status_value:
         error_msg = nlp_error or "NLP could not determine a valid GUID and status."
 
         # Activity log entry with error
@@ -951,7 +958,7 @@ async def one_shot_update_handler(
 
     # --- Call Flask /update_status via HTTP using NLP status -----------
     payload = {
-        "asset_guid": guid,
+        "asset_guid": guid_list,
         "status_value": status_value,  # from NLP, not from raw text
     }
 
@@ -967,7 +974,7 @@ async def one_shot_update_handler(
         log_update_status_activity(
             msg=msg,
             project_id=project_id,
-            guid=guid,
+            guid=", ".join(guid_list),
             status=status_value,
             error=error_msg,
         )
@@ -983,14 +990,13 @@ async def one_shot_update_handler(
         log_update_status_activity(
             msg=msg,
             project_id=project_id,
-            guid=guid,
+            guid=", ".join(guid_list),
             status=status_value,
             error=None,
         )
 
         await msg.reply_text(
-            f"Update logged and ACC updated for GUID {guid} "
-            f"(Project: {project_id})."
+            "All done! Your update has been logged, and ACC has now been updated accordingly."
         )
     else:
         # Build a useful error message
@@ -1006,14 +1012,14 @@ async def one_shot_update_handler(
         log_update_status_activity(
             msg=msg,
             project_id=project_id,
-            guid=guid,
+            guid=", ".join(guid_list),
             status=status_value,
             error=error_msg,
         )
 
         await msg.reply_text(
-            f"Update logged for GUID {guid} (Project: {project_id}), "
-            f"but ACC update FAILED (HTTP {resp.status_code})."
+            "Apologies, your update was received but I wasn’t able to apply it in ACC.\n"
+            "Error detail has been stored in the activity log for follow-up."
         )
 
 
