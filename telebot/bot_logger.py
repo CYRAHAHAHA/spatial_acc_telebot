@@ -131,20 +131,9 @@ TEMPLATE = (
     "Remarks: Ready for inspection\n"
 )
 
-ISSUE_TEMPLATE = (
-    "[ISSUE STATUS]\n"
-    "GUID: cae94f63-282c-435b-b798-ec527afcde1d\n"
-    "Status: open"
-)
+ISSUE_TEMPLATE = "[ISSUE STATUS] Change issue b5b6a625-e770-4443-9dae-556f1f97835b to status pending"
 
-CREATE_ISSUE_TEMPLATE = (
-    "[CREATE ISSUE]\n"
-    "Title: Water leakage at Level 3\n"
-    "Status: open\n"
-    "Subtype ID: 06e9ad10-7a05-43e8-9e27-38fb455dd50f\n"
-    "Description: Water leaking from ceiling\n"
-    "Location: Building A, Level 3"
-)
+CREATE_ISSUE_TEMPLATE = "[CREATE ISSUE] (Issue Title) with status of (Status) with the subtype of (Subtype ID). the problem is that (Description - Optional)"
 
 async def cmd_template(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
     await update.message.reply_text(
@@ -348,19 +337,13 @@ UPDATE_BLOCK_RE = re.compile(
 )
 
 ISSUE_STATUS_RE = re.compile(
-    r"""
-    ^\s*\[ISSUE\s+STATUS\]\s*
-    (?P<body>.+?)\s*$
-    """,
-    re.IGNORECASE | re.DOTALL | re.VERBOSE,
+    r"^\s*\[ISSUE\s+STATUS\]\s+Change\s+issue\s+([\w-]+)\s+to\s+status\s+(\w+)\s*$",
+    re.IGNORECASE | re.DOTALL,
 )		
 			
-CREATE_ISSUE_RE = re.compile(		
-    r"""		
-    ^\s*\[CREATE\s+ISSUE\]\s*		
-    (?P<body>.+?)\s*$		
-    """,		
-    re.IGNORECASE | re.DOTALL | re.VERBOSE,		
+CREATE_ISSUE_RE = re.compile(
+    r"^\s*\[CREATE\s+ISSUE\]\s+(.+?)\s+with\s+status\s+of\s+(\w+)\s+with\s+the\s+subtype\s+of\s+([\w-]+)\s*\.?\s*(?:the\s+problem\s+is\s+that\s+(.+))?\s*$",
+    re.IGNORECASE | re.DOTALL,
 )		
 
 LINE_RE = re.compile(
@@ -370,97 +353,75 @@ LINE_RE = re.compile(
 
 def _parse_issue_status(text: str) -> Tuple[str | None, str | None, List[str]]:
     """
-    Parse [ISSUE STATUS] message format.
+    Parse [ISSUE STATUS] message format (new single-line format).
     Returns: (guid, status, errors)
     
     Example input:
-    [ISSUE STATUS]
-    GUID: cae94f63-282c-435b-b798-ec527afcde1d
-    Status: open
+    [ISSUE STATUS] Change issue b5b6a625-e770-4443-9dae-556f1f97835b to status pending
     """
     m = ISSUE_STATUS_RE.match(text or "")
     if not m:
-        return (None, None, ["Message must start with [ISSUE STATUS]."])
+        return (None, None, [
+            "Invalid format. Use:\n"
+            "[ISSUE STATUS] Change issue <GUID> to status <status>\n\n"
+            "Example:\n"
+            "[ISSUE STATUS] Change issue b5b6a625-e770-4443-9dae-556f1f97835b to status pending"
+        ])
     
-    body = m.group("body")
-    
-    guid = None
-    status = None
-    
-    for raw_line in body.splitlines():
-        line = raw_line.strip()
-        if not line:
-            continue
-
-        m_line = LINE_RE.match(line)
-        if not m_line:
-            continue
-        
-        key = m_line.group("key").strip().lower()
-        val = m_line.group("val").strip()
-        
-        if key == "guid":
-            guid = val
-        elif key == "status":
-            status = val
+    guid = m.group(1).strip() if m.group(1) else None
+    status = m.group(2).strip() if m.group(2) else None
     
     errors = []
     if not guid:
-        errors.append("Missing 'GUID: ...'")
+        errors.append("Missing issue GUID. Format: Change issue <GUID> to status <status>")
     if not status:
-        errors.append("Missing 'Status: ...'")
+        errors.append("Missing status. Format: ... to status <status>")
     
-    return (guid, status, errors)
+    if errors:
+        return (None, None, errors)
+    
+    return (guid, status, [])
+
 
 def _parse_create_issue(text: str) -> Tuple[Dict[str, Any] | None, List[str]]:
     """
-    Parse [CREATE ISSUE] message format.
+    Parse [CREATE ISSUE] message format (new single-line format).
     Returns: (issue_data, errors)
+    
+    Example:
+    [CREATE ISSUE] Water leakage at Level 3 with status of open with the subtype of 06e9ad10-7a05-43e8-9e27-38fb455dd50f. the problem is that Water leaking from ceiling
     """
     m = CREATE_ISSUE_RE.match(text or "")
     if not m:
-        return (None, ["Message must start with [CREATE ISSUE]."])
+        return (None, [
+            "Invalid format. Use:\n"
+            "[CREATE ISSUE] <title> with status of <status> with the subtype of <subtype_id>.\n"
+            "Optional: the problem is that <description>\n\n"
+            "Example:\n"
+            "[CREATE ISSUE] Water leakage at Level 3 with status of open with the subtype of 06e9ad10-7a05-43e8-9e27-38fb455dd50f. the problem is that Water leaking from ceiling"
+        ])
     
-    body = m.group("body")
+    # Extract groups from regex
+    title = m.group(1).strip() if m.group(1) else None
+    status = m.group(2).strip() if m.group(2) else None
+    subtype_id = m.group(3).strip() if m.group(3) else None
+    description = m.group(4).strip() if m.group(4) else None
     
     issue_data = {
-        "title": None,
-        "status": None,
-        "subtype_id": None,
-        "description": None,
+        "title": title,
+        "status": status,
+        "subtype_id": subtype_id,
+        "description": description,
         "location": None
     }
     
-    for raw_line in body.splitlines():
-        line = raw_line.strip()
-        if not line:
-            continue
-
-        m_line = LINE_RE.match(line)
-        if not m_line:
-            continue
-        
-        key = m_line.group("key").strip().lower()
-        val = m_line.group("val").strip()
-        
-        if key == "title":
-            issue_data["title"] = val
-        elif key == "status":
-            issue_data["status"] = val
-        elif key.startswith("subtype") and "id" in key:
-            issue_data["subtype_id"] = val
-        elif key == "description":
-            issue_data["description"] = val
-        elif key == "location":
-            issue_data["location"] = val
-    
     errors = []
     if not issue_data["title"]:
-        errors.append("Missing 'Title: ...'")
+        errors.append("Missing issue title. Format: [CREATE ISSUE] (issue name) with status of (status) with the subtype of (subtype id)")
     if not issue_data["status"]:
-        errors.append("Missing 'Status: ...'")
+        errors.append("Missing status. Format: ... with status of (status) ...")
     if not issue_data["subtype_id"]:
-        errors.append("Missing 'Subtype ID: ...' (Use /issuesinfo to find IDs)")
+        errors.append("Missing subtype ID. Format: ... with the subtype of (subtype id). Use /issuesinfo to find IDs")
     
     if errors:
         return (None, errors)
