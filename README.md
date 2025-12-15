@@ -1,187 +1,166 @@
-# spatial_acc_telebot — Repo Overview
+# Spatial ACC Telebot
 
-## Top-level layout
-
-- root/
-  - app/ — Flask application and server code
-  - data/ — Generated CSV and hardcoded JSON payload files used by previews and creation
-
-- README.md (this file)
+An AI-powered Telegram bot that integrates with **Autodesk Construction Cloud (ACC)** to enable real-time BIM asset status updates from the field via natural language messages.
 
 ---
 
-## app/ (Flask app)
+## 🎯 Overview
 
-- **init**.py
+This system bridges the gap between on-site construction workers and BIM data management by:
 
-  - Initializes Flask `app`, CORS and the AutodeskAuth/token manager.
-  - Serves static files from `app/src` (SPA).
+1. **Telegram Bot** — Receives natural language status updates from site workers
+2. **NLP Engine** — Matches free-text messages to specific BIM/IFC elements using AI
+3. **Flask Backend** — Manages Autodesk OAuth and pushes status updates to ACC Assets API
 
-- **routes**.py
-
-  - Registers HTTP routes:
-
-    - Auth & flow:
-      - `GET /authorize` — start Autodesk OAuth
-      - `GET /callback` — OAuth callback
-      - `GET /switch_user/<user>` — change configured user in `config`
-    - Creation endpoints (protected):
-      - `POST /create_status_sets_from_json` — expects JSON array; calls `create_status_sets(...)`
-      - `POST /create_custom_fields_from_json` — expects JSON array; calls `create_custom_fields(...)`
-    - Update assets:
-      - `POST /update_status` — accepts `{ asset_guid, status_value }`, maps status name → status_id and PATCHes APS Assets batch API
-    - Fetch operations:
-      - `GET /fetch_assets_config` — triggers `fetch_assets_config(...)` to fetch config from ACC and write CSVs
-      - `GET /fetch_all_assets_info` — triggers `fetch_all_assets_info(...)` to fetch all assets and save `data/assets_total.csv`
-
-    ---
-    API calls for demo Single Page App purposes
-    - Status / config:
-      - `GET /api/status` — token and env info
-      - `GET /api/categories` — categories + hierarchy (from session)
-    - CSV previews (read-only):
-      - `GET /api/preview/status_sets` — reads `data/status_sets.csv`, groups rows by status_set_id and returns `{ count, items }`
-      - `GET /api/preview/custom_fields` — reads `data/custom_fields.csv`, normalizes enum values and returns `{ count, items }`
-    - Hardcoded JSON payloads for creation:
-      - `GET /api/payload/status_sets` — returns `data/new_status_sets.json`
-      - `GET /api/payload/custom_fields` — returns `data/new_custom_fields.json`
-    ---
-  - Routes are implemented to let the frontend:
-    - Preview CSV data (`/api/preview/*`)
-    - Fetch hardcoded JSON payloads to POST to creation endpoints (`/api/payload/*`)
-    - Create resources by posting that payload to protected endpoints
-
-- functions/
-
-  - fetch_assets_config.py
-    - Fetches project-level config from ACC, builds `status_sets.csv`, `custom_fields.csv`, and `categories.csv`.
-    - Writes CSVs with explicit comma delimiter and `sep=,` Excel hint.
-  - **fetch_all_assets_info.py 📌**
-    - Calls ACC Assets v2 GET endpoint (paginated) and writes `data/assets_total.csv`.
-  - create_status_sets.py
-    - Accepts normalized JSON array and posts status sets to ACC (implementation details live here).
-  - create_custom_fields.py
-    - Accepts normalized JSON array and posts custom fields to ACC.
-  - **update_status.py 📌**
-    - Looks up `status_id` from `data/status_sets.csv` using `status_label`.
-    - Resolves asset id (current placeholder: asset_guid → assetId passthrough).
-    - Calls APS Assets Batch PATCH v2 (`/construction/assets/v2/projects/{projectId}/assets:batch`) with body:
-      {
-      "<assetId>": { "statusId": "<statusId>" }
-      }
-  - fetch_assets_config.py, fetch_all_assets_info.py, etc. write CSVs to `data/`.
-
-- utils.py (contains decorator `require_access_token` used to guard endpoints)
-
-- config.py
-  - App configuration holder; `project_id`, client secrets, etc.
+```
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│  Telegram Bot   │───▶│   NLP Matcher   │───▶│   ACC Assets    │
+│  (bot_logger)   │    │   (OpenAI GPT)  │    │   (APS API)     │
+└─────────────────┘    └─────────────────┘    └─────────────────┘
+```
 
 ---
 
-## app/src (front-end SPA)
+## 📁 Project Structure
 
-- index.html
-
-  - SPA skeleton. Sections for token status, Create buttons, previews, and update form.
-
-- script.js
-
-  - Controls UI and calls backend APIs:
-    - On load:
-      - `GET /api/status` to populate token info
-      - `GET /api/categories` to render category tree (session data)
-      - `GET /api/preview/status_sets` and `GET /api/preview/custom_fields` to render preview tables from CSVs
-    - Create buttons:
-      - `GET /api/payload/status_sets` → returns `data/new_status_sets.json`
-      - `POST /create_status_sets_from_json` with that JSON
-      - `GET /api/payload/custom_fields` → returns `data/new_custom_fields.json`
-      - `POST /create_custom_fields_from_json` with that JSON
-    - Update Status form:
-      - Posts `{ asset_guid, status_value }` to `POST /update_status`
-      - `{ const resp = await fetch("/update_status",  {method: "POST", 
-      headers: { "Content-Type": "application/json" }, credentials: "include",
-      body: JSON.stringify({ asset_guid: assetGuid, status_value: assetStatus }) });`
-      - Backend resolves status id and calls ACC PATCH API
-  - The frontend separates preview (CSV backed) from creation (JSON payloads).
-
-- styles.css
-  - App styling, responsive layout, table styles, faint horizontal dividers for table rows, and extra horizontal padding for wide screens.
-
----
-
-## data/ (payloads & exported CSVs)
-
-- status_sets.csv — generated by `fetch_assets_config.py`; used by preview routes and status id lookup.
-- custom_fields.csv — generated by `fetch_assets_config.py`; used by preview routes.
-- categories.csv — generated by `fetch_assets_config.py`.
-- assets_total.csv — generated by `fetch_all_assets_info.py` (all assets).
-- new_status_sets.json — hardcoded JSON payload used by `/api/payload/status_sets` and sent to creation endpoint.
-- new_custom_fields.json — hardcoded JSON payload used by `/api/payload/custom_fields` and sent to creation endpoint.
-- custom_fields.csv (example data) — earlier sample CSV used in previews.
+```
+spatial_acc_telebot/
+├── root/                   # Flask backend application
+│   ├── app/
+│   │   ├── __init__.py     # Flask app initialization & OAuth
+│   │   ├── routes.py       # API endpoints
+│   │   ├── authentication.py
+│   │   ├── functions/      # ACC API integrations
+│   │   └── src/            # Web dashboard (SPA)
+│   └── main.py             # Flask entry point
+│
+├── telebot/                # Telegram bot
+│   ├── bot_logger.py       # Main bot logic
+│   ├── run_matcher.py      # NLP integration wrapper
+│   └── activity_log.json   # Logged updates
+│
+├── NLP/                    # AI-powered element matching
+│   ├── matcher.py          # OpenAI GPT integration
+│   └── io_wrapper.py       # Interface for bot
+│
+├── data/                   # Runtime data & configs
+│   ├── model.json          # IFC model metadata
+│   ├── status_sets.csv     # Available statuses
+│   └── assets_total.csv    # Asset inventory
+│
+├── tests/                  # NLP accuracy evaluation
+│   ├── test_data.json      # Human-annotated test cases
+│   └── nlp_accuracy_evaluation.ipynb
+│
+├── railway.json            # Railway deployment config
+├── nixpacks.toml           # Build configuration
+├── Procfile                # Process definition
+└── requirements.txt        # Python dependencies
+```
 
 ---
 
-## Key flows & notes
+## 🚀 Quick Start
 
-- Preview vs Creation:
+### Prerequisites
 
-  - Previews in the UI come from CSVs via `/api/preview/*`.
-  - Creation is intentionally simulated by reading hardcoded JSON files (`/api/payload/*`) and posting them to creation endpoints that call ACC APIs. This mimics receiving JSON payloads from an external source.
+- Python 3.11+
+- Telegram Bot Token (from @BotFather)
+- Autodesk APS credentials (Client ID, Secret)
+- OpenAI API Key
 
-- CSV/Excel behavior:
+### 1. Clone & Setup Environment
 
-  - CSV writer adds `sep=,` header to force Excel to interpret comma as delimiter even if cell values include semicolons.
+```bash
+git clone https://github.com/CYRAHAHAHA/spatial_acc_telebot.git
+cd spatial_acc_telebot
+python -m venv .venv
+source .venv/bin/activate  # Windows: .venv\Scripts\activate
+pip install -r requirements.txt
+```
 
-- Update Status flow:
-  - Frontend sends `{ asset_guid, status_value }` to `POST /update_status`.
-  - Backend looks up `status_id` from `data/status_sets.csv`.
-  - Backend maps `asset_guid` → assetId (currently passthrough; replace with real lookup as needed).
-  - Backend PATCHes the APS Assets batch endpoint with the body:
-    {
-    "<assetId>": { "statusId": "<statusId>" }
-    }
+### 2. Configure Environment Variables
 
----
+Create a `.env` file:
 
-## Running locally (basic)
+```env
+# Telegram
+TELEGRAM_TOKEN=your_telegram_bot_token
 
-1. Ensure Python environment with dependencies (Flask, requests, etc.).
-2. Configure `app.config` with Autodesk client id/secret and `project_id`.
-3. Run Flask app (example):
-   - On Windows PowerShell:
-     - set environment variables as needed
-     - `flask run` or run via your IDE
-4. Open `http://localhost:5000/` to load the SPA.
+# Autodesk APS
+APS_CLIENT_ID=your_client_id
+APS_CLIENT_SECRET=your_client_secret
+APS_CALLBACK_URL=http://localhost:8080/callback
 
----
+# OpenAI
+OPENAI_API_KEY=your_openai_key
 
-## Helpful endpoints (summary)
+# ACC Project
+PROJECT_ID=your_acc_project_id
+```
 
-- Public/read-only previews:
-  - GET /api/preview/status_sets
-  - GET /api/preview/custom_fields
-- Hardcoded payloads (for creation):
-  - GET /api/payload/status_sets
-  - GET /api/payload/custom_fields
-- Creation (require token):
-  - POST /create_status_sets_from_json
-  - POST /create_custom_fields_from_json
-- Update:
-  - POST /update_status (body: { asset_guid, status_value })
-- Fetching:
-  - GET /fetch_assets_config
-  - GET /fetch_all_assets_info
-- Auth:
-  - GET /authorize
-  - GET /callback
-- App status:
-  - GET /api/status
-  - GET /api/categories
+### 3. Run Locally
+
+```bash
+# Start both services
+bash start_all.sh
+
+# Or run individually:
+cd telebot && python bot_logger.py &
+cd root && python main.py
+```
 
 ---
 
-If you want, I can:
+## 💬 Usage
 
-- generate a shorter quickstart with exact env vars and commands,
-- add example curl commands for the important API calls,
-- or create unit tests for the CSV parsing functions.
+Send a message to your Telegram group with the bot:
+
+```
+[UPDATE]
+Door Single Flush Inside Level 1
+Installed
+```
+
+The bot will:
+
+1. Parse the message using NLP
+2. Match it to the correct BIM element(s)
+3. Update the asset status in ACC
+4. Reply with confirmation
+
+---
+
+## 🔌 API Endpoints
+
+| Endpoint               | Method | Description                 |
+| ---------------------- | ------ | --------------------------- |
+| `/authorize`           | GET    | Start Autodesk OAuth flow   |
+| `/callback`            | GET    | OAuth callback handler      |
+| `/update_status`       | POST   | Update asset status in ACC  |
+| `/fetch_assets_config` | GET    | Sync ACC configuration      |
+| `/api/status`          | GET    | Token & environment info    |
+
+---
+
+## 🧪 Testing
+
+Run NLP accuracy evaluation:
+
+```bash
+cd tests
+jupyter notebook nlp_accuracy_evaluation.ipynb
+```
+
+---
+
+## 📚 Additional Documentation
+
+- [Telegram Bot Setup](telebot/README_Tele.md)
+- [APS & ACC Integration](README_APSandACC.md)
+
+---
+
+## 📄 License
+
+MIT License

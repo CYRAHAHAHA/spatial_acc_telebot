@@ -2,11 +2,11 @@
 NLP BOT ACCURACY EVALUATION SUMMARY
 ============================================================
 
-Total Test Cases: 41
-Exact Match Rate: 36.59%
-Average Precision: 37.13%
-Average Recall: 39.02%
-Average F1 Score: 37.47%
+Total Test Cases: 33
+Exact Match Rate: 54.55%
+Average Precision: 54.55%
+Average Recall: 54.55%
+Average F1 Score: 54.55%
 
 ============================================================
 ACCURACY BY DIFFICULTY LEVEL
