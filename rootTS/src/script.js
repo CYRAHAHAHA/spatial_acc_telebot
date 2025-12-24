@@ -160,11 +160,6 @@
   el.toggleEnvBtn?.addEventListener("click", () => {
     el.envPanel.hidden = !el.envPanel.hidden;
   });
-
-    try {
-      showLoading(el.statusSetsLoading);
-      const res = await fetch("/api/preview/status_sets", { credentials: "include" });
-      if (!res.ok) {
   // ========================================
   // BUTTON HANDLERS
   // ========================================
@@ -415,7 +410,6 @@
 // INITIAL LOAD
 // ========================================
 await loadStatus();
-await loadCategories();
 await renderStatusSetsPreview();
 await renderCustomFieldsPreview();
 

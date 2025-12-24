@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Autodesk Construction Cloud - Asset Manager</title>
+    <link href="/styles.css" rel="stylesheet" />
+  </head>
+  <body>
+
+    <!-- ========== HEADER ========== -->
+    <header class="forge-header">
+      <div class="forge-container">
+        <div class="forge-header-left">
+          <svg class="forge-logo" viewBox="0 0 24 24" fill="currentColor">
+            <path
+              d="M12 2L2 7v10l10 5 10-5V7L12 2zm0 2.18L19.82 8 12 11.82 4.18 8 12 4.18zM4 9.73l7 3.5v6.95l-7-3.5V9.73zm16 0v6.95l-7 3.5v-6.95l7-3.5z"
+            />
+          </svg>
+          <h1 class="forge-title">ACC Asset Manager (TypeScript)</h1>
+        </div>
+        <div class="forge-header-right">
+          <button id="initialSetupBtn" class="forge-btn forge-btn-primary">
+            <svg width="16" height="16" fill="currentColor">
+              <path
+                d="M8 2a1 1 0 011 1v4h4a1 1 0 110 2H9v4a1 1 0 11-2 0V9H3a1 1 0 110-2h4V3a1 1 0 011-1z"
+              />
+            </svg>
+            Do All Initial Setup
+          </button>
+          <button id="authorizeBtn" class="forge-btn forge-btn-primary">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor">
+              <path
+                d="M8 8a3 3 0 100-6 3 3 0 000 6zm0 1a6 6 0 00-6 6h12a6 6 0 00-6-6z"
+              />
+            </svg>
+            Authorize
+          </button>
+        </div>
+      </div>
+    </header>
+
+    <!-- ========== TOAST NOTIFICATIONS ========== -->
+    <div
+      id="toastContainer"
+      class="forge-toast-container"
+      aria-live="polite"
+    ></div>
+
+    <!-- ========== MAIN CONTENT ========== -->
+    <main class="forge-main">
+      <div class="forge-container">
+        
+        <!-- ========== CONFIGURATION VIEW ========== -->
+        <div id="configurationView">
+          
+          <!-- ========== STATUS BANNER ========== -->
+          <section class="forge-status-banner">
+            <div class="status-item">
+              <svg width="20" height="20" fill="currentColor">
+                <circle cx="10" cy="10" r="4" />
+              </svg>
+              <div>
+                <div class="status-label">Token Status</div>
+                <div id="tokenStatus" class="status-value">Loading...</div>
+              </div>
+            </div>
+            <div class="status-item">
+              <svg width="20" height="20" fill="currentColor">
+                <path
+                  d="M10 2a8 8 0 100 16 8 8 0 000-16zm1 12H9v-2h2v2zm0-4H9V6h2v4z"
+                />
+              </svg>
+              <div>
+                <div class="status-label">Environment</div>
+                <div class="status-value">
+                  <button id="toggleEnvBtn" class="forge-link-btn">
+                    View Details
+                  </button>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          <!-- Environment Details Panel (Collapsible) -->
+          <div id="envPanel" class="forge-panel" hidden>
+            <h3>Environment Configuration</h3>
+            <ul id="envList" class="env-list"></ul>
+          </div>
+
+          <!-- ========== ACTIONS TOOLBAR ========== -->
+          <section class="forge-toolbar">
+
+          </section>
+
+          <!-- ========== TABBED INTERFACE ========== -->
+          <nav class="forge-tabs" role="tablist">
+            <button
+              class="forge-tab active"
+              data-tab="update-asset" 
+              role="tab"
+              aria-selected="true"
+            >
+              Update Asset
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="create-issue"
+              role="tab"
+              aria-selected="false"
+            >
+              Create Issue
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="update-issue"
+              role="tab"
+              aria-selected="false"
+            >
+              Update Issue Status
+            </button>
+            <button
+              class="forge-tab"
+              data-tab="fetch-issues"
+              role="tab"
+              aria-selected="false"
+            >
+              Fetch Issues Info
+            </button>
+          </nav>
+
+          <!-- ========== TAB PANELS ========== -->
+
+            <!-- UPDATE ASSET TAB -->
+            <section
+              id="tab-update-asset"
+              class="forge-tab-panel"
+              role="tabpanel"
+            >
+              <div class="forge-panel-header">
+                <h2>Update Asset Status</h2>
+              </div>
+              <div class="forge-panel-body">
+                <form id="updateAssetForm" class="forge-form">
+                  <div class="forge-form-group">
+                    <label for="assetGuid" class="forge-label"
+                      >Asset GUID *</label
+                    >
+                    <input
+                      type="text"
+                      id="assetGuid"
+                      name="assetGuid"
+                      class="forge-input"
+                      placeholder="e.g., 2f845f53-d5d1-4e1b-a5f0-1234567890ab"
+                      required
+                    />
+                    <small class="forge-help-text"
+                      >Enter the unique identifier for the asset</small
+                    >
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="assetStatus" class="forge-label"
+                      >New Status *</label
+                    >
+                    <input
+                      type="text"
+                      id="assetStatus"
+                      name="assetStatus"
+                      class="forge-input"
+                      placeholder="e.g., Specified"
+                      required
+                    />
+                    <small class="forge-help-text"
+                      >Status label must match a value from status_sets.csv</small
+                    >
+                  </div>
+                  <div class="forge-form-actions">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Update Status
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- CREATE ISSUE TAB -->
+            <section
+              id="tab-create-issue"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Create Issue</h2>
+              </div>
+              <div class="forge-panel-body">
+                <form id="createIssueForm" class="forge-form">
+                  <div class="forge-form-group">
+                    <label for="issueTitle" class="forge-label">Title *</label>
+                    <input
+                      type="text"
+                      id="issueTitle"
+                      name="issueTitle"
+                      class="forge-input"
+                      placeholder="e.g., Water leakage at Level 3"
+                      required
+                    />
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="issueStatus" class="forge-label">Status *</label>
+                    <select
+                      id="issueStatus"
+                      name="issueStatus"
+                      class="forge-input"
+                      required
+                    >
+                      <option value="">Select status...</option>
+                      <option value="open">Open</option>
+                      <option value="pending">Pending</option>
+                      <option value="in_review">In Review</option>
+                      <option value="closed">Closed</option>
+                    </select>
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="issueSubtypeId" class="forge-label"
+                      >Issue Subtype ID *</label
+                    >
+                    <input
+                      type="text"
+                      id="issueSubtypeId"
+                      name="issueSubtypeId"
+                      class="forge-input"
+                      placeholder="e.g., 06e9ad10-7a05-43e8-9e27-38fb455dd50f"
+                      required
+                    />
+                    <small class="forge-help-text"
+                      >Get IDs from the "Fetch Issues Info" tab</small
+                    >
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="issueDescription" class="forge-label"
+                      >Description</label
+                    >
+                    <textarea
+                      id="issueDescription"
+                      name="issueDescription"
+                      class="forge-input"
+                      placeholder="Optional: describe the issue"
+                      rows="3"
+                    ></textarea>
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="issueLocation" class="forge-label"
+                      >Location</label
+                    >
+                    <input
+                      type="text"
+                      id="issueLocation"
+                      name="issueLocation"
+                      class="forge-input"
+                      placeholder="Optional: e.g., Building A, Level 3"
+                    />
+                  </div>
+                  <div class="forge-form-actions">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Create Issue
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- UPDATE ISSUE STATUS TAB -->
+            <section
+              id="tab-update-issue"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Update Issue Status</h2>
+              </div>
+              <div class="forge-panel-body">
+                <form id="updateIssueForm" class="forge-form">
+                  <div class="forge-form-group">
+                    <label for="updateIssueGuid" class="forge-label"
+                      >Issue GUID *</label
+                    >
+                    <input
+                      type="text"
+                      id="updateIssueGuid"
+                      name="updateIssueGuid"
+                      class="forge-input"
+                      placeholder="e.g., cae94f63-282c-435b-b798-ec527afcde1d"
+                      required
+                    />
+                    <small class="forge-help-text"
+                      >Get GUIDs from the "Fetch Issues Info" tab</small
+                    >
+                  </div>
+                  <div class="forge-form-group">
+                    <label for="updateIssueStatus" class="forge-label"
+                      >New Status *</label
+                    >
+                    <select
+                      id="updateIssueStatus"
+                      name="updateIssueStatus"
+                      class="forge-input"
+                      required
+                    >
+                      <option value="">Select status...</option>
+                      <option value="open">Open</option>
+                      <option value="pending">Pending</option>
+                      <option value="in_review">In Review</option>
+                      <option value="closed">Closed</option>
+                    </select>
+                  </div>
+                  <div class="forge-form-actions">
+                    <button type="submit" class="forge-btn forge-btn-primary">
+                      Update Status
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </section>
+
+            <!-- FETCH ISSUES TAB -->
+            <section
+              id="tab-fetch-issues"
+              class="forge-tab-panel"
+              role="tabpanel"
+              hidden
+            >
+              <div class="forge-panel-header">
+                <h2>Fetch Issues Information</h2>
+              </div>
+              <div class="forge-panel-body">
+                <div class="forge-form-actions" style="margin-bottom: 20px;">
+                  <button id="fetchIssuesBtn" class="forge-btn forge-btn-primary">
+                    Load Issue Types & Recent Issues
+                  </button>
+                </div>
+                <div id="issuesLoading" class="forge-spinner" hidden>
+                  <div class="spinner"></div>
+                  <p>Loading issues...</p>
+                </div>
+                <div id="issueSubtypesDisplay"></div>
+                <div id="recentIssuesDisplay"></div>
+              </div>
+            </section>
+          </div>
+          
+        </div>
+      </div>
+    </main>
+
+    <!-- ========== FOOTER ========== -->
+    <footer class="forge-footer">
+      <div class="forge-container">
+        <p>
+          &copy; 2025 Autodesk Construction Cloud Integration | Powered by APS
+        </p>
+      </div>
+    </footer>
+
+    <script src="/script.js"></script>
+  </body>
+</html>
