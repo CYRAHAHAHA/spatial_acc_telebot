@@ -32,4 +32,4 @@ if __name__ == "__main__":
     app.logger.info(f"Flask app starting on {host}:{port}...")
     app.logger.info(f"Environment: {'Railway' if os.getenv('RAILWAY_ENVIRONMENT') else 'Local'}")
     
-    app.run(host=host, port=port, debug=False)
+    app.run(host=host, port=port, debug=True)
